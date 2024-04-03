@@ -16,6 +16,7 @@ tickerData = tickerData.history(start='2024-03-15', end=end_date)
 tickerHistory = {}
 
 for date in (tickerData.index):
+    date = str(date.day) + '-' + str(date.month) + '-' + str(date.year)
     tickerHistory[date] = {}
     for cat in tickerData.iloc[0,:].index:
         info = tickerData.iloc[0,:][cat]
@@ -24,6 +25,8 @@ for date in (tickerData.index):
 data = {
     ticker: tickerHistory
 }
+
+print(data)
 
 app = Flask(__name__)
 cors = CORS(app)
