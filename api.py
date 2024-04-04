@@ -4,7 +4,7 @@ from flask import Flask
 from flask_cors import CORS, cross_origin
 
 #Main
-tickers = ['AAPL', 'SPY']
+tickers = ['SPY', 'QQQ', 'DIA', 'NVDA', 'AAPL']
 
 data = {}
 
