@@ -19,6 +19,7 @@ for ticker in tickers:
 
     tickerHistory = {}
     prevDate = '3/15/2024'
+    crash = 0
 
     for date in (tickerData.index):
         date = str(date.month) + '/' + str(date.day) + '/' + str(date.year)
