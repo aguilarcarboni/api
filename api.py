@@ -18,10 +18,10 @@ for ticker in tickers:
     tickerData = tickerData.history(start='2024-03-15', end=end_date)
 
     tickerHistory = {}
-    prevDate = '3/15/2024'
+    prevDate = '2024-03-15'
 
     for date in (tickerData.index):
-        date = str(date.month) + '/' + str(date.day) + '/' + str(date.year)
+        date = str('%04d' % date.year) + '-' + str('%02d' % date.month) + '-' + str('%02d' % date.day)
         tickerHistory[date] = {}
         for cat in tickerData.iloc[0,:].index:
             info = tickerData.loc[date,:][cat]
