@@ -41,7 +41,12 @@ app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-@app.route("/")
 @cross_origin()
+
+@app.route("/")
 def root():
+    return data
+
+@app.route("/market")
+def market():
     return data
