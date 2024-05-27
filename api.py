@@ -1,9 +1,11 @@
-import yfinance as yf
 from datetime import datetime
 from flask import Flask
-from flask_cors import CORS, cross_origin
+from flask_cors import CORS
+import yfinance as yf
 
 from marsFunctions import getImages, getManifestData, getSol, getWaypoints
+
+from Athena import Athena
 
 # Market Data
 def getMarketData():
@@ -42,6 +44,16 @@ def getMarketData():
 marketData = getMarketData()
 print(marketData)
 
+lat = 9.9382
+lon = -84.1426
+
+Athena = Athena()
+DateAndTime = Athena.DateAndTime()
+Weather = Athena.Weather(lat,lon)
+Market = Athena.Market()
+
+athenaData = [DateAndTime.getCurrentDate(), DateAndTime.getCurrentTime(),  Weather.getTemperature(), round(Market.data['AAPL']['2024-05-24']['Close'], 3)]
+
 # Mars Data
 def getMarsData():
     manifestUrl = 'https://api.nasa.gov/mars-photos/api/v1/manifests/perseverance/?api_key=kQwoyoXi4rQeY0lXWt1RZln6mLeatlYKLmYfGENB'
@@ -68,8 +80,6 @@ app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-@cross_origin()
-
 @app.route("/")
 def root():
     return 'Welcome to the laserfocus API'
@@ -81,3 +91,7 @@ def market():
 @app.route("/mars")
 def mars():
     return marsData
+
+@app.route("/athena")
+def athena():
+    return athenaData
