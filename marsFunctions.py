@@ -40,3 +40,22 @@ def getDistance(coordsJson):
     distances = np.array(distances)
     distances = pd.DataFrame(distances) #data frame
     return distances
+
+def getMarsData():
+    manifestUrl = 'https://api.nasa.gov/mars-photos/api/v1/manifests/perseverance/?api_key=kQwoyoXi4rQeY0lXWt1RZln6mLeatlYKLmYfGENB'
+    manifest = getManifestData(manifestUrl)
+
+    sol = getSol(manifest)
+
+    imagesUrl = 'https://api.nasa.gov/mars-photos/api/v1/rovers/perseverance/photos?sol='+ str(sol) + '&api_key=kQwoyoXi4rQeY0lXWt1RZln6mLeatlYKLmYfGENB'
+    waypointsUrl = 'https://mars.nasa.gov/mmgis-maps/M20/Layers/json/M20_waypoints.json'
+
+    images = getImages(imagesUrl)
+    coordinates = getWaypoints(waypointsUrl)
+
+    marsData = {
+        'images': images,
+        'coords': coordinates
+    }
+
+    return marsData

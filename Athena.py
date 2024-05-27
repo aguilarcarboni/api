@@ -29,6 +29,7 @@ class Athena:
             self.response = rq.get(self.weatherURL)
             self.data = self.response.json()
         def getTemperature(self):
+            
             currentTemp = self.data['main']['temp']
             currentTemp -= 273.15
             currentTemp = math.floor(currentTemp)
