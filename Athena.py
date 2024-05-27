@@ -1,49 +1,8 @@
 import datetime as dt
 import requests as rq
 import math
-import speech_recognition as sr
-import pyttsx3 as tts
 
 class Athena:
-
-    class Ears:
-
-        def __init__(self):
-            self.recognizer = sr.Recognizer()
-            self.message = ''
-            
-        def listen(self):
-            try:
-                with sr.Microphone() as mic:
-                    print("Listening...")
-                    audio = self.recognizer.listen(mic,3)
-                    return audio
-            except:
-                pass
-
-        def getMessage(self, audio):
-            text = self.recognizer.recognize_google(audio, language='en-IN',show_all=True)
-            if type(text) is dict:
-                self.message = text['alternative'][0]['transcript']
-            print(self.message)
-            return self.message
-
-    class Mouth:
-
-        def __init__(self):
-            self.mouth = tts.init()
-            self.response = ''
-
-        def talk(self,message):
-            self.response = ''
-            if message == '0':
-                self.response = "Hey, I'm Athena"
-            if ('what time is it') in message: # language analysis
-                self.response = Athena.DateAndTime.getCurrentTime()
-            print(self.response)
-            self.mouth.say(self.response)
-            self.mouth.runAndWait()
-            return self.response
                 
     class DateAndTime:
         def __init__(self):
