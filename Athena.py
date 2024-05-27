@@ -1,12 +1,12 @@
-import datetime as dt
+from datetime import datetime
 import requests as rq
 import math
+import yfinance as yf
 
-class Athena:
-                
+class Athena:       
     class DateAndTime:
         def __init__(self):
-            self.currentDateTime = dt.datetime.now()
+            self.currentDateTime = datetime.now()
         def getCurrentTime(self):
             currentTime = self.currentDateTime.strftime("%I:%M%p")
             return currentTime
@@ -36,9 +36,41 @@ class Athena:
         
     class Market:
         def __init__(self):
-            self.dataURL = 'https://laserfocus-api.onrender.com/market'
-            self.response = rq.get(self.dataURL)
-            self.data = self.response.json()
+            self.data = self.getMarketData()
+
+        def getMarketData(self):
+            self.tickers = ['SPY', 'QQQ', 'TSLA', 'NVDA', 'AAPL', 'MSFT']
+
+            self.marketData = {}
+
+            for ticker in self.tickers:
+                
+                self.tickerData = yf.Ticker(ticker)
+
+                self.end_date = datetime.now().strftime('%Y-%m-%d')
+
+                # get all stock info
+                self.tickerData = self.tickerData.history(start='2024-03-15', end=self.end_date)
+
+                self.tickerHistory = {}
+                self.prevDate = '2024-03-15'
+
+                for date in (self.tickerData.index):
+                    date = str('%04d' % date.year) + '-' + str('%02d' % date.month) + '-' + str('%02d' % date.day)
+                    self.tickerHistory[date] = {}
+                    for cat in self.tickerData.iloc[0,:].index:
+                        info = self.tickerData.loc[date,:][cat]
+                        self.tickerHistory[date][cat] = info
+
+                self.marketData[ticker] = self.tickerHistory
+
+            for ticker in self.marketData:
+                for date in self.marketData[ticker]:
+                    self.marketData[ticker][date]['Change $'] = self.marketData[ticker][date]['Close'] - self.marketData[ticker][self.prevDate]['Close']
+                    self.marketData[ticker][date]['Change %'] = (self.marketData[ticker][date]['Close'] - self.marketData[ticker][self.prevDate]['Close'])/self.marketData[ticker][date]['Close'] * 100
+                    self.prevDate = date
+
+            return self.marketData
 
     class News:
         def __init__(self):
