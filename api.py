@@ -1,41 +1,37 @@
 from flask import Flask
 from flask_cors import CORS
 
-from marsFunctions import getMarsData
 from Athena import Athena
-
-# Mars Data
-marsData = getMarsData()
-print(marsData)
-
-lat = 9.9382
-lon = -84.1426
-
-Athena = Athena()
-DateAndTime = Athena.DateAndTime()
-Weather = Athena.Weather(lat,lon)
-Market = Athena.Market()
-
-athenaData = {
-    'date': DateAndTime.getCurrentDate(), 
-    'time': DateAndTime.getCurrentTime(),  
-    'weather': Weather.getTemperature(), 
-    'market': Market.data
-}
-print(athenaData)
 
 app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
+Athena = Athena()
+
 @app.route("/")
 def root():
-    return 'Welcome to the laserfocus API'
-
-@app.route("/mars")
-def mars():
-    return marsData
+    return 'any path to success starts with laserfocus.'
 
 @app.route("/athena")
 def athena():
+    athenaData = {
+        'date': Athena.DateAndTime().currentDate, 
+        'time': Athena.DateAndTime().currentTime,  
+        'weather': Athena.Weather(9.9382,-84.1426).temperature, 
+        'market':{
+            'AAPL': Athena.Market().getLastPrice('AAPL'),
+            'SPY': Athena.Market().getLastPrice('SPY')
+        }
+    }
     return athenaData
+
+@app.route("/athena/mars")
+def mars():
+    marsData = Athena.Explorer().Mars().data
+    return marsData
+
+@app.route("/athena/brain")
+def brain():
+    brainData = Athena.Brain().ask("Tell me more about Baseball")
+    return brainData
