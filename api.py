@@ -17,16 +17,24 @@ def root():
 def athena():
     athenaData = {
         'date': Athena.DateAndTime().currentDate, 
-        'time': Athena.DateAndTime().currentTime,  
-        'weather': Athena.Weather(9.9382,-84.1426).temperature, 
+        'time': Athena.DateAndTime().currentTime,
+        'currentTemp': Athena.Weather(9.9382,-84.1426).currentTemp,
+        'news':Athena.News().getNews(), 
+        'market':{
+            'AAPL': Athena.Market().getLastPrice('AAPL'),
+            'SPY': Athena.Market().getLastPrice('SPY')
+        }
     }
     return athenaData
 
 @app.route("/athena/market")
 def market():
     marketData = {
-        'AAPL': Athena.Market().getLastPrice('AAPL'),
-        'SPY': Athena.Market().getLastPrice('SPY')
+        'stocks':{
+            'AAPL': Athena.Market().getLastPrice('AAPL'),
+            'SPY': Athena.Market().getLastPrice('SPY')
+        },
+        'historical':Athena.Market().data
     }
     return marketData
 
@@ -40,9 +48,25 @@ def brain():
     brainData = Athena.Brain().ask("Tell me more about Baseball")
     return brainData
 
-"""
+@app.route("/athena/news")
+def news():
+    newsData = {
+        'general':Athena.News().getNews(), 
+        'space':Athena.News().getSpaceFlightNews()
+    }
+    return newsData
+
+@app.route("/athena/weather")
+def weather():
+    weatherData = {'forecast':Athena.Weather(9.9382,-84.1426).forecast, 'uv':Athena.Weather(9.9382,-84.1426).uv}
+    return weatherData
+
+@app.route("/athena/sports")
+def sports():
+    sportsData = Athena.Sports().data
+    return sportsData
+
 print('Service live.')
 
 if __name__ == "__main__": 
     app.run(debug=True) 
-"""

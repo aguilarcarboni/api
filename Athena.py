@@ -7,7 +7,8 @@ from pandas.tseries.offsets import BDay
 from datetime import datetime
 import pytz
 
-class Athena:       
+class Athena:
+           
     class Brain:
         def __init__(self):
             self.API_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.3"
@@ -41,27 +42,43 @@ class Athena:
 
     class Weather:
         def __init__(self,lat,lon):
-            self.weatherURL = "https://api.openweathermap.org/data/2.5/weather?lat=" + str(lat) + "&lon=" + str(lon) + "&appid=eb19583dcac353340bf0b6ba9becd965"
-            self.response = rq.get(self.weatherURL)
-            self.data = self.response.json()
-            self.temperature = self.getTemperature()
-
-        def getTemperature(self):
-            currentTemp = self.data['main']['temp']
-            currentTemp -= 273.15
-            currentTemp = math.floor(currentTemp)
-            return currentTemp
+            self.currentTemp = self.getCurrentTemp(lat,lon)
+            self.forecast = self.getHourlyFourDayForecast(lat,lon)
+            self.uv = self.getUVIndex(lat,lon)
         
+        def getCurrentTemp(self, lat, lon):
+            self.url = "https://api.openweathermap.org/data/2.5/weather?lat=" + str(lat) + "&lon=" + str(lon) + "&appid=eb19583dcac353340bf0b6ba9becd965"
+            self.response = rq.get(self.url)
+            self.data = self.response.json()
+            self.celcius = self.data["main"]["temp"] - 273.15
+            self.farenheit = (self.celcius * (9/5) + 32)
+            self.data = {'c':self.celcius, 'f':self.farenheit}
+            return self.data
+        
+        def getUVIndex(self, lat, lon):
+            self.url = f'https://api.openuv.io/api/v1/uv?lat=${str(lat)}&lng=${str(lon)}'
+            self.response = rq.get(self.url, headers={
+                'x-access-token':'openuv-2mznhrlwxafrx5-io'
+            })
+            self.data = self.response.json()
+            return self.data
+        
+        def getHourlyFourDayForecast(self,lat,lon):
+            self.url = "https://api.openweathermap.org/data/2.5/forecast?lat=" + str(lat) + "&lon=" + str(lon) + "&appid=eb19583dcac353340bf0b6ba9becd965"
+            self.response = rq.get(self.url)
+            self.data = self.response.json()
+            self.data = self.data['list']
+            return self.data
+
     class Market:
         def __init__(self):
-            self.data = self.getMarketData()
+            self.data = self.getMarketData(['SPY', 'QQQ', 'TSLA', 'NVDA', 'AAPL', 'MSFT'])
 
-        def getMarketData(self):
-            self.tickers = ['SPY', 'QQQ', 'TSLA', 'NVDA', 'AAPL', 'MSFT']
-
+        def getMarketData(self, tickers):
+            
             self.marketData = {}
 
-            for ticker in self.tickers:
+            for ticker in tickers:
                 
                 self.tickerData = yf.Ticker(ticker)
 
@@ -92,20 +109,40 @@ class Athena:
 
         def getLastPrice(self, ticker):
             self.lastWorkingDate = Athena.DateAndTime().lastWorkingDate
-            self.lastPrice = self.getMarketData()[ticker]['20240523']['Close']
+            self.lastPrice = self.data[ticker]['20240523']['Close']
             return self.lastPrice
         
     class News:
         def __init__(self):
             self.state = 0
+        def getNews(self):
+            self.url = 'https://api.thenewsapi.com/v1/news/top?api_token=PUfDTU61GLbCcHgiKXQszDx7Jxe6bBRlZFWdjhaB&locale=us&limit=3'
+            self.response = rq.get(self.url)
+            self.data = self.response.json()
+            return self.data
+        def getSpaceFlightNews(self):
+            self.url = "https://api.spaceflightnewsapi.net/v4/articles/"
+            self.response = rq.get(self.url)
+            self.data = self.response.json()
+            return self.data
             
     class Calendar:
         def __init__(self):
             self.state = 0
             
     class Sports:
+
         def __init__(self):
             self.state = 0
+            self.data = self.getData()
+
+        def getData(self):
+            self.url = "https://www.scorebat.com/video-api/v3/team/barcelona    /?token=MTYwOTMwXzE3MTczMTgyODNfMTFmNjUyM2I4ZWZkN2EyOTU1YTZkYjgwYzYwZGZhNjFkZWY5MmI4YQ=="
+            self.response = rq.get(self.url)
+            self.data = self.response.text
+            return self.data
+
+    # Betting
 
     class Files:
         def __init__(self):
