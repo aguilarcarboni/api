@@ -137,7 +137,7 @@ class Athena:
             self.data = self.getData()
 
         def getData(self):
-            self.url = "https://www.scorebat.com/video-api/v3/team/barcelona    /?token=MTYwOTMwXzE3MTczMTgyODNfMTFmNjUyM2I4ZWZkN2EyOTU1YTZkYjgwYzYwZGZhNjFkZWY5MmI4YQ=="
+            self.url = "https://api.sportmonks.com/v3/football/teams?api_token=IPYXP7oixqhqrv9VLL69QNxO2pY0EX7oSNLeQFJoYBKLzA9rVkvYzznG7Fni"
             self.response = rq.get(self.url)
             self.data = self.response.text
             return self.data
