@@ -19,11 +19,6 @@ def athena():
         'date': Athena.DateAndTime().currentDate, 
         'time': Athena.DateAndTime().currentTime,
         'currentTemp': Athena.Weather(9.9382,-84.1426).currentTemp,
-        'news':Athena.News().getNews(), 
-        'market':{
-            'AAPL': Athena.Market().getLastPrice('AAPL'),
-            'SPY': Athena.Market().getLastPrice('SPY')
-        }
     }
     return athenaData
 
@@ -58,7 +53,10 @@ def news():
 
 @app.route("/athena/weather")
 def weather():
-    weatherData = {'forecast':Athena.Weather(9.9382,-84.1426).forecast, 'uv':Athena.Weather(9.9382,-84.1426).uv}
+    weatherData = {
+        'forecast':Athena.Weather(9.9382,-84.1426).forecast, 
+        'uv':Athena.Weather(9.9382,-84.1426).uv
+    }
     return weatherData
 
 @app.route("/athena/sports")
@@ -66,7 +64,10 @@ def sports():
     sportsData = Athena.Sports().data
     return sportsData
 
-print('Service live.')
+debug = False
+if debug:
 
-if __name__ == "__main__": 
-    app.run(debug=True) 
+    if __name__ == "__main__": 
+        app.run(debug=True) 
+        
+    print('Service live.')
