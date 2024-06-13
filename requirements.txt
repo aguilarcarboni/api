@@ -5,3 +5,6 @@ Flask==3.0.0
 Flask-Cors==4.0.0
 requests==2.31.0
 APScheduler==3.10.4
+openmeteo_requests==1.2.0
+requests-cache==1.2.0
+retry-requests==2.0.0
