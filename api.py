@@ -18,7 +18,6 @@ def athena():
     athenaData = {
         'date': Athena.DateAndTime().currentDate, 
         'time': Athena.DateAndTime().currentTime,
-        'currentTemp': Athena.Weather(9.9382,-84.1426).currentTemp,
     }
     return athenaData
 
@@ -55,7 +54,8 @@ def news():
 def weather():
     weatherData = {
         'forecast':Athena.Weather(9.9382,-84.1426).forecast, 
-        'uv':Athena.Weather(9.9382,-84.1426).uv
+        'uv':Athena.Weather(9.9382,-84.1426).uv,
+        'currentTemp': Athena.Weather(9.9382,-84.1426).currentTemp,
     }
     return weatherData
 
