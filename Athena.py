@@ -7,6 +7,13 @@ from pandas.tseries.offsets import BDay
 from datetime import datetime
 import pytz
 
+
+import openmeteo_requests
+
+import requests_cache
+import pandas as pd
+from retry_requests import retry
+
 class Athena:
            
     class Brain:
@@ -42,32 +49,83 @@ class Athena:
 
     class Weather:
         def __init__(self,lat,lon):
-            self.currentTemp = self.getCurrentTemp(lat,lon)
-            self.forecast = self.getHourlyFourDayForecast(lat,lon)
-            self.uv = self.getUVIndex(lat,lon)
-        
-        def getCurrentTemp(self, lat, lon):
-            self.url = "https://api.openweathermap.org/data/2.5/weather?lat=" + str(lat) + "&lon=" + str(lon) + "&appid=eb19583dcac353340bf0b6ba9becd965"
-            self.response = rq.get(self.url)
-            self.data = self.response.json()
-            self.celcius = self.data["main"]["temp"] - 273.15
-            self.farenheit = (self.celcius * (9/5) + 32)
-            self.data = {'c':self.celcius, 'f':self.farenheit}
+
+            self.service = self.connectToOpenMeteo(lat,lon)
+            self.forecast = self.getHourlyFourDayForecast(self.service)
+            self.currentWeather = self.getCurrentWeather(self.service)
+
+        def connectToOpenMeteo(self,lat,lon):
+
+            # Setup the Open-Meteo API client with cache and retry on error
+            self.cache_session = requests_cache.CachedSession('.cache', expire_after = 3600)
+            self.retry_session = retry(self.cache_session, retries = 5, backoff_factor = 0.2)
+            self.openmeteo = openmeteo_requests.Client(session = self.retry_session)
+
+            # Make sure all required weather variables are listed here
+            # The order of variables in hourly or daily is important to assign them correctly below
+            self.url = "https://api.open-meteo.com/v1/forecast"
+            self.params = {
+                "latitude": lat,
+                "longitude": lon,
+                "current": ["temperature_2m", "relative_humidity_2m", "is_day", "rain", "showers", "weather_code"],
+                "hourly": ["temperature_2m", "relative_humidity_2m", "precipitation_probability", "rain", "showers", "weather_code", "visibility", "uv_index", "uv_index_clear_sky", "is_day"],
+                "daily": ["temperature_2m_max", "temperature_2m_min", "sunrise", "sunset", "daylight_duration", "rain_sum", "showers_sum", "precipitation_hours"],
+                "timezone": "America/Denver",
+                "forecast_days": 3
+            }
+            self.responses = self.openmeteo.weather_api(self.url, params=self.params)
+            return self.responses[0]
+
+        def getCurrentWeather(self, service):
+
+            # Current values. The order of variables needs to be the same as requested.
+            self.current = service.Current()
+            self.data = {
+                'current_temperature_2m':self.current.Variables(0).Value(),
+                'current_relative_humidity_2m':self.current.Variables(1).Value(),
+                'current_is_day':self.current.Variables(2).Value(),
+                'current_rain':self.current.Variables(3).Value(),
+                'current_showers':self.current.Variables(4).Value(),
+                'current_weather_code':self.current.Variables(5).Value()
+            }
             return self.data
         
-        def getUVIndex(self, lat, lon):
-            self.url = f'https://api.openuv.io/api/v1/uv?lat=${str(lat)}&lng=${str(lon)}'
-            self.response = rq.get(self.url, headers={
-                'x-access-token':'openuv-2mznhrlwxafrx5-io'
-            })
-            self.data = self.response.json()
-            return self.data
         
-        def getHourlyFourDayForecast(self,lat,lon):
-            self.url = "https://api.openweathermap.org/data/2.5/forecast?lat=" + str(lat) + "&lon=" + str(lon) + "&appid=eb19583dcac353340bf0b6ba9becd965"
-            self.response = rq.get(self.url)
-            self.data = self.response.json()
-            self.data = self.data['list']
+        def getHourlyFourDayForecast(self,service):
+
+            # Process hourly data. The order of variables needs to be the same as requested.
+            self.hourly = service.Hourly()
+            self.hourly_temperature_2m = self.hourly.Variables(0).ValuesAsNumpy()
+            self.hourly_relative_humidity_2m = self.hourly.Variables(1).ValuesAsNumpy()
+            self.hourly_precipitation_probability = self.hourly.Variables(2).ValuesAsNumpy()
+            self.hourly_rain = self.hourly.Variables(3).ValuesAsNumpy()
+            self.hourly_showers = self.hourly.Variables(4).ValuesAsNumpy()
+            self.hourly_weather_code = self.hourly.Variables(5).ValuesAsNumpy()
+            self.hourly_visibility = self.hourly.Variables(6).ValuesAsNumpy()
+            self.hourly_uv_index = self.hourly.Variables(7).ValuesAsNumpy()
+            self.hourly_uv_index_clear_sky = self.hourly.Variables(8).ValuesAsNumpy()
+            self.hourly_is_day = self.hourly.Variables(9).ValuesAsNumpy()
+
+            self.hourly_data = {"date": pd.date_range(
+                start = pd.to_datetime(self.hourly.Time(), unit = "s", utc = True),
+                end = pd.to_datetime(self.hourly.TimeEnd(), unit = "s", utc = True),
+                freq = pd.Timedelta(seconds = self.hourly.Interval()),
+                inclusive = "left"
+            )}
+
+            self.hourly_data["temperature_2m"] = self.hourly_temperature_2m
+            self.hourly_data["relative_humidity_2m"] = self.hourly_relative_humidity_2m
+            self.hourly_data["precipitation_probability"] = self.hourly_precipitation_probability
+            self.hourly_data["rain"] = self.hourly_rain
+            self.hourly_data["showers"] = self.hourly_showers
+            self.hourly_data["weather_code"] = self.hourly_weather_code
+            self.hourly_data["visibility"] = self.hourly_visibility
+            self.hourly_data["uv_index"] = self.hourly_uv_index
+            self.hourly_data["uv_index_clear_sky"] = self.hourly_uv_index_clear_sky
+            self.hourly_data["is_day"] = self.hourly_is_day
+
+            self.hourly_dataframe = pd.DataFrame(data = self.hourly_data)
+            self.data = self.hourly_dataframe.to_dict(orient="records")
             return self.data
 
     class Market:
@@ -218,3 +276,37 @@ class Athena:
                     distances.append([distanceData[i]['properties']['dist_m'],distanceData[i]['properties']['sol']])
                 distances = pd.DataFrame(distances) #data frame
                 return distances
+        
+
+"""
+print(hourly_dataframe)
+
+# Process daily data. The order of variables needs to be the same as requested.
+daily = response.Daily()
+daily_temperature_2m_max = daily.Variables(0).ValuesAsNumpy()
+daily_temperature_2m_min = daily.Variables(1).ValuesAsNumpy()
+daily_sunrise = daily.Variables(2).ValuesAsNumpy()
+daily_sunset = daily.Variables(3).ValuesAsNumpy()
+daily_daylight_duration = daily.Variables(4).ValuesAsNumpy()
+daily_rain_sum = daily.Variables(5).ValuesAsNumpy()
+daily_showers_sum = daily.Variables(6).ValuesAsNumpy()
+daily_precipitation_hours = daily.Variables(7).ValuesAsNumpy()
+
+daily_data = {"date": pd.date_range(
+	start = pd.to_datetime(daily.Time(), unit = "s", utc = True),
+	end = pd.to_datetime(daily.TimeEnd(), unit = "s", utc = True),
+	freq = pd.Timedelta(seconds = daily.Interval()),
+	inclusive = "left"
+)}
+daily_data["temperature_2m_max"] = daily_temperature_2m_max
+daily_data["temperature_2m_min"] = daily_temperature_2m_min
+daily_data["sunrise"] = daily_sunrise
+daily_data["sunset"] = daily_sunset
+daily_data["daylight_duration"] = daily_daylight_duration
+daily_data["rain_sum"] = daily_rain_sum
+daily_data["showers_sum"] = daily_showers_sum
+daily_data["precipitation_hours"] = daily_precipitation_hours
+
+daily_dataframe = pd.DataFrame(data = daily_data)
+print(daily_dataframe)
+"""

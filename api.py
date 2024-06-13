@@ -44,18 +44,19 @@ def brain():
 
 @app.route("/athena/news")
 def news():
+    News = Athena.News()
     newsData = {
-        'general':Athena.News().getNews(), 
-        'space':Athena.News().getSpaceFlightNews()
+        'general':News.getNews(), 
+        'space':News.getSpaceFlightNews()
     }
     return newsData
 
 @app.route("/athena/weather")
 def weather():
+    Weather = Athena.Weather(9.939085748069655, -83.98204884169583)
     weatherData = {
-        'forecast':Athena.Weather(9.9382,-84.1426).forecast, 
-        'uv':Athena.Weather(9.9382,-84.1426).uv,
-        'currentTemp': Athena.Weather(9.9382,-84.1426).currentTemp,
+        'forecast':Weather.forecast, 
+        'currentWeather': Weather.currentWeather,
     }
     return weatherData
 
@@ -64,7 +65,7 @@ def sports():
     sportsData = Athena.Sports().data
     return sportsData
 
-debug = False
+debug = True
 if debug:
 
     if __name__ == "__main__": 
