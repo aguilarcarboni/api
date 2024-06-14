@@ -62,7 +62,7 @@ def weather():
 
 @app.route("/athena/sports")
 def sports():
-    sportsData = Athena.Sports().data
+    sportsData = {}
     return sportsData
 
 debug = False
