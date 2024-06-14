@@ -70,7 +70,7 @@ def sports():
     sportsData = {}
     return sportsData
 
-debug = True
+debug = False
 if debug:
 
     if __name__ == "__main__": 
