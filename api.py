@@ -23,12 +23,17 @@ def athena():
 
 @app.route("/athena/market")
 def market():
+    Market = Athena.Market()
     marketData = {
         'stocks':{
-            'AAPL': Athena.Market().getLastPrice('AAPL'),
-            'SPY': Athena.Market().getLastPrice('SPY')
+            'AAPL': Market.getLastPrice('SPY'),
+            'SPY': Market.getLastPrice('QQQ'),
+            'TSLA': Market.getLastPrice('TSLA'),
+            'NVDA': Market.getLastPrice('NVDA'),
+            'AAPL': Market.getLastPrice('AAPL'),
+            'MSFT': Market.getLastPrice('MSFT'),
+            'historical':Market.historicalStocksData
         },
-        'historical':Athena.Market().data
     }
     return marketData
 
@@ -65,7 +70,7 @@ def sports():
     sportsData = {}
     return sportsData
 
-debug = False
+debug = True
 if debug:
 
     if __name__ == "__main__": 

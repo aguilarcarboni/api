@@ -130,7 +130,7 @@ class Athena:
 
     class Market:
         def __init__(self):
-            self.data = self.getMarketData(['SPY', 'QQQ', 'TSLA', 'NVDA', 'AAPL', 'MSFT'])
+            self.historicalStocksData = self.getMarketData(['SPY', 'QQQ', 'TSLA', 'NVDA', 'AAPL', 'MSFT'])
 
         def getMarketData(self, tickers):
             
@@ -167,7 +167,7 @@ class Athena:
 
         def getLastPrice(self, ticker):
             self.lastWorkingDate = Athena.DateAndTime().lastWorkingDate
-            self.lastPrice = self.data[ticker]['20240523']['Close']
+            self.lastPrice = self.historicalStocksData[ticker][self.lastWorkingDate]['Close']
             return self.lastPrice
         
     class News:
