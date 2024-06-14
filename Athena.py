@@ -195,7 +195,7 @@ class Athena:
             self.data = self.getData()
 
         def getData(self):
-            self.url = "https://api.sportmonks.com/v3/football/teams?api_token=IPYXP7oixqhqrv9VLL69QNxO2pY0EX7oSNLeQFJoYBKLzA9rVkvYzznG7Fni"
+            self.url = "https://basketball-highlights-api.p.rapidapi.com/matches"
             self.response = rq.get(self.url)
             self.data = self.response.text
             return self.data

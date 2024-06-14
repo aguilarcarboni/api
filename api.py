@@ -65,7 +65,7 @@ def sports():
     sportsData = Athena.Sports().data
     return sportsData
 
-debug = False
+debug = True
 if debug:
 
     if __name__ == "__main__": 
