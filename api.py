@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template, request, url_for, jsonify
 from flask_cors import CORS
 
 from Athena import Athena
@@ -6,8 +6,6 @@ from Athena import Athena
 app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
-
-Athena = Athena()
 
 @app.route("/")
 def root():
@@ -42,11 +40,27 @@ def mars():
     marsData = Athena.Explorer().Mars().data
     return marsData
 
+# Brain
 @app.route("/athena/brain")
 def brain():
-    brainData = Athena.Brain().ask("Tell me more about Baseball")
-    return brainData
+    Brain = Athena.Brain()
+    response = Brain.ask([
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": 'What does laserfocus stand for?'},
+    ])
+    return jsonify(response)
 
+@app.route('/athena/brain/ask', methods=['POST'])
+def ask_athena():
+    input_json = request.get_json(force=True)
+    Brain = Athena.Brain()
+    response = Brain.ask([
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": input_json['message']},
+    ])
+    return jsonify(response)
+
+# News
 @app.route("/athena/news")
 def news():
     News = Athena.News()
@@ -70,10 +84,10 @@ def sports():
     sportsData = {}
     return sportsData
 
-debug = False
+debug = True
 if debug:
 
     if __name__ == "__main__": 
-        app.run(debug=True) 
+        app.run(debug=True)
         
     print('Service live.')

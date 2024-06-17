@@ -14,16 +14,25 @@ import requests_cache
 import pandas as pd
 from retry_requests import retry
 
+from openai import OpenAI
+
 class Athena:
            
     class Brain:
         def __init__(self):
-            self.API_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.3"
-            self.headers = {"Authorization": "Bearer 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"}
 
-        def ask(self, payload):
-            self.response = rq.post(self.API_URL, headers=self.headers, json={"inputs": payload})
-            return self.response.json()
+            self.client = OpenAI(
+                organization="org-OS7XAD607Lm91uSmrhsR5EIc",
+                project="proj_2Ex6hAQAMAgBSs0DKRDGnlcx",
+            )
+
+        def ask(self, data):
+            
+            self.response = self.client.chat.completions.create(
+                model="gpt-4o",
+                messages=data
+            )
+            return self.response.choices[0].message.content
 
     class DateAndTime:
         def __init__(self):
