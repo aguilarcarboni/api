@@ -6,12 +6,11 @@ import pandas as pd
 from pandas.tseries.offsets import BDay
 from datetime import datetime
 import pytz
-
+import pandas as pd
+import os
 
 import openmeteo_requests
-
 import requests_cache
-import pandas as pd
 from retry_requests import retry
 
 from openai import OpenAI
@@ -22,8 +21,8 @@ class Athena:
         def __init__(self):
 
             self.client = OpenAI(
-                organization="org-OS7XAD607Lm91uSmrhsR5EIc",
-                project="proj_2Ex6hAQAMAgBSs0DKRDGnlcx",
+                organization=os.getenv("OPENAI_ORGANIZATION_ID"),
+                project=os.getenv("OPENAI_PROJECT_ID"),
             )
 
         def ask(self, data):
