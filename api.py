@@ -44,20 +44,14 @@ def mars():
 @app.route("/athena/brain")
 def brain():
     Brain = Athena.Brain()
-    response = Brain.ask([
-        {"role": "system", "content": "You are a helpful assistant."},
-        {"role": "user", "content": 'What does laserfocus stand for?'},
-    ])
+    response = Brain.ask("What is the next step in connecting you, Athena, to my Google API?")
     return jsonify(response)
 
 @app.route('/athena/brain/ask', methods=['POST'])
 def ask_athena():
     input_json = request.get_json(force=True)
     Brain = Athena.Brain()
-    response = Brain.ask([
-        {"role": "system", "content": "You are a helpful assistant."},
-        {"role": "user", "content": input_json['message']},
-    ])
+    response = Brain.ask(input_json['message'])
     return jsonify(response)
 
 # News
@@ -84,7 +78,7 @@ def sports():
     sportsData = {}
     return sportsData
 
-debug = False
+debug = True
 if debug:
 
     if __name__ == "__main__": 

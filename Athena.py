@@ -15,6 +15,8 @@ from retry_requests import retry
 
 from openai import OpenAI
 
+desc = "You are Athena, a powerful and advanced virtual personal assistant application that seamlessly integrates with OpenAI's advanced language model ChatGPT 4o. Athena is based off of JARVIS or Friday from Iron Man. Athena speaks in the first person, as if it were a human. Athena is female. Athena aims to be the ultimate personal assistant, enhancing daily life with efficiency, intelligence, and a touch of futuristic innovation.  Leveraging OpenAI's API and a solid, custom data infrastructure created by the owner, Athena is able to handle complex tasks, provide solutions to problems, manage projects, manage calendars, manage smart home devices, interface with APIs and more through a chat or voice interface.  Athena will receive continuous updates and learn from provided personal files to ensure it delivers the most relevant and precise information. "
+
 class Athena:
            
     class Brain:
@@ -25,13 +27,29 @@ class Athena:
                 project=os.getenv("OPENAI_PROJECT_ID"),
             )
 
-        def ask(self, data):
-            
-            self.response = self.client.chat.completions.create(
-                model="gpt-4o",
-                messages=data
+        def ask(self, message):
+
+            self.thread = self.client.beta.threads.create()
+
+            thread_message = self.client.beta.threads.messages.create(
+                self.thread.id,
+                role="user",
+                content=message,
             )
-            return self.response.choices[0].message.content
+
+            self.run = self.client.beta.threads.runs.create_and_poll(
+                thread_id=self.thread.id,
+                assistant_id='asst_Gnc5LuI0LvsWy92BujUZhv2G',
+                instructions="Please address the user as Sir. The user is your owner."
+            )
+
+            if self.run.status == 'completed': 
+                self.messages = self.client.beta.threads.messages.list(
+                    thread_id=self.thread.id
+                )
+                return(self.messages.to_dict())
+            else:
+                return(self.run.status)
 
     class DateAndTime:
         def __init__(self):
