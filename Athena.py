@@ -1,23 +1,19 @@
 from datetime import datetime
+import time
+import pytz
+
+import os
 import requests as rq
-import yfinance as yf
 import pandas as pd
 from pandas.tseries.offsets import BDay
-from datetime import datetime
-import pytz
-import pandas as pd
-import os
+
+import yfinance as yf
 
 import openmeteo_requests
 import requests_cache
 from retry_requests import retry
 
-from openai import OpenAI, AsyncOpenAI
-
-import time
-import asyncio
-
-import os
+from openai import AsyncOpenAI
 
 class Athena:
            
