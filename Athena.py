@@ -163,7 +163,7 @@ class Athena:
                 "timezone": "America/Denver",
                 "forecast_days": 3
             }
-            responses = self.openmeteo.weather_api(self.url, params=self.params)
+            responses = openmeteo.weather_api(self.url, params=self.params)
             return responses[0]
 
         def getCurrentWeather(self):
@@ -171,12 +171,12 @@ class Athena:
             # Current values. The order of variables needs to be the same as requested.
             current = self.service.Current()
             data = {
-                'current_temperature_2m':self.current.Variables(0).Value(),
-                'current_relative_humidity_2m':self.current.Variables(1).Value(),
-                'current_is_day':self.current.Variables(2).Value(),
-                'current_rain':self.current.Variables(3).Value(),
-                'current_showers':self.current.Variables(4).Value(),
-                'current_weather_code':self.current.Variables(5).Value()
+                'current_temperature_2m':current.Variables(0).Value(),
+                'current_relative_humidity_2m':current.Variables(1).Value(),
+                'current_is_day':current.Variables(2).Value(),
+                'current_rain':current.Variables(3).Value(),
+                'current_showers':current.Variables(4).Value(),
+                'current_weather_code':current.Variables(5).Value()
             }
             return data
         
@@ -235,7 +235,7 @@ class Athena:
                 end_date_f = datetime.now().strftime('%Y-%m-%d')
 
                 # get all stock info
-                tickerData = tickerData.history(start='2024-03-15', end=self.end_date_f)
+                tickerData = tickerData.history(start='2024-03-15', end=end_date_f)
                 tickerHistory = {}
                 prevDate = '20240315'
 
@@ -246,7 +246,7 @@ class Athena:
                         info = tickerData.loc[date,:][cat]
                         tickerHistory[date][cat] = info
 
-                marketData[ticker] = self.tickerHistory
+                marketData[ticker] = tickerHistory
 
             for ticker in marketData:
                 for date in marketData[ticker]:
