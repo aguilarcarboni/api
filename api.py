@@ -43,15 +43,13 @@ def mars():
 # Brain
 @app.route("/athena/brain")
 def brain():
-    Brain = Athena.Brain()
-    response = Brain.ask("What is the next step in connecting you, Athena, to my Google API?")
-    return jsonify(response)
+    return "QUOD OBSTAT VIAE FIT VIA"
 
 @app.route('/athena/brain/ask', methods=['POST'])
-def ask_athena():
+async def ask_athena():
     input_json = request.get_json(force=True)
     Brain = Athena.Brain()
-    response = Brain.ask(input_json['message'])
+    response = await Brain.ask(input_json['message'])
     return jsonify(response)
 
 # News

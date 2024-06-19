@@ -1,7 +1,5 @@
 #make a POST request
-import requests
-
-dictToSend = {'message':"What is the next step in connecting you, Athena, to my Google API?"}
+import requests as rq
 
 debug = True
 if debug:
@@ -9,6 +7,18 @@ if debug:
 else:
     url = 'https://laserfocus-api.onrender.com'
 
-res = requests.post(url + '/athena/brain/ask', json=dictToSend)
-dictFromServer = res.json()
-print(dictFromServer)
+print('Welcome to Athena (A Thourougly Helpful Everyday Natural Asistant)')
+print('Ask her anything or press enter to say goodbye to Athena.')
+
+message = ''
+while True:
+    message = input('User:')
+
+    if message == '':
+        exit('Exiting program...')
+
+    dictToSend = {'message':message}
+
+    res = rq.post(url + '/athena/brain/ask', json=dictToSend)
+    dictFromServer = res.json()
+    print('Athena:', dictFromServer)

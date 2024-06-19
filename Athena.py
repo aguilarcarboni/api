@@ -1,6 +1,5 @@
 from datetime import datetime
 import requests as rq
-import math
 import yfinance as yf
 import pandas as pd
 from pandas.tseries.offsets import BDay
@@ -13,51 +12,120 @@ import openmeteo_requests
 import requests_cache
 from retry_requests import retry
 
-from openai import OpenAI
+from openai import OpenAI, AsyncOpenAI
 
-desc = "You are Athena, a powerful and advanced virtual personal assistant application that seamlessly integrates with OpenAI's advanced language model ChatGPT 4o. Athena is based off of JARVIS or Friday from Iron Man. Athena speaks in the first person, as if it were a human. Athena is female. Athena aims to be the ultimate personal assistant, enhancing daily life with efficiency, intelligence, and a touch of futuristic innovation.  Leveraging OpenAI's API and a solid, custom data infrastructure created by the owner, Athena is able to handle complex tasks, provide solutions to problems, manage projects, manage calendars, manage smart home devices, interface with APIs and more through a chat or voice interface.  Athena will receive continuous updates and learn from provided personal files to ensure it delivers the most relevant and precise information. "
+import time
+import asyncio
+
+import os
 
 class Athena:
            
     class Brain:
         def __init__(self):
-
-            self.client = OpenAI(
+   
+            self.client = AsyncOpenAI(
                 organization=os.getenv("OPENAI_ORGANIZATION_ID"),
                 project=os.getenv("OPENAI_PROJECT_ID"),
             )
 
-        def ask(self, message):
+        async def ask(self, message):
 
-            self.thread = self.client.beta.threads.create()
+            runs = await self.client.beta.threads.runs.list(os.getenv('ATHENA_THREAD_ID'))
+            for run in runs.to_dict()['data']:
+                if run['status'] in ['in_progress', 'incomplete', 'queued', 'requires_action', 'cancelling']:
+                    runs = await self.client.beta.threads.runs.cancel(run['id'], thread_id=os.getenv('ATHENA_THREAD_ID'))
+                
 
-            thread_message = self.client.beta.threads.messages.create(
-                self.thread.id,
+            await self.add_message_to_thread(message)
+            message_content = await self.get_answer()
+            return message_content
+            
+        async def add_message_to_thread(self, user_question):
+            # Create a message inside the thread
+            message = await self.client.beta.threads.messages.create(
+                thread_id=os.getenv('ATHENA_THREAD_ID'),
                 role="user",
-                content=message,
+                content= user_question
+            )
+            return message
+    
+        async def get_answer(self):
+            # run assistant
+            print("Running Athena...")
+            run =  await self.client.beta.threads.runs.create(
+                thread_id=os.getenv('ATHENA_THREAD_ID'),
+                assistant_id=os.getenv('ATHENA_ASSISTANT_ID')
             )
 
-            self.run = self.client.beta.threads.runs.create_and_poll(
-                thread_id=self.thread.id,
-                assistant_id='asst_Gnc5LuI0LvsWy92BujUZhv2G',
-                instructions="Please address the user as Sir. The user is your owner."
-            )
+            # wait for the run to complete
+            while True:
+                runInfo = await self.client.beta.threads.runs.retrieve(thread_id=os.getenv('ATHENA_THREAD_ID'), run_id=run.id)
+                if runInfo.status == 'requires_action':
+                    # Define the list to store tool outputs
+                    tool_outputs = []
+                
+                    # Loop through each tool in the required action section
+                    for tool in runInfo.required_action.submit_tool_outputs.tool_calls:
+                        if tool.function.name == "get_info_from_db":
+                            print(tool.function.arguments)
+                            print('Athena fetching from database.')
 
-            if self.run.status == 'completed': 
-                self.messages = self.client.beta.threads.messages.list(
-                    thread_id=self.thread.id
-                )
-                return(self.messages.to_dict())
-            else:
-                return(self.run.status)
+                            tool_outputs.append({
+                                "tool_call_id": tool.id,
+                                "output":"cosi is my dogs name, the weather outside my home is 26 degrees"
+                            })
+                    
+                    # Submit all tool outputs at once after collecting them in a list
+                    if tool_outputs:
+                        try:
+                            run = await self.client.beta.threads.runs.submit_tool_outputs(
+                                thread_id=os.getenv('ATHENA_THREAD_ID'),
+                                run_id=run.id,
+                                tool_outputs=tool_outputs
+                            )
+                            print("Tool outputs submitted successfully.")
+                        except Exception as e:
+                            print("Failed to submit tool outputs:", e)
+                            break
+                    else:
+                        print("No tool outputs to submit.")
+                        break
+
+                if runInfo.completed_at:
+                    # elapsed = runInfo.completed_at - runInfo.created_at
+                    # elapsed = time.strftime("%H:%M:%S", time.gmtime(elapsed))
+                    print(f"Run completed")
+                    break
+
+                print("Waiting 1sec...")
+                time.sleep(1)
+
+            print("All done...")
+            
+            # Get messages from the thread
+            messages = await self.client.beta.threads.messages.list(
+                thread_id=os.getenv('ATHENA_THREAD_ID'),
+            )
+            message = messages.data[0]
+            message_content = message.content[0].text.value
+            return message_content
 
     class DateAndTime:
         def __init__(self):
-            self.currentDateTime = datetime.now()
+            self.timezone = pytz.timezone('America/Costa_Rica')
+            self.currentDateTime = datetime.now(self.timezone)
+
+            self.currentDateTimeString = self.getCurrentDateTimeString()
             self.currentDate = self.getCurrentDate()
             self.currentTime = self.getCurrentTime()
             self.lastWorkingDate = self.getLastWorkingDate()
             
+        def getCurrentDateTimeString(self):
+            # Get the current time in CST
+            dateTimeString = self.currentDateTime.strftime('%Y%m%d%H%M%S')
+            return dateTimeString
+
         def getCurrentTime(self):
             currentTime = self.currentDateTime.strftime("%I:%M%p")
             return currentTime
@@ -77,15 +145,15 @@ class Athena:
         def __init__(self,lat,lon):
 
             self.service = self.connectToOpenMeteo(lat,lon)
-            self.forecast = self.getHourlyFourDayForecast(self.service)
-            self.currentWeather = self.getCurrentWeather(self.service)
+            self.forecast = self.getHourlyFourDayForecast()
+            self.currentWeather = self.getCurrentWeather()
 
         def connectToOpenMeteo(self,lat,lon):
 
             # Setup the Open-Meteo API client with cache and retry on error
-            self.cache_session = requests_cache.CachedSession('.cache', expire_after = 3600)
-            self.retry_session = retry(self.cache_session, retries = 5, backoff_factor = 0.2)
-            self.openmeteo = openmeteo_requests.Client(session = self.retry_session)
+            cache_session = requests_cache.CachedSession('.cache', expire_after = 3600)
+            retry_session = retry(cache_session, retries = 5, backoff_factor = 0.2)
+            openmeteo = openmeteo_requests.Client(session = retry_session)
 
             # Make sure all required weather variables are listed here
             # The order of variables in hourly or daily is important to assign them correctly below
@@ -99,14 +167,14 @@ class Athena:
                 "timezone": "America/Denver",
                 "forecast_days": 3
             }
-            self.responses = self.openmeteo.weather_api(self.url, params=self.params)
-            return self.responses[0]
+            responses = self.openmeteo.weather_api(self.url, params=self.params)
+            return responses[0]
 
-        def getCurrentWeather(self, service):
+        def getCurrentWeather(self):
 
             # Current values. The order of variables needs to be the same as requested.
-            self.current = service.Current()
-            self.data = {
+            current = self.service.Current()
+            data = {
                 'current_temperature_2m':self.current.Variables(0).Value(),
                 'current_relative_humidity_2m':self.current.Variables(1).Value(),
                 'current_is_day':self.current.Variables(2).Value(),
@@ -114,101 +182,97 @@ class Athena:
                 'current_showers':self.current.Variables(4).Value(),
                 'current_weather_code':self.current.Variables(5).Value()
             }
-            return self.data
+            return data
         
         
-        def getHourlyFourDayForecast(self,service):
+        def getHourlyFourDayForecast(self):
 
             # Process hourly data. The order of variables needs to be the same as requested.
-            self.hourly = service.Hourly()
-            self.hourly_temperature_2m = self.hourly.Variables(0).ValuesAsNumpy()
-            self.hourly_relative_humidity_2m = self.hourly.Variables(1).ValuesAsNumpy()
-            self.hourly_precipitation_probability = self.hourly.Variables(2).ValuesAsNumpy()
-            self.hourly_rain = self.hourly.Variables(3).ValuesAsNumpy()
-            self.hourly_showers = self.hourly.Variables(4).ValuesAsNumpy()
-            self.hourly_weather_code = self.hourly.Variables(5).ValuesAsNumpy()
-            self.hourly_visibility = self.hourly.Variables(6).ValuesAsNumpy()
-            self.hourly_uv_index = self.hourly.Variables(7).ValuesAsNumpy()
-            self.hourly_uv_index_clear_sky = self.hourly.Variables(8).ValuesAsNumpy()
-            self.hourly_is_day = self.hourly.Variables(9).ValuesAsNumpy()
+            hourly = self.service.Hourly()
+            hourly_temperature_2m = hourly.Variables(0).ValuesAsNumpy()
+            hourly_relative_humidity_2m = hourly.Variables(1).ValuesAsNumpy()
+            hourly_precipitation_probability = hourly.Variables(2).ValuesAsNumpy()
+            hourly_rain = hourly.Variables(3).ValuesAsNumpy()
+            hourly_showers = hourly.Variables(4).ValuesAsNumpy()
+            hourly_weather_code = hourly.Variables(5).ValuesAsNumpy()
+            hourly_visibility = hourly.Variables(6).ValuesAsNumpy()
+            hourly_uv_index = hourly.Variables(7).ValuesAsNumpy()
+            hourly_uv_index_clear_sky = hourly.Variables(8).ValuesAsNumpy()
+            hourly_is_day = hourly.Variables(9).ValuesAsNumpy()
 
-            self.hourly_data = {"date": pd.date_range(
-                start = pd.to_datetime(self.hourly.Time(), unit = "s", utc = True),
-                end = pd.to_datetime(self.hourly.TimeEnd(), unit = "s", utc = True),
-                freq = pd.Timedelta(seconds = self.hourly.Interval()),
+            hourly_data = {"date": pd.date_range(
+                start = pd.to_datetime(hourly.Time(), unit = "s", utc = True),
+                end = pd.to_datetime(hourly.TimeEnd(), unit = "s", utc = True),
+                freq = pd.Timedelta(seconds = hourly.Interval()),
                 inclusive = "left"
             )}
 
-            self.hourly_data["temperature_2m"] = self.hourly_temperature_2m
-            self.hourly_data["relative_humidity_2m"] = self.hourly_relative_humidity_2m
-            self.hourly_data["precipitation_probability"] = self.hourly_precipitation_probability
-            self.hourly_data["rain"] = self.hourly_rain
-            self.hourly_data["showers"] = self.hourly_showers
-            self.hourly_data["weather_code"] = self.hourly_weather_code
-            self.hourly_data["visibility"] = self.hourly_visibility
-            self.hourly_data["uv_index"] = self.hourly_uv_index
-            self.hourly_data["uv_index_clear_sky"] = self.hourly_uv_index_clear_sky
-            self.hourly_data["is_day"] = self.hourly_is_day
+            hourly_data["temperature_2m"] = hourly_temperature_2m
+            hourly_data["relative_humidity_2m"] = hourly_relative_humidity_2m
+            hourly_data["precipitation_probability"] = hourly_precipitation_probability
+            hourly_data["rain"] = hourly_rain
+            hourly_data["showers"] = hourly_showers
+            hourly_data["weather_code"] = hourly_weather_code
+            hourly_data["visibility"] = hourly_visibility
+            hourly_data["uv_index"] = hourly_uv_index
+            hourly_data["uv_index_clear_sky"] = hourly_uv_index_clear_sky
+            hourly_data["is_day"] = hourly_is_day
 
-            self.hourly_dataframe = pd.DataFrame(data = self.hourly_data)
-            self.data = self.hourly_dataframe.to_dict(orient="records")
+            hourly_dataframe = pd.DataFrame(data = hourly_data)
+            self.data = hourly_dataframe.to_dict(orient="records")
             return self.data
 
     class Market:
         def __init__(self):
+
             self.historicalStocksData = self.getMarketData(['SPY', 'QQQ', 'TSLA', 'NVDA', 'AAPL', 'MSFT'])
 
         def getMarketData(self, tickers):
             
-            self.marketData = {}
+            marketData = {}
 
             for ticker in tickers:
                 
-                self.tickerData = yf.Ticker(ticker)
+                tickerData = yf.Ticker(ticker)
 
-                self.end_date = datetime.now().strftime('%Y%m%d')
-                self.end_date_f = datetime.now().strftime('%Y-%m-%d')
+                end_date = datetime.now().strftime('%Y%m%d')
+                end_date_f = datetime.now().strftime('%Y-%m-%d')
 
                 # get all stock info
-                self.tickerData = self.tickerData.history(start='2024-03-15', end=self.end_date_f)
-                self.tickerHistory = {}
-                self.prevDate = '20240315'
+                tickerData = tickerData.history(start='2024-03-15', end=self.end_date_f)
+                tickerHistory = {}
+                prevDate = '20240315'
 
-                for date in (self.tickerData.index):
+                for date in (tickerData.index):
                     date = str('%04d' % date.year) + str('%02d' % date.month) + str('%02d' % date.day)
-                    self.tickerHistory[date] = {}
-                    for cat in self.tickerData.iloc[0,:].index:
-                        info = self.tickerData.loc[date,:][cat]
-                        self.tickerHistory[date][cat] = info
+                    tickerHistory[date] = {}
+                    for cat in tickerData.iloc[0,:].index:
+                        info = tickerData.loc[date,:][cat]
+                        tickerHistory[date][cat] = info
 
-                self.marketData[ticker] = self.tickerHistory
+                marketData[ticker] = self.tickerHistory
 
-            for ticker in self.marketData:
-                for date in self.marketData[ticker]:
-                    self.marketData[ticker][date]['Change $'] = self.marketData[ticker][date]['Close'] - self.marketData[ticker][self.prevDate]['Close']
-                    self.marketData[ticker][date]['Change %'] = (self.marketData[ticker][date]['Close'] - self.marketData[ticker][self.prevDate]['Close'])/self.marketData[ticker][date]['Close'] * 100
-                    self.prevDate = date
+            for ticker in marketData:
+                for date in marketData[ticker]:
+                    marketData[ticker][date]['Change $'] = marketData[ticker][date]['Close'] - marketData[ticker][prevDate]['Close']
+                    marketData[ticker][date]['Change %'] = (marketData[ticker][date]['Close'] - marketData[ticker][prevDate]['Close'])/marketData[ticker][date]['Close'] * 100
+                    prevDate = date
 
-            return self.marketData
+            return marketData
 
         def getLastPrice(self, ticker):
-            self.lastWorkingDate = Athena.DateAndTime().lastWorkingDate
-            self.lastPrice = self.historicalStocksData[ticker][self.lastWorkingDate]['Close']
-            return self.lastPrice
+            lastWorkingDate = Athena.DateAndTime().lastWorkingDate
+            lastPrice = self.historicalStocksData[ticker][lastWorkingDate]['Close']
+            return lastPrice
         
     class News:
         def __init__(self):
             self.state = 0
-        def getNews(self):
-            self.url = 'https://api.thenewsapi.com/v1/news/top?api_token=PUfDTU61GLbCcHgiKXQszDx7Jxe6bBRlZFWdjhaB&locale=us&limit=3'
-            self.response = rq.get(self.url)
-            self.data = self.response.json()
-            return self.data
         def getSpaceFlightNews(self):
-            self.url = "https://api.spaceflightnewsapi.net/v4/articles/"
-            self.response = rq.get(self.url)
-            self.data = self.response.json()
-            return self.data
+            url = "https://api.spaceflightnewsapi.net/v4/articles/"
+            response = rq.get(url)
+            data = response.json()
+            return data
             
     class Calendar:
         def __init__(self):
@@ -218,13 +282,6 @@ class Athena:
 
         def __init__(self):
             self.state = 0
-            self.data = self.getData()
-
-        def getData(self):
-            self.url = "https://basketball-highlights-api.p.rapidapi.com/matches"
-            self.response = rq.get(self.url)
-            self.data = self.response.text
-            return self.data
 
     # Betting
 
@@ -303,36 +360,3 @@ class Athena:
                 distances = pd.DataFrame(distances) #data frame
                 return distances
         
-
-"""
-print(hourly_dataframe)
-
-# Process daily data. The order of variables needs to be the same as requested.
-daily = response.Daily()
-daily_temperature_2m_max = daily.Variables(0).ValuesAsNumpy()
-daily_temperature_2m_min = daily.Variables(1).ValuesAsNumpy()
-daily_sunrise = daily.Variables(2).ValuesAsNumpy()
-daily_sunset = daily.Variables(3).ValuesAsNumpy()
-daily_daylight_duration = daily.Variables(4).ValuesAsNumpy()
-daily_rain_sum = daily.Variables(5).ValuesAsNumpy()
-daily_showers_sum = daily.Variables(6).ValuesAsNumpy()
-daily_precipitation_hours = daily.Variables(7).ValuesAsNumpy()
-
-daily_data = {"date": pd.date_range(
-	start = pd.to_datetime(daily.Time(), unit = "s", utc = True),
-	end = pd.to_datetime(daily.TimeEnd(), unit = "s", utc = True),
-	freq = pd.Timedelta(seconds = daily.Interval()),
-	inclusive = "left"
-)}
-daily_data["temperature_2m_max"] = daily_temperature_2m_max
-daily_data["temperature_2m_min"] = daily_temperature_2m_min
-daily_data["sunrise"] = daily_sunrise
-daily_data["sunset"] = daily_sunset
-daily_data["daylight_duration"] = daily_daylight_duration
-daily_data["rain_sum"] = daily_rain_sum
-daily_data["showers_sum"] = daily_showers_sum
-daily_data["precipitation_hours"] = daily_precipitation_hours
-
-daily_dataframe = pd.DataFrame(data = daily_data)
-print(daily_dataframe)
-"""
