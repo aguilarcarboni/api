@@ -1,11 +1,15 @@
-from flask import Flask, render_template, request, url_for, jsonify
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 
+
+from firestore_api_helpers import initializeFirebase
 from Athena import Athena
 
 app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
+
+db = initializeFirebase()
 
 @app.route("/")
 def root():

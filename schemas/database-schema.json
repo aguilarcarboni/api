@@ -1,0 +1,65 @@
+Main database URL
+{
+    "title": "Database",
+    "path": "(default)",
+    "description": "The database default path",
+    "type": "object",
+    "properties": {
+        "profiles": {
+            "type": "string",
+            "description": "Profiles table of the databse"
+        },
+        "required": [
+            "profiles"
+        ]
+    }
+}
+
+Profiles endpoint of the URL
+{
+    "title": "Profile",
+    "path": "profiles",
+    "description": "A profile of a person, animal or object saved in my database.",
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string",
+            "description": "Name of the person or object with the profile"
+        },
+        "full_name": {
+            "type": "string",
+            "description": "Full name of the person or object with the profile"
+        },
+        "type": {
+            "type": "string",
+            "description": "Type of profile (person, object, etc)."
+        },
+        "required": [
+            "name",
+            "full_name",
+            "type"
+        ]
+    }
+}
+
+Owner's events endpoint of the URL
+{
+    "title": "Event",
+    "description": "An event in my calendar.",
+    "path": "profiles/owner/events",
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string",
+            "description": "Name of the person or object with the profile"
+        },
+        "datetime": {
+            "type": "string",
+            "description": "Date and time the event will take place."
+        },
+        "required": [
+            "datetime",
+            "name",
+        ]
+    }
+}

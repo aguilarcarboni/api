@@ -1,0 +1,85 @@
+{
+  "name": "save_info_to_db",
+  "description": "Save info to outside database when the user inputs a personal fact Athena doesn't know about and thinks should be stored.",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "path": {
+        "type": "string",
+        "description": "The path in my database where Athena thinks the relevant data should be stored. Returned paths should match the schema in the database-schema.json file in Memory to see all paths. Use only the paths in that file under each schema."
+      },
+      "data": {
+        "type": "object",
+        "description":"A key value pair that Athena thinks should be stored in my database.",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "The key used to store the relevant data that Athena thinks should be stored in my database. Athena should not use dot notation to access a key inside a table, if Athena thinks it should use dot notation then it should actually use a target."
+          },
+          "value": {
+            "type": "string",
+            "description": "The relevant data that Athena thinks should be stored in my database."
+          }
+        }
+      },
+      "target": {
+        "type": "string",
+        "description": "The target Athena thinks the data should be stored in. If Athena thinks a new entry in a table is being made, the target will be a string containing NONE. If Athena thinks an entry in a table is being updated, the target will be the name Athena thinks that entry has."
+      }
+    },
+    "required": [
+      "path",
+      "data",
+      "target"
+    ]
+  }
+}
+
+{
+  "name": "get_info_from_db",
+  "description": "Get info from my database when Athena doesn't know the answer to a personal question and thinks it should be in the database.",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "output": {
+        "type": "array",
+        "description": "An array containing objects with one key and one value each. Each element in the array is one field in the table the function is querying. Returned keys should match the schema in the database-schema.json file in Memory to see all paths.",
+        "items":{
+          "type":"object",
+          "properties":{
+            "generic_key":{
+              "type":"string",
+              "description":"A table field containing one key and one value representing one field of the data being queried. The name, generic key, is supposed to be replaced with whatever the database returned. Also, you can see what key to use in the database-schema.json fle in your Memory."
+            }
+          }
+        }
+      },
+      "path": {
+        "type": "string",
+        "description": "The path in my database where Athena thinks the relevant data should be gotten from. Use database-schema.json file in Memory to see all paths. Use only the paths in that file under each schema."
+      },
+      "query": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "The key that will be used for the query."
+          },
+          "operation": {
+            "type": "string",
+            "description": "The operation that will be used for the query. Use == always for now."
+          },
+          "value": {
+            "type": "string",
+            "description": "The value that will be compared with the key for the query."
+          }
+        },
+        "description": "The query Athena thinks should be made to my database to retrieve the data. Use database-schema.json file in Memory to see all paths."
+      }
+    },
+    "required": [
+      "path",
+      "query"
+    ]
+  }
+}

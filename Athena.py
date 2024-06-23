@@ -15,6 +15,11 @@ from retry_requests import retry
 
 from openai import AsyncOpenAI
 
+from firestore_api_helpers import queryDocumentsFromCollection, addDocument, initializeFirebase, updateDocument
+import ast
+
+import firebase_admin
+
 class Athena:
            
     class Brain:
@@ -63,13 +68,45 @@ class Athena:
                 
                     # Loop through each tool in the required action section
                     for tool in runInfo.required_action.submit_tool_outputs.tool_calls:
-                        if tool.function.name == "get_info_from_db":
-                            print(tool.function.arguments)
-                            print('Athena fetching from database.')
+
+                        if tool.function.name == "save_info_to_db":
+
+                            print('Athena saving info to database.')
+
+                            arguments = ast.literal_eval(tool.function.arguments)
+
+                            print(arguments, tool.function.arguments)
+
+                            # Query database
+                            db = initializeFirebase()
+
+                            if arguments['target'] != 'NONE':
+                                updateDocument({list(arguments['data'].keys())[0]: list(arguments['data'].values())[0]}, arguments['path'], arguments['target'], db )
+                            else:
+                                addDocument({list(arguments['data'].keys())[0]: list(arguments['data'].values())[0]}, arguments['path'], list(arguments['data'].values())[0], db)
 
                             tool_outputs.append({
                                 "tool_call_id": tool.id,
-                                "output":"cosi is my dogs name, the weather outside my home is 26 degrees"
+                                "output":str(list(arguments['data'].values())[0])
+                            })
+
+                        elif tool.function.name == "get_info_from_db":
+                            
+                            print('Athena fetching from database.')
+                            arguments = ast.literal_eval(tool.function.arguments)
+
+                            print(arguments, tool.function.arguments)
+
+                            db = initializeFirebase()
+                            query = queryDocumentsFromCollection(arguments['path'], arguments['query']['key'], arguments['query']['operation'], arguments['query']['value'], db)
+
+                            data = []
+                            for q in query:
+                                data.append(q.to_dict())
+
+                            tool_outputs.append({
+                                "tool_call_id": tool.id,
+                                "output":str(data)
                             })
                     
                     # Submit all tool outputs at once after collecting them in a list
