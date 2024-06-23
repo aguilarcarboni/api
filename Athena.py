@@ -256,9 +256,9 @@ class Athena:
             return self.data
 
     class Market:
-        def __init__(self):
+        def __init__(self, tickers):
 
-            self.historicalStocksData = self.getMarketData(['SPY', 'QQQ', 'TSLA', 'NVDA', 'AAPL', 'MSFT'])
+            self.historicalStocksData = self.getMarketData(tickers)
 
         def getMarketData(self, tickers):
             
@@ -392,4 +392,3 @@ class Athena:
                     distances.append([distanceData[i]['properties']['dist_m'],distanceData[i]['properties']['sol']])
                 distances = pd.DataFrame(distances) #data frame
                 return distances
-        

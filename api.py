@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
-
 from firestore_api_helpers import initializeFirebase
 from Athena import Athena
 
@@ -25,18 +24,19 @@ def athena():
 
 @app.route("/athena/market")
 def market():
-    Market = Athena.Market()
+    tickers = ['SPY', 'QQQ', 'TSLA', 'NVDA', 'AAPL', 'AMZN', 'NVDA', 'AMD', 'GOOGL', 'MSFT']
+    Market = Athena.Market(tickers)
     marketData = {
         'stocks':{
-            'AAPL': Market.getLastPrice('SPY'),
-            'SPY': Market.getLastPrice('QQQ'),
-            'TSLA': Market.getLastPrice('TSLA'),
-            'NVDA': Market.getLastPrice('NVDA'),
-            'AAPL': Market.getLastPrice('AAPL'),
-            'MSFT': Market.getLastPrice('MSFT'),
-            'historical':Market.historicalStocksData
+            'last':{
+            },
+            'historical': Market.historicalStocksData
         },
     }
+
+    for ticker in tickers:
+        marketData['stocks']['last'][ticker] = Market.getLastPrice(ticker)
+
     return marketData
 
 @app.route("/athena/mars")

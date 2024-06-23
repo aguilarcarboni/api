@@ -8,7 +8,7 @@ else:
     url = 'https://laserfocus-api.onrender.com'
 
 print('Welcome to Athena (A Thourougly Helpful Everyday Natural Asistant)')
-print('Ask her anything or press enter to say goodbye to Athena.')
+print('Ask me anything or press CTRL + C to exit.')
 
 message = ''
 while True:
@@ -20,5 +20,6 @@ while True:
     dictToSend = {'message':message}
 
     res = rq.post(url + '/athena/brain/ask', json=dictToSend)
+    print(res)
     dictFromServer = res.json()
     print('Athena:', dictFromServer)

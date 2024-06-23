@@ -4,6 +4,10 @@
   "parameters": {
     "type": "object",
     "properties": {
+      "output": {
+        "type": "string",
+        "description": "A string with any variation of message that tells you the save in the database completed. For example: {data} was saved successfully in {path} in your database."
+      },
       "path": {
         "type": "string",
         "description": "The path in my database where Athena thinks the relevant data should be stored. Returned paths should match the schema in the database-schema.json file in Memory to see all paths. Use only the paths in that file under each schema."
