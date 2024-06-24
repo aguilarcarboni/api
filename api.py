@@ -24,7 +24,7 @@ def athena():
 
 @app.route("/athena/market")
 def market():
-    tickers = ['SPY', 'QQQ', 'TSLA', 'NVDA', 'AAPL', 'AMZN', 'NVDA', 'AMD', 'GOOGL', 'MSFT']
+    tickers = ['SPY', 'QQQ', 'TSLA', 'NVDA', 'AAPL', 'AMZN', 'NVDA', 'AMD', 'GOOGL', 'MSFT', 'V']
     Market = Athena.Market(tickers)
     marketData = {
         'stocks':{
