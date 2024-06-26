@@ -18,7 +18,7 @@ from openai import AsyncOpenAI
 from firestore_api_helpers import queryDocumentsFromCollection, addDocument, initializeFirebase, updateDocument
 import ast
 
-from idk import WeaatherCodes
+from types import WeaatherCodes
 
 import firebase_admin
 

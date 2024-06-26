@@ -78,11 +78,81 @@
             "description": "The value that will be compared with the key for the query."
           }
         },
-        "description": "The query Athena thinks should be made to my database to retrieve the data. Use database-schema.json file in Memory to see all paths."
+        "description": "The query Athena thinks should be made to my database to retrieve the data. Use database-schema.json file in Memory to see all keys and paths."
       }
     },
     "required": [
       "path",
+      "query"
+    ]
+  }
+}
+
+{
+  "name": "fetch_info_from_api",
+  "description": "Get info from my API when Athena doesn't know the answer to a question and thinks it should be in the API and not my personal database.",
+  "parameters": {
+  "type": "object",
+  "properties": {
+    "output": {
+      "type": "array",
+      "description": "An array containing objects with one key and one value each. Each element in the array is one field in the table the function is querying. Returned keys should match the schema in the api-schema.json file in Memory to see all paths.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "generic_key": {
+            "type": "string",
+            "description": "A table field containing one key and one value representing one field of the data being queried. The name, generic key, is supposed to be replaced with whatever the database returned. Also, you can see what key to use in the api-schema.json fle in your Memory."
+          }
+        }
+      }
+    },
+    "endpoint": {
+      "type": "string",
+      "description": "The endpoint in my API where Athena thinks the relevant data should be fetched from. Use api-schema.json file in Memory to see all endpoints in API. Use only the endpoints in that file under each schema."
+    },
+      "key": {
+        "type": "string",
+        "description": "The key Athena thinks should be queried from my API to retrieve the data. Use api-schema.json file in Memory to see all keys and endpoints."
+      }
+    },
+    "required": [
+      "endpoint",
+      "query"
+    ]
+  }
+}
+
+{
+  "name": "fetch_info_from_google_drive",
+  "description": "Get info from my API when Athena doesn't know the answer to a question and thinks it should be in the API and not my personal database.",
+  "parameters": {
+  "type": "object",
+  "properties": {
+    "output": {
+      "type": "array",
+      "description": "An array containing objects with one key and one value each. Each element in the array is one field in the table the function is querying. Returned keys should match the schema in the api-schema.json file in Memory to see all paths.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "generic_key": {
+            "type": "string",
+            "description": "A table field containing one key and one value representing one field of the data being queried. The name, generic key, is supposed to be replaced with whatever the database returned. Also, you can see what key to use in the api-schema.json fle in your Memory."
+          }
+        }
+      }
+    },
+    "endpoint": {
+      "type": "string",
+      "description": "The endpoint in my API where Athena thinks the relevant data should be fetched from. Use api-schema.json file in Memory to see all endpoints in API. Use only the endpoints in that file under each schema."
+    },
+      "key": {
+        "type": "string",
+        "description": "The key Athena thinks should be queried from my API to retrieve the data. Use api-schema.json file in Memory to see all keys and endpoints."
+      }
+    },
+    "required": [
+      "endpoint",
       "query"
     ]
   }

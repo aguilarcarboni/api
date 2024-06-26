@@ -1,11 +1,8 @@
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
-
 import base64
 from email.message import EmailMessage
-
 import gspread
-
 import pandas as pd
 
 
@@ -65,3 +62,42 @@ def sendClientGmail(data, creds, client_email):
   )
 
   print(f'Email sent: {send_message["id"]}')
+
+# Find a shared drive's info
+def get_shared_drive_info(drive_name):
+
+  shared_drive = (
+    service.drives()
+    .list(
+        q=f"name = '{drive_name}'",
+        fields="nextPageToken, drives(id, name)"
+  ).execute())['drives']
+
+  return shared_drive[0]
+
+# Find folder's info using a parent's folder ID
+def get_folder_info(parent_id, folder_name):
+
+  folders = (
+      service.files()
+      .list(
+          supportsAllDrives=True,
+          includeItemsFromAllDrives=True,
+          q=f"name = '{folder_name}' and '{parent_id}' in parents",
+          fields="nextPageToken, files(id, name)",
+      ).execute())['files']
+
+  return folders[0]
+
+# Find file's info using its file name and it's parent folder
+def get_file_info(parent_id, file_name):
+  f = (
+      service.files()
+      .list(
+          supportsAllDrives=True,
+          includeItemsFromAllDrives=True,
+          q=f"name = '{file_name}' and '{parent_id}' in parents",
+          fields="nextPageToken, files(id, name)",
+      ).execute())['files']
+
+  return f[0]
