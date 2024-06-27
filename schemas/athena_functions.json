@@ -64,20 +64,6 @@
       },
       "query": {
         "type": "object",
-        "properties": {
-          "key": {
-            "type": "string",
-            "description": "The key that will be used for the query."
-          },
-          "operation": {
-            "type": "string",
-            "description": "The operation that will be used for the query. Use == always for now."
-          },
-          "value": {
-            "type": "string",
-            "description": "The value that will be compared with the key for the query."
-          }
-        },
         "description": "The query Athena thinks should be made to my database to retrieve the data. Use database-schema.json file in Memory to see all keys and paths."
       }
     },
