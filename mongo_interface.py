@@ -7,17 +7,42 @@ if debug:
 else:
     url = 'https://laserfocus-api.onrender.com'
 
-print('Find any file in your drive.')
 
+mode = input('Enter mode:\n1. Query\n2. Update\n3. Insert\n')
 path = input('Path:')
-query = input('File name:')
-data = input('Data:')
 
-queryDict = {'path':path, 'query':query}
-updateDict = {'data':data,'path':path, 'query':query}
-insertDict = {'data':data, 'path':path}
+dictToSend = {}
 
-res = rq.post(url + '/athena/mongo/update', json=updateDict)
+match mode:
+
+    case '1':
+        print('Query any entry (document) in your database.')
+
+        query = input('Query:')
+        dictToSend = {'path':path, 'query':query}
+
+        res = rq.post(url + '/athena/mongo/query', json=dictToSend)
+
+    case '2':
+        print('Update any entry (document) in your database.')
+
+        query = input('Query:')
+        data = input('Data:')
+
+        dictToSend = {'data':data,'path':path, 'query':query}
+
+        res = rq.post(url + '/athena/mongo/update', json=dictToSend)
+
+    case '3':
+        print('Insert any entry (document) in your database.')
+
+        data = input('Data:')
+
+        dictToSend = {'data':data, 'path':path}
+
+        res = rq.post(url + '/athena/mongo/insert', json=dictToSend)
+
+
 
 print(res)
 dictFromServer = res.json()
