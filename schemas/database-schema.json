@@ -1,12 +1,18 @@
 Main database URL
 {
     "title": "Database",
-    "path": "(default)",
-    "description": "The database default path",
+    "path": "main",
+    "description": "The database default path.",
     "type": "object",
     "properties": {
         "profiles": {
             "type": "string",
+            "path":"profiles",
+            "description": "Profiles table of the databse"
+        },
+        "events": {
+            "type": "string",
+            "path":"events",
             "description": "Profiles table of the databse"
         },
         "required": [
@@ -15,7 +21,7 @@ Main database URL
     }
 }
 
-Profiles endpoint of the URL
+Profiles table
 {
     "title": "Profile",
     "path": "profiles",
@@ -30,23 +36,23 @@ Profiles endpoint of the URL
             "type": "string",
             "description": "Full name of the person or object with the profile"
         },
-        "type": {
+        "status": {
             "type": "string",
             "description": "Type of profile (person, object, etc)."
         },
         "required": [
             "name",
             "full_name",
-            "type"
+            "status"
         ]
     }
 }
 
-Owner's events endpoint of the URL
+Events table
 {
     "title": "Event",
     "description": "An event in my calendar.",
-    "path": "profiles/owner/events",
+    "path": "events",
     "type": "object",
     "properties": {
         "name": {
