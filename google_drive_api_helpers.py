@@ -6,6 +6,19 @@ import gspread
 import pandas as pd
 
 
+
+# todo
+def authenticateGoogleDrive():
+    
+    # Google Drive Authentication
+    SCOPES = ["https://www.googleapis.com/auth/drive", "https://mail.google.com/"]
+    flow = InstalledAppFlow.from_client_secrets_file("creds/GoogleAuthPython.json", SCOPES)
+    creds = flow.run_local_server(port=0)
+    
+    return creds
+
+
+
 def read_gs(worksheet_name, sheet_name, creds):
 
   gs = gspread.authorize(creds)
@@ -26,15 +39,6 @@ def gsheet_to_df(worksheet):
   df_sheet = df_sheet.iloc[1:]
 
   return df_sheet
-
-def authenticateGoogleDrive():
-    
-    # Google Drive Authentication
-    SCOPES = ["https://www.googleapis.com/auth/drive", "https://mail.google.com/"]
-    flow = InstalledAppFlow.from_client_secrets_file("creds/GoogleAuthPython.json", SCOPES)
-    creds = flow.run_local_server(port=0)
-    
-    return creds
 
 def sendClientGmail(data, creds, client_email):
 
@@ -63,20 +67,11 @@ def sendClientGmail(data, creds, client_email):
 
   print(f'Email sent: {send_message["id"]}')
 
-# Find a shared drive's info
-def get_shared_drive_info(drive_name):
 
-  shared_drive = (
-    service.drives()
-    .list(
-        q=f"name = '{drive_name}'",
-        fields="nextPageToken, drives(id, name)"
-  ).execute())['drives']
 
-  return shared_drive[0]
 
 # Find folder's info using a parent's folder ID
-def get_folder_info(parent_id, folder_name):
+def getFolderInfo(parent_id, folder_name):
 
   folders = (
       service.files()
@@ -90,7 +85,7 @@ def get_folder_info(parent_id, folder_name):
   return folders[0]
 
 # Find file's info using its file name and it's parent folder
-def get_file_info(parent_id, file_name):
+def getFileInfo(parent_id, file_name):
   f = (
       service.files()
       .list(
@@ -101,3 +96,5 @@ def get_file_info(parent_id, file_name):
       ).execute())['files']
 
   return f[0]
+
+

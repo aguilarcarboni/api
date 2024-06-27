@@ -3,7 +3,7 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 
 # Authenticate Firebase Credentials
-cred = credentials.Certificate("creds/Firebase-AdminSDK.json")
+cred = credentials.Certificate("creds/FirebaseAdminSDK.json")
 
 def initializeFirebase():
     try:

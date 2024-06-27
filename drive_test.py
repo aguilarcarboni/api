@@ -1,30 +1,30 @@
-import os
 from googleapiclient.discovery import build
+from google.oauth2.credentials import Credentials
 
-service = build('drive', 'v3')
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
 
-path_athena = '/content/gdrive/MyDrive/Athena/'
+from google_drive_api_helpers import queryForFile
+
+SCOPES = ['https://www.googleapis.com/auth/drive']
+
+
+creds = Credentials.from_authorized_user_file("creds/GoogleAuthedToken.json", SCOPES)
+service = build('drive', 'v3', creds)
 
 # Athena input
-path = 'statements/'
+path1 = 'statements'
 file_name = '062024.csv'
 
 current_path = ''
-
+path = path1 + '/' + file_name
 paths = path.split('/')
-found = False
+
 for path in paths:
-
-  files = os.listdir(path_athena + current_path)
-  for f in files:
-    if f == file_name:
-      found = True
-      break
-
-    if f == path:
-      current_path += path + '/'
-
-if found:
-  print(f'Found. Path: {path_athena + current_path + file_name}')
-else:
-  print('Not found.')
+  try:
+    files = queryForFile(path, creds)
+    current_path += '/' + path
+    print(files[0]['id'], current_path)
+  except:
+    print('Not found.')
+    break

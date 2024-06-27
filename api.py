@@ -80,6 +80,14 @@ def sports():
     sportsData = {}
     return sportsData
 
+@app.route('/athena/drive', methods=['POST'])
+async def drive():
+    # Athena input
+    input_json = request.get_json(force=True)
+    Drive = Athena.GoogleDrive()
+    response = Drive.queryForFile(input_json['path'], input_json['file_name'])
+    return jsonify(response)
+
 debug = True
 if debug:
 

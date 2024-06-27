@@ -15,12 +15,13 @@ from retry_requests import retry
 
 from openai import AsyncOpenAI
 
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
+from google.oauth2.credentials import Credentials
+
 from firestore_api_helpers import queryDocumentsFromCollection, addDocument, initializeFirebase, updateDocument
+
 import ast
-
-from types import WeaatherCodes
-
-import firebase_admin
 
 class Athena:
            
@@ -40,11 +41,11 @@ class Athena:
                     runs = await self.client.beta.threads.runs.cancel(run['id'], thread_id=os.getenv('ATHENA_THREAD_ID'))
                 
 
-            await self.add_message_to_thread(message)
-            message_content = await self.get_answer()
+            await self.addMessageToThread(message)
+            message_content = await self.getAnswer()
             return message_content
             
-        async def add_message_to_thread(self, user_question):
+        async def addMessageToThread(self, user_question):
             # Create a message inside the thread
             message = await self.client.beta.threads.messages.create(
                 thread_id=os.getenv('ATHENA_THREAD_ID'),
@@ -53,7 +54,7 @@ class Athena:
             )
             return message
     
-        async def get_answer(self):
+        async def getAnswer(self):
             # run assistant
             print("Running Athena...")
             run =  await self.client.beta.threads.runs.create(
@@ -327,6 +328,57 @@ class Athena:
     class Home:
         def __init__(self):
             self.state = 0
+
+    class GoogleDrive:
+
+        def __init__(self):
+            SCOPES = ['https://www.googleapis.com/auth/drive']
+            creds = Credentials.from_authorized_user_file("creds/GoogleAuthedToken.json", SCOPES)
+            self.service = build("drive", "v3", credentials=creds)
+
+        # Query a file inside Drive
+        def queryForFile(self, path, file_name):
+
+            path = path + '/' + file_name
+            paths = path.split('/')
+            
+            current_path = ''
+
+            for path in paths:
+                try:
+                    files = []
+                    page_token = None
+
+                    try:
+                        while True:
+
+                            response = (
+                                self.service.files()
+                                .list(
+                                    q=f"name='{file_name}'",
+                                    spaces="drive",
+                                    fields="nextPageToken, files(id, name)",
+                                    pageToken=page_token,
+                                )
+                                .execute()
+                            )
+                                
+                            files.extend(response.get("files", []))
+                            page_token = response.get("nextPageToken", None)
+                            if page_token is None:
+                                break
+
+                    except HttpError as error:
+                        print(f"An error occurred: {error}")
+                        files = None
+
+                    current_path += '/' + path
+                    print(files[0]['id'], current_path)
+                except:
+                    print('Not found.')
+                    break
+
+            return files
 
     class Explorer:
     
