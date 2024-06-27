@@ -87,9 +87,9 @@ class Athena:
                             Mongo = Athena.MongoDB()
                             
                             if arguments['target'] != 'NONE':
-                                Mongo.updateDocumentInCollection(arguments['query'],arguments['path'])
+                                Mongo.updateDocumentInCollection(arguments['data'], arguments['query'],arguments['path'])
                             else:
-                                Mongo.insertDocumentToCollection(arguments['data'], arguments['query'], arguments['path'])
+                                Mongo.insertDocumentToCollection(arguments['data'], arguments['path'])
 
                             tool_outputs.append({
                                 "tool_call_id": tool.id,
