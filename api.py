@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
-from misc.firestore_api_helpers import initializeFirebase
 from Athena import Athena
 
 from bson import json_util
@@ -10,8 +9,6 @@ import json
 app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
-
-db = initializeFirebase()
 
 @app.route("/")
 def root():
@@ -87,7 +84,7 @@ def sports():
 async def drive():
     # Athena input
     input_json = request.get_json(force=True)
-    Drive = Athena.GoogleDrive()
+    Drive = Athena.Drive()
     response = Drive.queryForFile(input_json['path'], input_json['file_name'])
     return jsonify(response)
 
@@ -95,7 +92,7 @@ async def drive():
 async def mongo_query():
     # Athena input
     input_json = request.get_json(force=True)
-    Mongo = Athena.MongoDB()
+    Mongo = Athena.Database()
     response = Mongo.queryDocumentInCollection(input_json['query'],input_json['path'])
     return json.loads(json_util.dumps(response))
 
@@ -103,7 +100,7 @@ async def mongo_query():
 async def mongo_insert():
     # Athena input
     input_json = request.get_json(force=True)
-    Mongo = Athena.MongoDB()
+    Mongo = Athena.Database()
     response = Mongo.insertDocumentToCollection(input_json['data'], input_json['path'])
     return {}
 
@@ -111,7 +108,7 @@ async def mongo_insert():
 async def mongo_update():
     # Athena input
     input_json = request.get_json(force=True)
-    Mongo = Athena.MongoDB()
+    Mongo = Athena.Database()
     response = Mongo.updateDocumentInCollection(input_json['data'], input_json['query'],input_json['path'])
     return {}
 

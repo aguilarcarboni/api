@@ -2,6 +2,7 @@ from datetime import datetime
 import time
 import pytz
 
+import ast
 import os
 import requests as rq
 import pandas as pd
@@ -18,10 +19,6 @@ from openai import AsyncOpenAI
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from google.oauth2.credentials import Credentials
-
-from misc.firestore_api_helpers import addDocument, initializeFirebase, updateDocument
-
-import ast
 
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
@@ -316,17 +313,15 @@ class Athena:
         def __init__(self):
             self.state = 0
 
-    # Betting
-
-    class Files:
+    class Betting:
         def __init__(self):
-            self.state = 0
+            state = 0
 
     class Home:
         def __init__(self):
             self.state = 0
 
-    class GoogleDrive:
+    class Drive:
 
         def __init__(self):
             SCOPES = ['https://www.googleapis.com/auth/drive']
@@ -378,7 +373,7 @@ class Athena:
 
             return files
 
-    class MongoDB:
+    class Database:
         def __init__(self):
 
             # Create a new client and connect to the server
@@ -436,7 +431,6 @@ class Athena:
             
             return document
                 
-
     class Explorer:
     
         def __init__(self):
