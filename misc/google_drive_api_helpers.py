@@ -17,8 +17,6 @@ def authenticateGoogleDrive():
     
     return creds
 
-
-
 def read_gs(worksheet_name, sheet_name, creds):
 
   gs = gspread.authorize(creds)
@@ -66,35 +64,3 @@ def sendClientGmail(data, creds, client_email):
   )
 
   print(f'Email sent: {send_message["id"]}')
-
-
-
-
-# Find folder's info using a parent's folder ID
-def getFolderInfo(parent_id, folder_name):
-
-  folders = (
-      service.files()
-      .list(
-          supportsAllDrives=True,
-          includeItemsFromAllDrives=True,
-          q=f"name = '{folder_name}' and '{parent_id}' in parents",
-          fields="nextPageToken, files(id, name)",
-      ).execute())['files']
-
-  return folders[0]
-
-# Find file's info using its file name and it's parent folder
-def getFileInfo(parent_id, file_name):
-  f = (
-      service.files()
-      .list(
-          supportsAllDrives=True,
-          includeItemsFromAllDrives=True,
-          q=f"name = '{file_name}' and '{parent_id}' in parents",
-          fields="nextPageToken, files(id, name)",
-      ).execute())['files']
-
-  return f[0]
-
-

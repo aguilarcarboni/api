@@ -18,7 +18,7 @@
         "properties": {
           "key": {
             "type": "string",
-            "description": "The key used to store the relevant data that Athena thinks should be stored in my database. Athena should not use dot notation to access a key inside a table, if Athena thinks it should use dot notation then it should actually use a target."
+            "description": "The key used to store the relevant data that Athena thinks should be stored in my database. Use database-schema.json file in Memory to see all keys and paths, but Athena can also choose another one."
           },
           "value": {
             "type": "string",
@@ -26,15 +26,15 @@
           }
         }
       },
-      "target": {
+      "query": {
         "type": "string",
-        "description": "The target Athena thinks the data should be stored in. If Athena thinks a new entry in a table is being made, the target will be a string containing NONE. If Athena thinks an entry in a table is being updated, the target will be the name Athena thinks that entry has."
+        "description": "The query Athena thinks should be run to query the data in the database. Should always have format that can be used to query a MongoDB database. Use database-schema.json file in Memory to see all keys and paths."
       }
     },
     "required": [
       "path",
       "data",
-      "target"
+      "query"
     ]
   }
 }
@@ -63,8 +63,8 @@
         "description": "The path in my database where Athena thinks the relevant data should be gotten from. Use database-schema.json file in Memory to see all paths. Use only the paths in that file under each schema."
       },
       "query": {
-        "type": "object",
-        "description": "The query Athena thinks should be made to my database to retrieve the data. Use database-schema.json file in Memory to see all keys and paths."
+        "type": "string",
+        "description": "The query Athena thinks should be made to my database to retrieve the data. Should always have format that can be used to query a MongoDB database. Use database-schema.json file in Memory to see all keys and paths."
       }
     },
     "required": [

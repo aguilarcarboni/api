@@ -19,9 +19,13 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from google.oauth2.credentials import Credentials
 
-from firestore_api_helpers import queryDocumentsFromCollection, addDocument, initializeFirebase, updateDocument
+from misc.firestore_api_helpers import addDocument, initializeFirebase, updateDocument
 
 import ast
+
+from pymongo.mongo_client import MongoClient
+from pymongo.server_api import ServerApi
+import certifi
 
 class Athena:
            
@@ -75,18 +79,17 @@ class Athena:
                         if tool.function.name == "save_info_to_db":
 
                             print('Athena saving info to database.')
-
                             arguments = ast.literal_eval(tool.function.arguments)
 
                             print(arguments, tool.function.arguments)
 
                             # Query database
-                            db = initializeFirebase()
-
+                            Mongo = Athena.MongoDB()
+                            
                             if arguments['target'] != 'NONE':
-                                updateDocument({list(arguments['data'].keys())[0]: list(arguments['data'].values())[0]}, arguments['path'], arguments['target'], db )
+                                Mongo.updateDocumentInCollection(arguments['query'],arguments['path'])
                             else:
-                                addDocument({list(arguments['data'].keys())[0]: list(arguments['data'].values())[0]}, arguments['path'], list(arguments['data'].values())[0], db)
+                                Mongo.insertDocumentToCollection(arguments['data'], arguments['query'], arguments['path'])
 
                             tool_outputs.append({
                                 "tool_call_id": tool.id,
@@ -98,18 +101,12 @@ class Athena:
                             print('Athena fetching from database.')
                             arguments = ast.literal_eval(tool.function.arguments)
 
-                            print(arguments, tool.function.arguments)
-
-                            db = initializeFirebase()
-                            query = queryDocumentsFromCollection(arguments['path'], arguments['query']['key'], arguments['query']['operation'], arguments['query']['value'], db)
-
-                            data = []
-                            for q in query:
-                                data.append(q.to_dict())
+                            Mongo = Athena.MongoDB()
+                            document = Mongo.queryDocumentInCollection(arguments['query'],arguments['path'])
 
                             tool_outputs.append({
                                 "tool_call_id": tool.id,
-                                "output":str(data)
+                                "output":str(document)
                             })
                     
                     # Submit all tool outputs at once after collecting them in a list
@@ -344,7 +341,7 @@ class Athena:
             
             current_path = ''
 
-            for path in paths:
+            for index, path in enumerate(paths):
                 try:
                     files = []
                     page_token = None
@@ -355,7 +352,7 @@ class Athena:
                             response = (
                                 self.service.files()
                                 .list(
-                                    q=f"name='{file_name}'",
+                                    q=f"name='{path}' and trashed = false",
                                     spaces="drive",
                                     fields="nextPageToken, files(id, name)",
                                     pageToken=page_token,
@@ -364,6 +361,7 @@ class Athena:
                             )
                                 
                             files.extend(response.get("files", []))
+                            print(response.get("files", []))
                             page_token = response.get("nextPageToken", None)
                             if page_token is None:
                                 break
@@ -373,12 +371,71 @@ class Athena:
                         files = None
 
                     current_path += '/' + path
-                    print(files[0]['id'], current_path)
+                    print('Found:', files[0]['id'], current_path)
                 except:
                     print('Not found.')
                     break
 
             return files
+
+    class MongoDB:
+        def __init__(self):
+
+            # Create a new client and connect to the server
+            uri = "mongodb+srv://aguilarcarboni:NewYork2020@athena.jcntnxw.mongodb.net/?retryWrites=true&w=majority&appName=Athena"
+            self.client = MongoClient(uri, server_api=ServerApi('1'), tlsCAFile=certifi.where())
+            print('Initialized client')
+
+        def insertDocumentToCollection(self, data, path):
+
+            data = ast.literal_eval(data)
+            collection = self.client['main']
+
+            paths = path.split('/')
+            current_path = ''
+
+            collection = collection[path]
+
+            data = [data]
+            collection.insert_many(data)
+
+            print('Inserted document.')
+            
+            return
+    
+        def updateDocumentInCollection(self, data, query, path):
+
+            query = ast.literal_eval(query)
+            data = ast.literal_eval(data)
+
+            collection = self.client['main']
+
+            paths = path.split('/')
+            current_path = ''
+
+            collection = collection[path]
+            document = collection.update_many(query, {
+                '$set': data
+            })
+            print(document)
+            
+            return document
+
+
+        def queryDocumentInCollection(self, query, path):
+
+            query = ast.literal_eval(query)
+            collection = self.client['main']
+
+            paths = path.split('/')
+            current_path = ''
+
+            collection = collection[path]
+            document = collection.find_one(query)
+            print(document)
+            
+            return document
+                
 
     class Explorer:
     
