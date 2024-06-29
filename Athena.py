@@ -81,7 +81,7 @@ class Athena:
                             print(arguments, tool.function.arguments)
 
                             # Query database
-                            Mongo = Athena.MongoDB()
+                            Mongo = Athena.Database()
                             
                             if arguments['target'] != 'NONE':
                                 Mongo.updateDocumentInCollection(arguments['data'], arguments['query'],arguments['path'])
@@ -90,7 +90,7 @@ class Athena:
 
                             tool_outputs.append({
                                 "tool_call_id": tool.id,
-                                "output":str(list(arguments['data'].values())[0])
+                                "output":str(list(arguments['sdata'].values())[0])
                             })
 
                         elif tool.function.name == "get_info_from_db":
@@ -98,7 +98,7 @@ class Athena:
                             print('Athena fetching from database.')
                             arguments = ast.literal_eval(tool.function.arguments)
 
-                            Mongo = Athena.MongoDB()
+                            Mongo = Athena.Database()
                             document = Mongo.queryDocumentInCollection(arguments['query'],arguments['path'])
 
                             tool_outputs.append({
@@ -418,8 +418,9 @@ class Athena:
 
 
         def queryDocumentInCollection(self, query, path):
+            print(path, query)
 
-            query = ast.literal_eval(query)
+            #query = ast.literal_eval(query)
             collection = self.client['main']
 
             paths = path.split('/')
