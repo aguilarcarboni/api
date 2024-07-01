@@ -112,7 +112,7 @@ async def mongo_update():
     response = Mongo.updateDocumentInCollection(input_json['data'], input_json['query'],input_json['path'])
     return {}
 
-debug = True
+debug = False
 if debug:
 
     if __name__ == "__main__": 
