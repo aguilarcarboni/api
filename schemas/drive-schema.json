@@ -1,3 +1,21 @@
+Main Drive
+{
+    "name": "root",
+    "path": "",
+    "description": "The root drive folder.",
+    "type":"object",
+    "properties": {
+        "folders": {
+            "type":"array",
+            "description":"",
+            "items": {
+                "type":"string",
+                "description":"A folder inside the statements folder."
+            }
+        }
+    }
+}
+
 Statements
 {
     "name": "statements",
@@ -13,13 +31,5 @@ Statements
                 "description":"A monthly statement in the statements folder. Must have naming convention MMYYYY.csv"
             }
         },
-        "folders": {
-            "type":"array",
-            "description":"",
-            "items": {
-                "type":"string",
-                "description":"A folder inside the statements folder."
-            }
-        }
     }
 }

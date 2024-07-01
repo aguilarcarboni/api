@@ -71,7 +71,9 @@ class Athena:
                     tool_outputs = []
                 
                     # Loop through each tool in the required action section
+                    print(runInfo.required_action)
                     for tool in runInfo.required_action.submit_tool_outputs.tool_calls:
+                        print(tool)
 
                         if tool.function.name == "save_info_to_db":
 
@@ -105,6 +107,19 @@ class Athena:
                                 "tool_call_id": tool.id,
                                 "output":str(document)
                             })
+                        
+                        elif tool.function.name == "get_file_from_google_drive":
+                            print('Athena fetching from Drive.')
+                            arguments = ast.literal_eval(tool.function.arguments)
+
+                            Drive = Athena.Drive()
+                            fileId = Drive.queryForFile(arguments['path'], arguments['file_name'])
+
+                            tool_outputs.append({
+                                "tool_call_id": tool.id,
+                                "output":str({'data':fileId})
+                            })
+                        
                     
                     # Submit all tool outputs at once after collecting them in a list
                     if tool_outputs:
@@ -123,8 +138,8 @@ class Athena:
                         break
 
                 if runInfo.completed_at:
-                    # elapsed = runInfo.completed_at - runInfo.created_at
-                    # elapsed = time.strftime("%H:%M:%S", time.gmtime(elapsed))
+                    elapsed = runInfo.completed_at - runInfo.created_at
+                    elapsed = time.strftime("%H:%M:%S", time.gmtime(elapsed))
                     print(f"Run completed")
                     break
 
@@ -331,6 +346,8 @@ class Athena:
         # Query a file inside Drive
         def queryForFile(self, path, file_name):
 
+            print(path, file_name)
+
             path = path + '/' + file_name
             paths = path.split('/')
             
@@ -356,7 +373,6 @@ class Athena:
                             )
                                 
                             files.extend(response.get("files", []))
-                            print(response.get("files", []))
                             page_token = response.get("nextPageToken", None)
                             if page_token is None:
                                 break
@@ -367,6 +383,7 @@ class Athena:
 
                     current_path += '/' + path
                     print('Found:', files[0]['id'], current_path)
+
                 except:
                     print('Not found.')
                     break

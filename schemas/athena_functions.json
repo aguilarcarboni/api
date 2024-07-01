@@ -110,19 +110,19 @@
 }
 
 {
-  "name": "fetch_info_from_google_drive",
-  "description": "Get info from my API when Athena doesn't know the answer to a question and thinks it should be in the API and not my personal database.",
+  "name": "get_file_from_google_drive",
+  "description": "Get file from my Drive when Athena thinks it should be in the Drive.",
   "parameters": {
-  "type": "object",
-  "properties": {
-    "output": {
-      "type": "string",
-      "description": "The file ID of the file that was found.",
-    },
-    "path": {
-      "type": "string",
-      "description": "The path in my Drive where Athena thinks the relevant file should be stored. drive api-schema.json file in Memory to see all paths in Drive. Use only the paths in that file under each schema."
-    },
+    "type": "object",
+    "properties": {
+      "output": {
+        "type": "string",
+        "description": "The file ID of the file that was found."
+      },
+      "path": {
+        "type": "string",
+        "description": "The path in my Drive where Athena thinks the relevant file is stored. Use the drive-schema.json file in Memory to see all paths in Drive. Use only the paths in that file under each schema."
+      },
       "file_name": {
         "type": "string",
         "description": "The file name Athena thinks should be gotten from my Drive. Use drive-schema.json file in Memory to see all paths."
