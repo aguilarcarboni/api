@@ -9,18 +9,8 @@
         "description": "The path in my database where Athena thinks the relevant data should be stored. Returned paths should match the schema in the database-schema.json file in Memory to see all paths. Use only the paths in that file under each schema."
       },
       "data": {
-        "type": "object",
-        "description":"A key value pair that Athena thinks should be stored in my database.",
-        "properties": {
-          "key": {
-            "type": "string",
-            "description": "The key used to store the relevant data that Athena thinks should be stored in my database. Use database-schema.json file in Memory to see all keys and paths, but Athena can also choose another one."
-          },
-          "value": {
-            "type": "string",
-            "description": "The relevant data that Athena thinks should be stored in my database."
-          }
-        }
+        "type": "string",
+        "description": "The data Athena thinks should be saved in the database. Must have dictionary format enclosed by brackets {} and use relevant key names."
       },
       "query": {
         "type": "string",

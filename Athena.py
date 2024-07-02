@@ -72,16 +72,15 @@ class Athena:
                     tool_outputs = []
                 
                     # Loop through each tool in the required action section
-                    print(runInfo.required_action)
                     for tool in runInfo.required_action.submit_tool_outputs.tool_calls:
                         print(tool)
 
-                        if tool.function.name == "save_info_to_db":
+                        if tool.function.name == "save_info_to_database":
 
                             print('Athena saving info to database.')
                             arguments = ast.literal_eval(tool.function.arguments)
 
-                            print(arguments, tool.function.arguments)
+                            print(arguments)
 
                             # Query database
                             Mongo = Athena.Database()
@@ -101,7 +100,7 @@ class Athena:
                             print('Athena fetching from database.')
                             arguments = ast.literal_eval(tool.function.arguments)
 
-                            print(arguments, tool.function.arguments)
+                            print(arguments)
 
                             Mongo = Athena.Database()
                             document = Mongo.queryDocumentInCollection(arguments['query'],arguments['path'])
@@ -118,7 +117,7 @@ class Athena:
                             print('Athena fetching from Drive.')
                             arguments = ast.literal_eval(tool.function.arguments)
 
-                            print(arguments, tool.function.arguments)
+                            print(arguments)
 
                             Drive = Athena.Drive()
                             fileId = Drive.queryForFile(arguments['path'], arguments['file_name'])
