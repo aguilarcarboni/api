@@ -42,8 +42,5 @@ match mode:
 
         res = rq.post(url + '/athena/mongo/insert', json=dictToSend)
 
-
-
-print(res)
 dictFromServer = res.json()
 print('Athena:', dictFromServer)

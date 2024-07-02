@@ -15,6 +15,5 @@ file_name = input('File name:')
 dictToSend = {'path':path, 'file_name':file_name}
 
 res = rq.post(url + '/athena/drive', json=dictToSend)
-print(res)
 dictFromServer = res.json()
 print('Athena:', dictFromServer)

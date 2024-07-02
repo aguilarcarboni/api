@@ -56,6 +56,7 @@ class Athena:
             return message
     
         async def getAnswer(self):
+
             # run assistant
             print("Running Athena...")
             run =  await self.client.beta.threads.runs.create(
@@ -85,14 +86,14 @@ class Athena:
                             # Query database
                             Mongo = Athena.Database()
                             
-                            if arguments['target'] != 'NONE':
-                                Mongo.updateDocumentInCollection(arguments['data'], arguments['query'],arguments['path'])
+                            if arguments['query'] != 'NONE':
+                                Mongo.updateDocumentInCollection(arguments['data'], arguments['query'], arguments['path'])
                             else:
                                 Mongo.insertDocumentToCollection(arguments['data'], arguments['path'])
 
                             tool_outputs.append({
                                 "tool_call_id": tool.id,
-                                "output":str(list(arguments['sdata'].values())[0])
+                                "output":"Query successful."
                             })
 
                         elif tool.function.name == "get_info_from_db":
@@ -100,8 +101,12 @@ class Athena:
                             print('Athena fetching from database.')
                             arguments = ast.literal_eval(tool.function.arguments)
 
+                            print(arguments, tool.function.arguments)
+
                             Mongo = Athena.Database()
                             document = Mongo.queryDocumentInCollection(arguments['query'],arguments['path'])
+
+                            print(document)
 
                             tool_outputs.append({
                                 "tool_call_id": tool.id,
@@ -113,8 +118,12 @@ class Athena:
                             print('Athena fetching from Drive.')
                             arguments = ast.literal_eval(tool.function.arguments)
 
+                            print(arguments, tool.function.arguments)
+
                             Drive = Athena.Drive()
                             fileId = Drive.queryForFile(arguments['path'], arguments['file_name'])
+
+                            print(fileId)
 
                             tool_outputs.append({
                                 "tool_call_id": tool.id,
@@ -146,6 +155,7 @@ class Athena:
 
                 print("Waiting 1sec...")
                 time.sleep(1)
+                print(runInfo.status)
 
             print("All done...")
             
@@ -354,18 +364,22 @@ class Athena:
             
             current_path = ''
 
+            parentId = 'root'
+            files = []
+
             for index, path in enumerate(paths):
                 try:
-                    files = []
                     page_token = None
 
                     try:
                         while True:
 
+                            print(files)
+
                             response = (
                                 self.service.files()
                                 .list(
-                                    q=f"name='{path}' and trashed = false",
+                                    q=f"name='{path}' and trashed = false and '{parentId}' in parents",
                                     spaces="drive",
                                     fields="nextPageToken, files(id, name)",
                                     pageToken=page_token,
@@ -373,7 +387,9 @@ class Athena:
                                 .execute()
                             )
                                 
-                            files.extend(response.get("files", []))
+                            files.append(response.get("files"))
+                            parentId = response.get("files")[0]['id']
+
                             page_token = response.get("nextPageToken", None)
                             if page_token is None:
                                 break
@@ -383,13 +399,13 @@ class Athena:
                         files = None
 
                     current_path += '/' + path
-                    print('Found:', files[0]['id'], current_path)
+                    print('\nFound:\n', files[0], current_path)
 
                 except:
                     print('Not found.')
                     break
-
-            return files
+            
+            return files[len(files) - 1]
 
     class Database:
         def __init__(self):
@@ -438,7 +454,7 @@ class Athena:
         def queryDocumentInCollection(self, query, path):
             print(path, query)
 
-            #query = ast.literal_eval(query)
+            query = ast.literal_eval(query)
             collection = self.client['main']
 
             paths = path.split('/')
