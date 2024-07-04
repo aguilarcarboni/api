@@ -4,6 +4,9 @@ import pytz
 
 import ast
 import os
+import io
+
+
 import requests as rq
 import pandas as pd
 from pandas.tseries.offsets import BDay
@@ -19,6 +22,7 @@ from openai import AsyncOpenAI
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from google.oauth2.credentials import Credentials
+from googleapiclient.http import MediaIoBaseDownload
 
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
@@ -392,6 +396,25 @@ class Athena:
                     files = []
             
             return files[len(files) - 1]
+
+        def downloadFile(self, fileId):
+            try:
+                request = self.service.files().get_media(fileId=fileId)
+                file = io.BytesIO()
+                downloader = MediaIoBaseDownload(file, request)
+                done = False
+                while done is False:
+                    status, done = downloader.next_chunk()
+                    print(f"Download {int(status.progress() * 100)}.")
+
+            except HttpError as error:
+                print(f"An error occurred: {error}")
+                file = None
+
+            with open("hello.txt", "wb") as my_file:
+                my_file.write(file.getvalue())
+
+            return file.getvalue()
 
     class Database:
         def __init__(self):

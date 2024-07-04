@@ -86,6 +86,7 @@ async def drive():
     input_json = request.get_json(force=True)
     Drive = Athena.Drive()
     response = Drive.queryForFile(input_json['path'], input_json['file_name'])
+    Drive.downloadFile(response['id'])
     return jsonify(response)
 
 @app.route('/athena/mongo/query', methods=['POST'])
