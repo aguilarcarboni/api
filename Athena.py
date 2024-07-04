@@ -351,7 +351,7 @@ class Athena:
         def __init__(self):
 
             SCOPES = ['https://www.googleapis.com/auth/drive']
-            creds = Credentials.from_authorized_user_file("creds/token.json", SCOPES)
+            creds = Credentials.from_authorized_user_file("creds/GoogleAuthedTokenPython.json", SCOPES)
             self.service = build("drive", "v3", credentials=creds)
 
         # Query a file inside Drive
