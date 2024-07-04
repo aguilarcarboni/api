@@ -1,18 +1,19 @@
 #make a POST request
 import requests as rq
 
-debug = True
+debug = False
 if debug:
     url = 'http://127.0.0.1:5000'
 else:
     url = 'https://laserfocus-api.onrender.com'
 
 print('Welcome to Athena (A Thourougly Helpful Everyday Natural Asistant)')
-print('Ask me anything or press CTRL + C to exit.')
+print('Ask me anything or press CTRL + C to exit.
+      m¡™œ£')
 
 message = ''
 while True:
-    message = input('User:')
+    message = input('\nUser:')
 
     if message == '':
         exit('Exiting program...')
@@ -21,4 +22,4 @@ while True:
 
     res = rq.post(url + '/athena/brain/ask', json=dictToSend)
     dictFromServer = res.json()
-    print('Athena:', dictFromServer)
+    print('\nAthena:', dictFromServer)
