@@ -8,8 +8,7 @@ else:
     url = 'https://laserfocus-api.onrender.com'
 
 print('Welcome to Athena (A Thourougly Helpful Everyday Natural Asistant)')
-print('Ask me anything or press CTRL + C to exit.
-      m¡™œ£')
+print('Ask me anything or press CTRL + C to exit')
 
 message = ''
 while True:

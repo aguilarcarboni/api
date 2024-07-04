@@ -349,14 +349,15 @@ class Athena:
     class Drive:
 
         def __init__(self):
+
             SCOPES = ['https://www.googleapis.com/auth/drive']
-            creds = Credentials.from_authorized_user_file("creds/GoogleAuthedToken.json", SCOPES)
+            creds = Credentials.from_authorized_user_file("creds/token.json", SCOPES)
             self.service = build("drive", "v3", credentials=creds)
 
         # Query a file inside Drive
         def queryForFile(self, path, file_name):
 
-            print(path, file_name)
+            print(path, '/', file_name)
 
             path = path + '/' + file_name
             paths = path.split('/')
@@ -366,43 +367,35 @@ class Athena:
             parentId = 'root'
             files = []
 
+
             for index, path in enumerate(paths):
                 try:
-                    page_token = None
+                        #print(path, files)
+                        print(parentId, path)
 
-                    try:
-                        while True:
-
-                            print(files)
-
-                            response = (
-                                self.service.files()
-                                .list(
-                                    q=f"name='{path}' and trashed = false and '{parentId}' in parents",
-                                    spaces="drive",
-                                    fields="nextPageToken, files(id, name)",
-                                    pageToken=page_token,
-                                )
-                                .execute()
+                        response = (
+                            self.service.files()
+                            .list(
+                                q=f"name='{path}' and trashed = false and '{parentId}' in parents",
+                                spaces="drive",
+                                fields="files(id, name)",
                             )
-                                
-                            files.append(response.get("files"))
-                            parentId = response.get("files")[0]['id']
+                            .execute()
+                        )
+                        
+                        filesResponse = response.get("files")
+                        files.append(filesResponse[0])
 
-                            page_token = response.get("nextPageToken", None)
-                            if page_token is None:
-                                break
+                        parentId = files[index]['id']
 
-                    except HttpError as error:
-                        print(f"An error occurred: {error}")
-                        files = None
+                        print(files)
 
-                    current_path += '/' + path
-                    print('\nFound:\n', files[0], current_path)
+                except HttpError as error:
+                    print(f"An error occurred. {error}")
+                    files = []
 
                 except:
-                    print('Not found.')
-                    break
+                    print('File not found.')
             
             return files[len(files) - 1]
 
