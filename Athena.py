@@ -351,7 +351,7 @@ class Athena:
         def __init__(self):
 
             SCOPES = ['https://www.googleapis.com/auth/drive']
-            creds = Credentials.from_authorized_user_file("creds/GoogleAuthedTokenPython.json", SCOPES)
+            creds = Credentials.from_authorized_user_file("creds/token.json", SCOPES)
             self.service = build("drive", "v3", credentials=creds)
 
         # Query a file inside Drive
@@ -367,11 +367,8 @@ class Athena:
             parentId = 'root'
             files = []
 
-
             for index, path in enumerate(paths):
                 try:
-                        #print(path, files)
-                        print(parentId, path)
 
                         response = (
                             self.service.files()
@@ -393,9 +390,6 @@ class Athena:
                 except HttpError as error:
                     print(f"An error occurred. {error}")
                     files = []
-
-                except:
-                    print('File not found.')
             
             return files[len(files) - 1]
 
