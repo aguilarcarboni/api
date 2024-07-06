@@ -56,6 +56,13 @@ async def ask_athena():
     response = await Brain.ask(input_json['message'])
     return jsonify(response)
 
+@app.route('/athena/brain2/ask', methods=['POST'])
+async def ask_athena2():
+    input_json = request.get_json(force=True)
+    Brain = Athena.Brain2()
+    response = Brain.ask(input_json['message'])
+    return jsonify(response)
+
 # News
 @app.route("/athena/news")
 def news():

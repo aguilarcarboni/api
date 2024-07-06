@@ -1,7 +1,7 @@
 #make a POST request
 import requests as rq
 
-debug = False
+debug = True
 if debug:
     url = 'http://127.0.0.1:5000'
 else:
@@ -19,6 +19,6 @@ while True:
 
     dictToSend = {'message':message}
 
-    res = rq.post(url + '/athena/brain/ask', json=dictToSend)
+    res = rq.post(url + '/athena/brain2/ask', json=dictToSend)
     dictFromServer = res.json()
     print('\nAthena:', dictFromServer)
