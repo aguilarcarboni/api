@@ -93,6 +93,7 @@ messages = [
 ]
 
 while True:
+
     message = input('Enter a message:')
     messages.append({"role": "user", "content": message})
 
@@ -104,6 +105,7 @@ while True:
     token_ids = tokenizer.encode(prompt_str)
 
     gen_tokens = []
+    
     # Get list of stop_tokens
     stop_token_ids = [
         tokenizer.encode(token)[-1]

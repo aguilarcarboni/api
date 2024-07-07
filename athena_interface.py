@@ -19,6 +19,6 @@ while True:
 
     dictToSend = {'message':message}
 
-    res = rq.post(url + '/athena/brain2/ask', json=dictToSend)
+    res = rq.post(url + '/athena/brain/ask', json=dictToSend)
     dictFromServer = res.json()
     print('\nAthena:', dictFromServer)

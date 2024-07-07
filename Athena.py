@@ -1,11 +1,10 @@
 from datetime import datetime
-import time
 import pytz
 
-import ast
-import os
-import io
+import base64
 
+import ast
+import io
 
 import requests as rq
 import pandas as pd
@@ -16,8 +15,6 @@ import yfinance as yf
 import openmeteo_requests
 import requests_cache
 from retry_requests import retry
-
-from openai import AsyncOpenAI
 
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
@@ -36,13 +33,16 @@ from functionary.prompt_template import get_prompt_template_from_tokenizer
 
 from transformers import AutoTokenizer
 
-
 class Athena:
-           
-    class Brain2:
+
+    def __init__(self):
+        return
+    
+    class Brain:
 
         def __init__(self):
-
+            
+            #"""
             self.tools = [
                 {
                     "name": "get_info_from_database",
@@ -105,6 +105,7 @@ class Athena:
                     }
                 }
             ]
+            #"""
 
             # You can download gguf files from https://huggingface.co/meetkai/functionary-small-v2.5-GGUF
             PATH_TO_GGUF_FILE = "athena.gguf"
@@ -118,31 +119,32 @@ class Athena:
 
             # prompt_template will be used for creating the prompt
             self.prompt_template = get_prompt_template_from_tokenizer(self.tokenizer)
+            print('Prompt template: ', self.prompt_template)
+
+        def ask(self, messages):
 
             # Start messages
             self.messages = [
                 {
                     "role": "system", 
                     "content":  """
-                                You are Athena, a powerful and advanced virtual personal assistant application.
+                                You are Athena, a powerful and advanced virtual personal assistant application. My name is Andres.
                                 """
                 }
             ]
 
-        def ask(self, message):
-
-            messages = self.messages
-            messages.append({"role": "user", "content": message})
+            for message in messages:
+                self.messages.append({"role": "user", "content": message})
 
             # Before inference, we need to add an empty assistant (message without content or function_call)
-            messages.append({"role": "assistant"})
+            self.messages.append({"role": "assistant"})
 
             # Create the prompt to use for inference
-            prompt_str = self.prompt_template.get_prompt_from_messages(messages, self.tools)
+            prompt_str = self.prompt_template.get_prompt_from_messages(self.messages, self.tools)
             token_ids = self.tokenizer.encode(prompt_str)
 
-            gen_tokens = []
             # Get list of stop_tokens
+            gen_tokens = []
             stop_token_ids = [
                 self.tokenizer.encode(token)[-1]
                 for token in self.prompt_template.get_stop_tokens_for_generation()
@@ -151,46 +153,61 @@ class Athena:
             print('Generating result...')
             index = 1
 
-            # We use function generate (instead of __call__) so we can pass in list of token_ids
             for token_id in self.llm.generate(token_ids, temp=0):
                 if token_id in stop_token_ids:
                     break
+                print(self.tokenizer.decode(token_id))
                 gen_tokens.append(token_id)
                 index += 1
 
-            #print('Decoding...')
             llm_output = self.tokenizer.decode(gen_tokens)
 
-            # parse the message from llm_output
-            #print('Parsing...')
+            print('\nDone.\n')
+
+            # Parse the message from llm_output
             result = self.prompt_template.parse_assistant_response(llm_output)
-            print('Athena:', result)
+            self.messages.append(result)
+
+            print(result)
+
+            # Check for necessary function calls
+            if result['tool_calls'] is not None:
+                
+                functionResult = self.executeFunctionCall(result['tool_calls'])
+            
+                # TODO allow for multiple functions
+                result = {"role": "function", "name": result['tool_calls'][0]['function']['name'], "content": str(functionResult)}
+                
             return result['content']
+    
+        def see(self, file_path):
 
-            """
-            import base64
-
-            def image_to_base64_data_uri(file_path):
-                with open(file_path, "rb") as img_file:
-                    base64_data = base64.b64encode(img_file.read()).decode('utf-8')
-                    return f"data:image/png;base64,{base64_data}"
-
-            # Replace 'file_path.png' with the actual path to your PNG file
-            file_path = 'file_path.png'
-            data_uri = image_to_base64_data_uri(file_path)
+            with open(file_path, "rb") as img_file:
+                base64_data = base64.b64encode(img_file.read()).decode('utf-8')
+                data_url = f"data:image/png;base64,{base64_data}"
 
             messages = [
                 {
                     "role": "user",
                     "content": [
-                        {"type": "image_url", "image_url": {"url": data_uri }},
+                        {"type": "image_url", "image_url": {"url": data_url }},
                         {"type" : "text", "text": "Describe this image in detail please."}
                     ]
                 }
             ]
-            """
+
+        def executeFunctionCall(self, tool_calls):
+
+            if tool_calls[0]['function']['name'] == "get_info_from_database":
+                result = 'Andres'
+                print(result)
+
+            else:
+                result = f"Error: function {tool_calls[0]['function']['name']} does not exist"
+            return result
     
-    class Brain:
+    """
+    class Brain_Old:
         def __init__(self):
             
    
@@ -331,7 +348,8 @@ class Athena:
             message = messages.data[0]
             message_content = message.content[0].text.value
             return message_content
-
+            """
+    
     class DateAndTime:
         def __init__(self):
             self.timezone = pytz.timezone('America/Costa_Rica')

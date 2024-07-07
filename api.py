@@ -10,6 +10,8 @@ app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
+Brain = Athena.Brain()
+
 @app.route("/")
 def root():
     return 'any path to success starts with laserfocus.'
@@ -49,17 +51,18 @@ def mars():
 def brain():
     return "QUOD OBSTAT VIAE FIT VIA"
 
+"""
+@app.route('/athena/brain/old_ask', methods=['POST'])
+async def ask_athena_old():
+    input_json = request.get_json(force=True)
+    B = Athena.Brain()
+    response = await B.ask(input_json['message'])
+    return jsonify(response)
+"""
+
 @app.route('/athena/brain/ask', methods=['POST'])
 async def ask_athena():
     input_json = request.get_json(force=True)
-    Brain = Athena.Brain()
-    response = await Brain.ask(input_json['message'])
-    return jsonify(response)
-
-@app.route('/athena/brain2/ask', methods=['POST'])
-async def ask_athena2():
-    input_json = request.get_json(force=True)
-    Brain = Athena.Brain2()
     response = Brain.ask(input_json['message'])
     return jsonify(response)
 
