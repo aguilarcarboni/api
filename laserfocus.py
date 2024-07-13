@@ -1,10 +1,9 @@
 from datetime import datetime
 import pytz
 
-import base64
-
 import ast
 import io
+import csv
 
 import requests as rq
 import pandas as pd
@@ -138,6 +137,96 @@ class laserfocus:
             self.data = hourly_dataframe.to_dict(orient="records")
             return self.data
 
+    class Wallet:
+
+        class BAC:
+
+            def __init__(self):
+                self.accounts = [
+                    {
+                        'name':'Cash',
+                        'account_id':'CR83010200009295665295'
+                    }
+                ]
+
+            def parseStatements(self, file_text):
+
+                rows = file_text.splitlines()
+                parsed_csv = csv.reader(rows)
+
+                rows = []
+                    
+                for row in parsed_csv:
+                    try:
+                        if datetime.strptime(row[0], '%d/%m/%Y'):
+                            rows.append(row)
+                    except:
+                        continue
+
+                data = []
+                for row in rows:
+                    transaction = {'Date':row[0], 'Reference':row[1], 'Code':row[2], 'Description':row[3], 'Debit':row[4], 'Credit':row[5], 'Balance':row[6], 'Category':''}
+                    data.append(transaction)
+
+                df_statements = pd.DataFrame(data)
+                return df_statements
+
+            def getEntries(self, df_statements):
+
+                df_debits = df_statements[df_statements['Debit'].astype(float) == 0].copy()
+
+                df_credits = df_statements[df_statements['Credit'].astype(float) == 0].copy()
+
+                return df_credits, df_debits
+            
+            def categorizeStatements(self, df_statements):
+
+                subscriptions = [
+                    {
+                        'name':'Compass',
+                        'identifier':'COMPA'
+                    }
+                ]
+
+                if len(df_statements[df_statements['Credit'].astype(float) != 0]) == 0:
+                
+                    for index, row in df_statements.iterrows():
+
+                        if subscriptions[0]['identifier'] in row['Description']:
+                            df_statements.loc[index, 'Category'] = 'Subscriptions'
+
+                        # Categorize income
+
+                        if '960587293' in row['Description']:
+                            df_statements.loc[index,'Category'] = 'Savings'
+
+                        for gas_station in ['DELTA', 'SERVICIO', 'SERVICENTRO']:
+                            if gas_station in row['Description']:
+                                df_statements.loc[index,'Category'] = 'Transportation'
+                                
+                else:
+
+                    for index, row in df_statements.iterrows():
+
+                        if subscriptions[0]['identifier'] in row['Description']:
+                            df_statements.loc[index, 'Category'] = 'Subscriptions'
+
+                        # Categorize income
+
+                        if '960587293' in row['Description']:
+                            df_statements.loc[index,'Category'] = 'Savings'
+
+                return df_statements
+
+            def manuallyCategorizeStatements(self, df_statements):
+
+                for index, row in df_statements[df_statements['Category'] == ''].iterrows():
+                    print('\n', row)
+                    category = input('Enter category for statement:')
+                    df_statements.loc[index, 'Category'] = category
+
+                return df_statements
+
     class Market:
         def __init__(self, tickers):
 
@@ -255,10 +344,11 @@ class laserfocus:
             return files[len(files) - 1]
 
         def downloadFile(self, fileId):
+
             try:
                 request = self.service.files().get_media(fileId=fileId)
-                file = io.BytesIO()
-                downloader = MediaIoBaseDownload(file, request)
+                downloaded_file = io.BytesIO()
+                downloader = MediaIoBaseDownload(downloaded_file, request)
                 done = False
                 while done is False:
                     status, done = downloader.next_chunk()
@@ -266,12 +356,9 @@ class laserfocus:
 
             except HttpError as error:
                 print(f"An error occurred: {error}")
-                file = None
+                downloaded_file = None
 
-            with open("hello.txt", "wb") as my_file:
-                my_file.write(file.getvalue())
-
-            return file.getvalue()
+            return downloaded_file.getvalue()
 
     class Database:
         def __init__(self):
@@ -398,3 +485,4 @@ class laserfocus:
                     distances.append([distanceData[i]['properties']['dist_m'],distanceData[i]['properties']['sol']])
                 distances = pd.DataFrame(distances) #data frame
                 return distances
+                

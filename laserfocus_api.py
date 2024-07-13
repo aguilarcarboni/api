@@ -1,5 +1,9 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file, Response
 from flask_cors import CORS
+
+from io import BytesIO
+
+from datetime import datetime
 
 from laserfocus import laserfocus
 
@@ -71,14 +75,19 @@ def mars():
     return marsData
 
 # Drive
-@app.route('/drive', methods=['POST'])
+@app.route('/drive/query', methods=['POST'])
 async def drive():
+
     # Athena input
     input_json = request.get_json(force=True)
     Drive = laserfocus.Drive()
+
     response = Drive.queryForFile(input_json['path'], input_json['file_name'])
-    Drive.downloadFile(response['id'])
-    return jsonify(response)
+
+    fileContent = Drive.downloadFile(response['id'])
+    f = BytesIO(fileContent)
+
+    return send_file(f, mimetype="text/plain")
 
 # Database
 @app.route('/mongo/query', methods=['POST'])
@@ -104,6 +113,33 @@ async def mongo_update():
     Mongo = laserfocus.Database()
     response = Mongo.updateDocumentInCollection(input_json['data'], input_json['query'],input_json['path'])
     return {}
+
+# Wallet
+@app.route("/wallet/bac/generateStatements", methods=['POST'])
+def bac_generate_statements():
+
+    # Athena input
+    input_json = request.get_json(force=True)
+    BAC = laserfocus.Wallet.BAC()
+
+    # TODO cambiar a file object
+    f = input_json['file_text']
+
+    df_statements = BAC.parseStatements(f)
+    df_debits, df_credits = BAC.getEntries(df_statements)
+
+    df_debits = BAC.categorizeStatements(df_debits)
+    df_credits = BAC.categorizeStatements(df_credits)
+
+    # Save to drive
+    # Output path: Personal/Wallet/Statements/{Bank}/{AccountNumber}
+    # Output file name: MMYYYY.csv
+    time = datetime.now()
+    time = time.strftime('%d%M%Y%H%M%S')
+    df_debits.to_csv(f'/Users/andres/Google Drive/My Drive/Personal/Wallet/Statements/Tests/{time}.csv')
+
+    print('Processed data.')
+    return {'path':f'Personal/Wallet/Statements/Tests/{time}'}
 
 debug = True
 if debug:
