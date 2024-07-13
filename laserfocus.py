@@ -301,7 +301,10 @@ class laserfocus:
         def __init__(self):
 
             SCOPES = ['https://www.googleapis.com/auth/drive']
+
+            # TODO replace with env
             creds = Credentials.from_authorized_user_file("creds/token.json", SCOPES)
+            
             self.service = build("drive", "v3", credentials=creds)
 
         # Query a file inside Drive
@@ -364,7 +367,10 @@ class laserfocus:
         def __init__(self):
 
             # Create a new client and connect to the server
+
+            # TODO replace with env
             uri = "mongodb+srv://aguilarcarboni:NewYork2020@athena.jcntnxw.mongodb.net/?retryWrites=true&w=majority&appName=Athena"
+
             self.client = MongoClient(uri, server_api=ServerApi('1'), tlsCAFile=certifi.where())
             print('Initialized client')
 
