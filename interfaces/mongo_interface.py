@@ -21,7 +21,7 @@ match mode:
         query = input('Query:')
         dictToSend = {'path':path, 'query':query}
 
-        res = rq.post(url + '/athena/mongo/query', json=dictToSend)
+        res = rq.post(url + '/mongo/query', json=dictToSend)
 
     case '2':
         print('Update any entry (document) in your database.')
@@ -31,7 +31,7 @@ match mode:
 
         dictToSend = {'data':data,'path':path, 'query':query}
 
-        res = rq.post(url + '/athena/mongo/update', json=dictToSend)
+        res = rq.post(url + '/mongo/update', json=dictToSend)
 
     case '3':
         print('Insert any entry (document) in your database.')
@@ -40,7 +40,7 @@ match mode:
 
         dictToSend = {'data':data, 'path':path}
 
-        res = rq.post(url + '/athena/mongo/insert', json=dictToSend)
+        res = rq.post(url + '/mongo/insert', json=dictToSend)
 
 dictFromServer = res.json()
 print('Athena:', dictFromServer)
