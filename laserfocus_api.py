@@ -82,7 +82,7 @@ async def drive():
     input_json = request.get_json(force=True)
     Drive = laserfocus.Drive()
 
-    response = Drive.queryForFile(input_json['path'], input_json['file_name'])
+    response = Drive.queryForFile(input_json['database'], input_json['path'], input_json['file_name'])
 
     fileContent = Drive.downloadFile(response['id'])
     f = BytesIO(fileContent)
@@ -90,28 +90,28 @@ async def drive():
     return send_file(f, mimetype="text/plain")
 
 # Database
-@app.route('/mongo/query', methods=['POST'])
+@app.route('/database/query', methods=['POST'])
 async def mongo_query():
     # Athena input
     input_json = request.get_json(force=True)
     Mongo = laserfocus.Database()
-    response = Mongo.queryDocumentInCollection(input_json['query'],input_json['path'])
+    response = Mongo.queryDocumentInCollection(input_json['database'], input_json['table'], input_json['query'],)
     return json.loads(json_util.dumps(response))
 
-@app.route('/mongo/insert', methods=['POST'])
-async def mongo_insert():
-    # Athena input
-    input_json = request.get_json(force=True)
-    Mongo = laserfocus.Database()
-    response = Mongo.insertDocumentToCollection(input_json['data'], input_json['path'])
-    return {}
-
-@app.route('/mongo/update', methods=['POST'])
+@app.route('/database/update', methods=['POST'])
 async def mongo_update():
     # Athena input
     input_json = request.get_json(force=True)
     Mongo = laserfocus.Database()
-    response = Mongo.updateDocumentInCollection(input_json['data'], input_json['query'],input_json['path'])
+    response = Mongo.updateDocumentInCollection(input_json['database'], input_json['table'], input_json['data'], input_json['query'])
+    return {}
+
+@app.route('/database/insert', methods=['POST'])
+async def mongo_insert():
+    # Athena input
+    input_json = request.get_json(force=True)
+    Mongo = laserfocus.Database()
+    response = Mongo.insertDocumentToCollection(input_json['database'], input_json['table'], input_json['data'])
     return {}
 
 # Wallet

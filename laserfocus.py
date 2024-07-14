@@ -369,61 +369,49 @@ class laserfocus:
             # Create a new client and connect to the server
 
             # TODO replace with env
-            uri = "mongodb+srv://aguilarcarboni:NewYork2020@athena.jcntnxw.mongodb.net/?retryWrites=true&w=majority&appName=Athena"
+            uri = "mongodb+srv://aguilarcarboni:B5A1OqHHOJ409OH2@owner.bg1trmz.mongodb.net/?retryWrites=true&w=majority&appName=owner"
 
             self.client = MongoClient(uri, server_api=ServerApi('1'), tlsCAFile=certifi.where())
             print('Initialized client')
 
-        def insertDocumentToCollection(self, data, path):
+        def queryDocumentInCollection(self, database, table, query):
+
+            query = ast.literal_eval(query)
+            collection = self.client[database]
+
+            collection = collection[table]
+            document = collection.find_one(query)
+            print(document)
+            
+            return document
+        
+        def updateDocumentInCollection(self, database, table, data, query):
+
+            query = ast.literal_eval(query)
+            data = ast.literal_eval(data)
+
+            collection = self.client[database]
+
+            collection = collection[table]
+            document = collection.update_many(query, {
+                '$set': data
+            })
+
+            print(document)
+            return document
+
+        def insertDocumentToCollection(self, database, table, data):
 
             data = ast.literal_eval(data)
-            collection = self.client['main']
+            collection = self.client[database]
 
-            paths = path.split('/')
-            current_path = ''
-
-            collection = collection[path]
+            collection = collection[table]
 
             data = [data]
             collection.insert_many(data)
 
             print('Inserted document.')
-            
             return
-    
-        def updateDocumentInCollection(self, data, query, path):
-
-            query = ast.literal_eval(query)
-            data = ast.literal_eval(data)
-
-            collection = self.client['main']
-
-            paths = path.split('/')
-            current_path = ''
-
-            collection = collection[path]
-            document = collection.update_many(query, {
-                '$set': data
-            })
-            print(document)
-            
-            return document
-
-
-        def queryDocumentInCollection(self, query, path):
-            print(path, query)
-
-            query = ast.literal_eval(query)
-            collection = self.client['main']
-
-            paths = path.split('/')
-            current_path = ''
-
-            collection = collection[path]
-            document = collection.find_one(query)
-            print(document)
-            
-            return document
                 
     class Explorer:
     
