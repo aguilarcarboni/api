@@ -17,14 +17,6 @@ path = input('Path:')
 file_name = input('File name:')
 
 dictToSend = {'path':path, 'file_name':file_name}
-res = rq.post(url + '/drive/query', json=dictToSend)
-
-binaryFile = res.content
-file_text = binaryFile.decode('latin1')
-
-print('Successfully read file data.')
-
-dictToSend = {'file_text': file_text}
 res = rq.post(url + '/wallet/bac/generateStatements', json=dictToSend)
 
 print('Successfully parsed transactions. Saved at:', res.json()['path'])

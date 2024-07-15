@@ -10,11 +10,19 @@ from laserfocus import laserfocus
 from bson import json_util
 import json
 
+import requests as rq
+
 app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 laserfocus = laserfocus()
+
+debug = True
+if debug:
+    url = 'http://127.0.0.1:5000'
+else:
+    url = 'https://laserfocus-api.onrender.com'
 
 @app.route("/")
 def root():
@@ -82,9 +90,9 @@ async def drive():
     input_json = request.get_json(force=True)
     Drive = laserfocus.Drive()
 
-    response = Drive.queryForFile(input_json['database'], input_json['path'], input_json['file_name'])
-
+    response = Drive.queryForFile(input_json['path'], input_json['file_name'])
     fileContent = Drive.downloadFile(response['id'])
+
     f = BytesIO(fileContent)
 
     return send_file(f, mimetype="text/plain")
@@ -118,14 +126,18 @@ async def mongo_insert():
 @app.route("/wallet/bac/generateStatements", methods=['POST'])
 def bac_generate_statements():
 
-    # Athena input
-    input_json = request.get_json(force=True)
     BAC = laserfocus.Wallet.BAC()
 
-    # TODO cambiar a file object
-    f = input_json['file_text']
+    # Query drive for document
+    input_json = request.get_json(force=True)
+    dictToSend = {'path':input_json['path'], 'file_name':input_json['file_name']}
+    res = rq.post(url + '/drive/query', json=dictToSend)
 
-    df_statements = BAC.parseStatements(f)
+    # Download file in plain text
+    binaryFile = res.content
+    file_text = binaryFile.decode('latin1')
+
+    df_statements = BAC.parseStatements(file_text)
     df_debits, df_credits = BAC.getEntries(df_statements)
 
     df_debits = BAC.categorizeStatements(df_debits)
@@ -134,12 +146,12 @@ def bac_generate_statements():
     # Save to drive
     # Output path: Personal/Wallet/Statements/{Bank}/{AccountNumber}
     # Output file name: MMYYYY.csv
-    time = datetime.now()
-    time = time.strftime('%d%M%Y%H%M%S')
-    df_debits.to_csv(f'/Users/andres/Google Drive/My Drive/Personal/Wallet/Statements/Tests/{time}.csv')
+
+    output_path = f'/Users/andres/Google Drive/My Drive/Personal/Wallet/Statements/Tests/{laserfocus.DateAndTime().currentDateTimeString}.csv'
+    df_debits.to_csv(output_path)
 
     print('Processed data.')
-    return {'path':f'Personal/Wallet/Statements/Tests/{time}'}
+    return {'path':output_path}
 
 debug = True
 if debug:
