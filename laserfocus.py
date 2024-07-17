@@ -153,6 +153,7 @@ class laserfocus:
 
                 rows = file_text.splitlines()
                 parsed_csv = csv.reader(rows)
+                account_number = None
 
                 rows = []
                     
@@ -161,6 +162,8 @@ class laserfocus:
                         if datetime.strptime(row[0], '%d/%m/%Y'):
                             rows.append(row)
                     except:
+                        if len(row) > 0 and row[0].isdigit():
+                            account_number = row[2]
                         continue
 
                 data = []
@@ -169,7 +172,7 @@ class laserfocus:
                     data.append(transaction)
 
                 df_statements = pd.DataFrame(data)
-                return df_statements
+                return df_statements, account_number
 
             def getEntries(self, df_statements):
 

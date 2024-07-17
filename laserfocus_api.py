@@ -126,18 +126,33 @@ async def mongo_insert():
 @app.route("/wallet/bac/generateStatements", methods=['POST'])
 def bac_generate_statements():
 
+    # Is document given?
+
     BAC = laserfocus.Wallet.BAC()
 
     # Query drive for document
     input_json = request.get_json(force=True)
-    dictToSend = {'path':input_json['path'], 'file_name':input_json['file_name']}
+    path = 'Personal/Wallet/Statements/BAC/Sources/' +  input_json['path']
+    dictToSend = {'path':path, 'file_name':input_json['file_name']}
     res = rq.post(url + '/drive/query', json=dictToSend)
 
     # Download file in plain text
     binaryFile = res.content
     file_text = binaryFile.decode('latin1')
 
-    df_statements = BAC.parseStatements(file_text)
+    df_statements, account_number = BAC.parseStatements(file_text)
+    account_number = account_number.strip()
+    print(account_number)
+
+    accounts = [{'id':'CR83010200009295665295', 'name':'Cash'}]
+
+    # Query database
+    for account in accounts:
+        if account['id'] == account_number and account['name'] == input_json['path']:
+            account = account['name']
+
+    # Get account number
+
     df_debits, df_credits = BAC.getEntries(df_statements)
 
     df_debits = BAC.categorizeStatements(df_debits)
@@ -147,11 +162,14 @@ def bac_generate_statements():
     # Output path: Personal/Wallet/Statements/{Bank}/{AccountNumber}
     # Output file name: MMYYYY.csv
 
-    output_path = f'/Users/andres/Google Drive/My Drive/Personal/Wallet/Statements/Tests/{laserfocus.DateAndTime().currentDateTimeString}.csv'
-    df_debits.to_csv(output_path)
+    try:
+        df_debits.to_csv(f'/Users/andres/Google Drive/My Drive/Personal/Wallet/Statements/BAC/Processed/{account}/debits_{laserfocus.DateAndTime().currentDateTimeString}.csv')
+        df_credits.to_csv(f'/Users/andres/Google Drive/My Drive/Personal/Wallet/Statements/BAC/Processed/{account}/credits_{laserfocus.DateAndTime().currentDateTimeString}.csv')
+    except:
+        return {'error':'error'}
 
     print('Processed data.')
-    return {'path':output_path}
+    return {'account':account_number}
 
 debug = True
 if debug:

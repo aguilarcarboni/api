@@ -16,7 +16,7 @@ print('Generate your monthly statements.')
 path = input('Path:')
 file_name = input('File name:')
 
-dictToSend = {'path':path, 'file_name':file_name}
+dictToSend = {'path': path, 'file_name':file_name}
 res = rq.post(url + '/wallet/bac/generateStatements', json=dictToSend)
 
-print('Successfully parsed transactions. Saved at:', res.json()['path'])
+print('Successfully parsed transactions for account:', res.json()['account'])
