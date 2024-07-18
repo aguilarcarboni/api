@@ -83,8 +83,8 @@ def mars():
     return marsData
 
 # Drive
-@app.route('/drive/query', methods=['POST'])
-async def drive():
+@app.route('/drive/query_file', methods=['POST'])
+async def drive_query_file():
 
     # Athena input
     input_json = request.get_json(force=True)
@@ -96,6 +96,18 @@ async def drive():
     f = BytesIO(fileContent)
 
     return send_file(f, mimetype="text/plain")
+
+@app.route('/drive/query_id', methods=['POST'])
+async def drive_query_id():
+
+    # Athena input
+    input_json = request.get_json(force=True)
+    Drive = laserfocus.Drive()
+
+    response = Drive.queryForFile(input_json['path'], input_json['file_name'])
+    print(response)
+
+    return response
 
 # Database
 @app.route('/database/query', methods=['POST'])
