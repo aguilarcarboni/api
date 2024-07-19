@@ -1,5 +1,7 @@
 #make a POST request
 import requests as rq
+import pandas as pd
+from io import BytesIO
 
 debug = True
 if debug:
@@ -14,6 +16,13 @@ file_name = input('File name:')
 
 dictToSend = {'path':path, 'file_name':file_name}
 
-res = rq.post(url + '/drive/query_id', json=dictToSend)
+res = rq.post(url + '/drive/query_file', json=dictToSend)
+print(res, res.content)
+
+df = pd.read_csv(BytesIO(res.content), encoding='latin1')
+print(df)
+
+"""
 dictFromServer = res.json()
 print('Athena:', dictFromServer)
+"""
