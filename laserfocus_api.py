@@ -115,7 +115,7 @@ async def mongo_query():
     # Athena input
     input_json = request.get_json(force=True)
     Mongo = laserfocus.Database()
-    response = Mongo.queryDocumentInCollection(input_json['database'], input_json['table'], input_json['query'],)
+    response = Mongo.queryDocumentInCollection(input_json['database'], input_json['table'], input_json['query'])
     return json.loads(json_util.dumps(response))
 
 @app.route('/database/update', methods=['POST'])

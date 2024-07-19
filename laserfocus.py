@@ -26,6 +26,9 @@ import certifi
 
 class laserfocus:
   
+    def __init__(self):
+        self.error = {'error':'error'}
+
     class DateAndTime:
         def __init__(self):
             self.timezone = pytz.timezone('America/Costa_Rica')
@@ -384,9 +387,11 @@ class laserfocus:
 
             collection = collection[table]
             document = collection.find_one(query)
-            print(document)
             
-            return document
+            if document is not None:
+                return document
+            else:
+                return {'error':'Document not found.'}
         
         def updateDocumentInCollection(self, database, table, data, query):
 
@@ -396,10 +401,13 @@ class laserfocus:
             collection = self.client[database]
 
             collection = collection[table]
-            document = collection.update_many(query, {
-                '$set': data
-            })
-
+            try:
+                document = collection.update_one(query, {
+                    '$set': data
+                })
+            except:
+                return {'error':'Error updating document.'}
+            
             print(document)
             return document
 
@@ -411,13 +419,16 @@ class laserfocus:
             collection = collection[table]
 
             data = [data]
-            collection.insert_many(data)
+            try:
+                collection.insert_many(data)
+            except:
+                return {'error':'Error inserting document.'}
 
             print('Inserted document.')
             return
                 
     class Explorer:
-    
+
         def __init__(self):
             self.state = 0
         class Mars:
