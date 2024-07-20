@@ -320,8 +320,6 @@ class laserfocus:
 
             path = path + '/' + file_name
             paths = path.split('/')
-            
-            current_path = ''
 
             parentId = 'root'
             files = []
@@ -358,19 +356,20 @@ class laserfocus:
         # Query a file inside Drive
         def queryForFiles(self, path):
 
-            print(path, '/')
-
             path = path + '/'
             paths = path.split('/')
 
             parentID = 'root'
 
-            for index, path in enumerate(paths):
+            for index, currentPath in enumerate(paths):
 
                 query = f"trashed = false and '{parentID}' in parents"
 
-                if index == 0:
-                    query =f"name='{path}' and trashed = false and '{parentID}' in parents"
+                if index < len(paths) - 1:
+                    query =f"name='{currentPath}' and trashed = false and '{parentID}' in parents"
+
+                if path == '/':
+                    query =f"trashed = false and 'root' in parents"
 
                 try:
 
@@ -394,7 +393,6 @@ class laserfocus:
                     return {'status':'success', 'content':None}
             
             return {'content':response, 'status':'success'}
-
 
         def downloadFile(self, fileId):
 
