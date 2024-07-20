@@ -50,4 +50,4 @@ match mode:
         res = rq.post(url + '/database/insert', json=dictToSend)
 
 dictFromServer = res.json()
-print('Athena:', dictFromServer)
+print('API Response:', dictFromServer)

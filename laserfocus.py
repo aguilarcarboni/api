@@ -27,7 +27,7 @@ import certifi
 class laserfocus:
   
     def __init__(self):
-        self.error = {'error':'error'}
+        pass
 
     class DateAndTime:
         def __init__(self):
@@ -340,17 +340,61 @@ class laserfocus:
                         )
                         
                         filesResponse = response.get("files")
+                        print(filesResponse)
                         files.append(filesResponse[0])
 
                         parentId = files[index]['id']
 
-                        print(files)
+                except HttpError as error:
+                    print(f"An error occurred. {error}")
+                    return {'status':'error'}
+                
+                except:
+                    print('Error querying file.')
+                    return {'status':'success', 'content':None}
+            
+            return {'content':files[len(files) - 1], 'status':'success'}
+
+        # Query a file inside Drive
+        def queryForFiles(self, path):
+
+            print(path, '/')
+
+            path = path + '/'
+            paths = path.split('/')
+
+            parentID = 'root'
+
+            for index, path in enumerate(paths):
+
+                query = f"trashed = false and '{parentID}' in parents"
+
+                if index == 0:
+                    query =f"name='{path}' and trashed = false and '{parentID}' in parents"
+
+                try:
+
+                        response = (
+                            self.service.files()
+                            .list(
+                                q=query,
+                                spaces="drive",
+                                fields="files(id, name)",
+                            )
+                            .execute()
+                        )
+
+                        parentID = response['files'][0]['id']
 
                 except HttpError as error:
                     print(f"An error occurred. {error}")
-                    files = []
+                    return {'status':'error'}
             
-            return files[len(files) - 1]
+                except:
+                    return {'status':'success', 'content':None}
+            
+            return {'content':response, 'status':'success'}
+
 
         def downloadFile(self, fileId):
 
@@ -366,8 +410,12 @@ class laserfocus:
             except HttpError as error:
                 print(f"An error occurred: {error}")
                 downloaded_file = None
-
-            return downloaded_file.getvalue()
+                return ({'status':'error'})
+            
+            except:
+                return {'status':'success', 'content':None}
+            
+            return {'content':downloaded_file.getvalue(), 'status':'success'}
 
     class Database:
         def __init__(self):
@@ -382,6 +430,7 @@ class laserfocus:
 
         def queryDocumentInCollection(self, database, table, query):
 
+            print('Querying entry in table in database.', {'database':database, 'table':table, 'query':query})
             query = ast.literal_eval(query)
             collection = self.client[database]
 
@@ -389,12 +438,15 @@ class laserfocus:
             document = collection.find_one(query)
             
             if document is not None:
-                return document
+                print('Successfully queried entry.', {'document':document})
+                return {'status':'success', 'content':document}
             else:
-                return {'error':'Document not found.'}
+                print('Entry not found.')
+                return {'status':'success', 'content':None}
         
         def updateDocumentInCollection(self, database, table, data, query):
 
+            print('Updating entry in table in database.', {'database':database, 'table':table, 'data':data, 'query':query})
             query = ast.literal_eval(query)
             data = ast.literal_eval(data)
 
@@ -406,13 +458,15 @@ class laserfocus:
                     '$set': data
                 })
             except:
+                print('Error updating document.')
                 return {'error':'Error updating document.'}
             
-            print(document)
-            return document
+            print('Successfully updated entry.', {'document':document})
+            return {'status':'success', 'content':document}
 
         def insertDocumentToCollection(self, database, table, data):
 
+            print('Inserting entry to table in Database.', {'database':database, 'table':table, 'data':data})
             data = ast.literal_eval(data)
             collection = self.client[database]
 
@@ -422,10 +476,11 @@ class laserfocus:
             try:
                 collection.insert_many(data)
             except:
-                return {'error':'Error inserting document.'}
+                print('Error inserting entry.')
+                return {'status':'error'}
 
-            print('Inserted document.')
-            return
+            print('Successfully inserted entry.', {'data':data})
+            return {'status':'success', 'content':data}
                 
     class Explorer:
 

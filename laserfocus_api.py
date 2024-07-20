@@ -83,6 +83,15 @@ def mars():
     return marsData
 
 # Drive
+@app.route('/drive/query_files', methods=['POST'])
+async def drive_query_files_in_folder():
+
+    # Athena input
+    input_json = request.get_json(force=True)
+    Drive = laserfocus.Drive()
+    response = Drive.queryForFiles(input_json['path'])
+    return response
+
 @app.route('/drive/query_file', methods=['POST'])
 async def drive_query_file():
 
@@ -90,12 +99,16 @@ async def drive_query_file():
     input_json = request.get_json(force=True)
     Drive = laserfocus.Drive()
 
+    if input_json['file_name'].endswith('.xlsx'):
+        mimetype="text/plain"
+    else:
+        return {'status':'error', 'content':'File type not supported.'}
+
     response = Drive.queryForFile(input_json['path'], input_json['file_name'])
-    fileContent = Drive.downloadFile(response['id'])
+    response = Drive.downloadFile(response['content']['id'])
+    f = BytesIO(response['content'])
 
-    f = BytesIO(fileContent)
-
-    return send_file(f, mimetype="text/plain")
+    return send_file(f, mimetype=mimetype)
 
 @app.route('/drive/query_id', methods=['POST'])
 async def drive_query_id():
@@ -105,7 +118,6 @@ async def drive_query_id():
     Drive = laserfocus.Drive()
 
     response = Drive.queryForFile(input_json['path'], input_json['file_name'])
-    print(response)
 
     return response
 
@@ -124,7 +136,7 @@ async def mongo_update():
     input_json = request.get_json(force=True)
     Mongo = laserfocus.Database()
     response = Mongo.updateDocumentInCollection(input_json['database'], input_json['table'], input_json['data'], input_json['query'])
-    return {}
+    return response
 
 @app.route('/database/insert', methods=['POST'])
 async def mongo_insert():
@@ -132,7 +144,7 @@ async def mongo_insert():
     input_json = request.get_json(force=True)
     Mongo = laserfocus.Database()
     response = Mongo.insertDocumentToCollection(input_json['database'], input_json['table'], input_json['data'])
-    return {}
+    return response
 
 # Wallet
 @app.route("/wallet/bac/generateStatements", methods=['POST'])

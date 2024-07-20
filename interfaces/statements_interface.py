@@ -18,5 +18,6 @@ file_name = input('File name:')
 
 dictToSend = {'path': path, 'file_name':file_name}
 res = rq.post(url + '/wallet/bac/generateStatements', json=dictToSend)
+dictFromServer = res.json()
 
-print('Successfully parsed transactions for account:', res.json()['account'])
+print('API Response:', dictFromServer)
