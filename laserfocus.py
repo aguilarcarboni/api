@@ -546,4 +546,3 @@ class laserfocus:
                     distances.append([distanceData[i]['properties']['dist_m'],distanceData[i]['properties']['sol']])
                 distances = pd.DataFrame(distances) #data frame
                 return distances
-                
