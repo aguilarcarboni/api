@@ -1,9 +1,9 @@
-from flask import Flask, request, jsonify, send_file, Response
+from flask import Flask, request, send_file
 from flask_cors import CORS
 
-from io import BytesIO
+import pandas as pd
 
-from datetime import datetime
+from io import BytesIO
 
 from laserfocus import laserfocus
 
@@ -99,7 +99,7 @@ async def drive_query_file():
     input_json = request.get_json(force=True)
     Drive = laserfocus.Drive()
 
-    if input_json['file_name'].endswith('.xlsx'):
+    if input_json['file_name'].endswith('.xlsx') or input_json['file_name'].endswith('.csv'):
         mimetype="text/plain"
     else:
         return {'status':'error', 'content':'File type not supported.'}
@@ -158,7 +158,9 @@ def bac_generate_statements():
     input_json = request.get_json(force=True)
     path = 'Personal/Wallet/Statements/BAC/Sources/' +  input_json['path']
     dictToSend = {'path':path, 'file_name':input_json['file_name']}
-    res = rq.post(url + '/drive/query', json=dictToSend)
+    res = rq.post(url + '/drive/query_file', json=dictToSend)
+
+    period = input_json['file_name'].split('.')[0]
 
     # Download file in plain text
     binaryFile = res.content
@@ -182,13 +184,16 @@ def bac_generate_statements():
     df_debits = BAC.categorizeStatements(df_debits)
     df_credits = BAC.categorizeStatements(df_credits)
 
+    df_all = pd.concat([df_debits, df_credits])
+
     # Save to drive
     # Output path: Personal/Wallet/Statements/{Bank}/{AccountNumber}
     # Output file name: MMYYYY.csv
 
     try:
-        df_debits.to_csv(f'/Users/andres/Google Drive/My Drive/Personal/Wallet/Statements/BAC/Processed/{account}/debits_{laserfocus.DateAndTime().currentDateTimeString}.csv')
-        df_credits.to_csv(f'/Users/andres/Google Drive/My Drive/Personal/Wallet/Statements/BAC/Processed/{account}/credits_{laserfocus.DateAndTime().currentDateTimeString}.csv')
+        df_debits.to_csv(f'/Users/andres/Google Drive/My Drive/Personal/Wallet/Statements/BAC/Processed/{account}/debits_{period}.csv')
+        df_credits.to_csv(f'/Users/andres/Google Drive/My Drive/Personal/Wallet/Statements/BAC/Processed/{account}/credits_{period}.csv')
+        df_all.to_csv(f'/Users/andres/Google Drive/My Drive/Personal/Wallet/Statements/BAC/Processed/{account}/{period}.csv')
     except:
         return {'error':'error'}
 
