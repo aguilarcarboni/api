@@ -156,7 +156,7 @@ def bac_generate_statements():
 
     # Query drive for document
     input_json = request.get_json(force=True)
-    path = 'Personal/Wallet/Statements/BAC/Sources/' +  input_json['path']
+    path = 'Personal/Wallet/Statements/BAC/' +  input_json['path'] + '/Sources'
     dictToSend = {'path':path, 'file_name':input_json['file_name']}
     res = rq.post(url + '/drive/query_file', json=dictToSend)
 
@@ -185,15 +185,16 @@ def bac_generate_statements():
     df_credits = BAC.categorizeStatements(df_credits)
 
     df_all = pd.concat([df_debits, df_credits])
+    df_all = df_all.sort_values(by='Date')
 
     # Save to drive
     # Output path: Personal/Wallet/Statements/{Bank}/{AccountNumber}
     # Output file name: MMYYYY.csv
 
     try:
-        df_debits.to_csv(f'/Users/andres/Google Drive/My Drive/Personal/Wallet/Statements/BAC/Processed/{account}/debits_{period}.csv')
-        df_credits.to_csv(f'/Users/andres/Google Drive/My Drive/Personal/Wallet/Statements/BAC/Processed/{account}/credits_{period}.csv')
-        df_all.to_csv(f'/Users/andres/Google Drive/My Drive/Personal/Wallet/Statements/BAC/Processed/{account}/{period}.csv')
+        df_debits.to_csv(f'/Users/andres/Google Drive/My Drive/Personal/Wallet/Statements/BAC/{account}/Processed/debits_{period}.csv')
+        df_credits.to_csv(f'/Users/andres/Google Drive/My Drive/Personal/Wallet/Statements/BAC/{account}/Processed/credits_{period}.csv')
+        df_all.to_csv(f'/Users/andres/Google Drive/My Drive/Personal/Wallet/Statements/BAC/{account}/Processed/{period}.csv')
     except:
         return {'error':'error'}
 

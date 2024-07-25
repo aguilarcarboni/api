@@ -24,6 +24,8 @@ from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 import certifi
 
+import time
+
 class laserfocus:
   
     def __init__(self):
@@ -171,10 +173,13 @@ class laserfocus:
 
                 data = []
                 for row in rows:
-                    transaction = {'Date':row[0], 'Reference':row[1], 'Code':row[2], 'Description':row[3], 'Debit':row[4], 'Credit':row[5], 'Balance':row[6], 'Category':''}
+                    date = datetime.strptime(row[0], '%d/%m/%Y')
+                    transaction = {'Date':date, 'Reference':row[1], 'Code':row[2], 'Description':row[3], 'Debit':row[4], 'Credit':row[5], 'Balance':row[6], 'Category':'', 'Q': 'Q1' if date.day < 15 else 'Q2'}
                     data.append(transaction)
 
                 df_statements = pd.DataFrame(data)
+                df_statements['Date'] = pd.to_datetime(df_statements['Date'], format='%d/%m/%Y')
+
                 return df_statements, account_number
 
             def getEntries(self, df_statements):
@@ -227,6 +232,9 @@ class laserfocus:
                         for savings_account in ['960587293', 'SAVINGS']:
                             if savings_account in row['Description']:
                                 df_statements.loc[index,'Category'] = 'Savings'
+
+                        for food_source in ['ROSTI', 'SUBWAY']:
+                            pass
 
                 return df_statements
 
