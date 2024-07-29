@@ -192,20 +192,29 @@ class laserfocus:
             
             def categorizeStatements(self, df_statements):
 
-                subscriptions = [
-                    {
-                        'name':'Compass',
-                        'identifier':'COMPA'
-                    }
-                ]
-
-                # Credits
+                # Debits
                 if len(df_statements[df_statements['Debit'].astype(float) == 0]) == 0:
                 
                     for index, row in df_statements.iterrows():
 
-                        if subscriptions[0]['identifier'] in row['Description']:
-                            df_statements.loc[index, 'Category'] = 'Subscriptions'
+                        for subscription in ['COMPA', 'SEGURO BELD', 'COMPASS']:
+                            if subscription in row['Description']:
+                                df_statements.loc[index, 'Category'] = 'Subscriptions'
+
+                        # Categorize income
+                        for gas_station in ['DELTA', 'SERVICIO', 'SERVICENTRO', 'GAS', 'Uber Rides']:
+                            if gas_station in row['Description']:
+                                df_statements.loc[index,'Category'] = 'Transportation'
+
+                        for savings_account in ['960587293', 'SAVINGS']:
+                            if savings_account in row['Description']:
+                                df_statements.loc[index,'Category'] = 'Savings'
+
+
+                # Credits             
+                else:
+
+                    for index, row in df_statements.iterrows():
 
                         for savings_account in ['960587293', 'SAVINGS']:
                             if savings_account in row['Description']:
@@ -214,28 +223,8 @@ class laserfocus:
                         for income_source in ['DEP', '1Q', '2Q', 'INCOME']:
                             if income_source in row['Description']:
                                 df_statements.loc[index,'Category'] = 'Income'
-                
-                # Debits             
-                else:
-
-                    for index, row in df_statements.iterrows():
-
-                        for subscription in ['COMPA','SEGURO BELD']:
-                            if subscription in row['Description']:
-                                df_statements.loc[index, 'Category'] = 'Subscriptions'
-
-                        # Categorize income
-                        for gas_station in ['DELTA', 'SERVICIO', 'SERVICENTRO', 'GAS']:
-                            if gas_station in row['Description']:
-                                df_statements.loc[index,'Category'] = 'Transportation'
-
-                        for savings_account in ['960587293', 'SAVINGS']:
-                            if savings_account in row['Description']:
-                                df_statements.loc[index,'Category'] = 'Savings'
-
-                        for food_source in ['ROSTI', 'SUBWAY']:
-                            pass
-
+                    
+                        
                 return df_statements
 
             def manuallyCategorizeStatements(self, df_statements):

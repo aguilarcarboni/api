@@ -185,16 +185,21 @@ def bac_generate_statements():
     df_credits = BAC.categorizeStatements(df_credits)
 
     df_all = pd.concat([df_debits, df_credits])
+    df_all['Total'] = df_all['Credit'].astype(float) - df_all['Debit'].astype(float)
     df_all = df_all.sort_values(by='Date')
 
     # Save to drive
     # Output path: Personal/Wallet/Statements/{Bank}/{AccountNumber}
+    # /Users/andres/Library/CloudStorage/GoogleDrive-aguilarcarboni@gmail.com/My Drive/Personal/Wallet/Statements/BAC/Cash/Processed
     # Output file name: MMYYYY.csv
+
+    print(account, period)
 
     try:
         df_debits.to_csv(f'/Users/andres/Google Drive/My Drive/Personal/Wallet/Statements/BAC/{account}/Processed/debits_{period}.csv')
         df_credits.to_csv(f'/Users/andres/Google Drive/My Drive/Personal/Wallet/Statements/BAC/{account}/Processed/credits_{period}.csv')
         df_all.to_csv(f'/Users/andres/Google Drive/My Drive/Personal/Wallet/Statements/BAC/{account}/Processed/{period}.csv')
+
     except:
         return {'error':'error'}
 
