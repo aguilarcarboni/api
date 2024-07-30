@@ -449,11 +449,12 @@ class laserfocus:
                 return {'status':'error', 'content':'No table with that name found.'}
             table = database[table]
             
-            entry = table.find(query)
+            entry = table.find_one(query)
+            print(entry)
             
             if entry is not None:
-                print('Successfully queried entry.', {'content':entry})
-                return {'status':'success', 'content':entry}
+                print('Successfully queried entry.', {'content':entry[0]})
+                return {'status':'success', 'content':entry[0]}
             else:
                 print('Entry not found.')
                 return {'status':'no_data', 'content':None}
@@ -471,6 +472,7 @@ class laserfocus:
             if database not in self.client.list_database_names():
                 print('No database with that name found.')
                 return {'status':'error', 'content':'No database with that name found.'}
+            
             database = self.client[database]
             
             if table not in database.list_collection_names():
@@ -486,7 +488,6 @@ class laserfocus:
             else:
                 print('Entry not found.')
                 return {'status':'no_data', 'content':None}
-        
 
         def updateDocumentInCollection(self, database, table, data, query):
 
