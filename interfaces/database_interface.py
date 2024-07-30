@@ -21,7 +21,7 @@ match mode:
 
         key = input('Key:')
         value = input('Value:')
-        query = '{' + f'"{key}":"{value}"' + '}'
+        query = input('Query')
 
         dictToSend = {'database':database, 'table':table, 'query':query}
 
