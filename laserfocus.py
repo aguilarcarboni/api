@@ -470,23 +470,21 @@ class laserfocus:
                 print('Malformed query query.')
                 return {'status':'error', 'content':'Malformed query.'}
             
-            try:
-                collection = self.client[database]
-            except:
+            database = self.client[database]
+            if database is None:
                 print('No database with that name found.')
                 return {'status':'error', 'content':'No database with that name found.'}
-
-            try:
-                collection = collection[table]
-            except:
+            
+            table = database[table]
+            if table is None:
                 print('No table with that name found.')
                 return {'status':'error', 'content':'No table with that name found.'}
             
-            document = collection.find(query)
+            entry = table.find(query)
             
-            if document is not None:
-                print('Successfully queried entry.', {'document':document})
-                return {'status':'success', 'content':document}
+            if entry is not None:
+                print('Successfully queried entry.', {'content':entry})
+                return {'status':'success', 'content':entry}
             else:
                 print('Entry not found.')
                 return {'status':'success', 'content':None}
