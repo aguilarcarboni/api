@@ -352,7 +352,7 @@ class laserfocus:
                 
                 except:
                     print('Error querying file.')
-                    return {'status':'success', 'content':None}
+                    return {'status':'no_data', 'content':None}
             
             return {'content':files[len(files) - 1], 'status':'success'}
 
@@ -393,7 +393,7 @@ class laserfocus:
                     return {'status':'error'}
             
                 except:
-                    return {'status':'success', 'content':None}
+                    return {'status':'no_data', 'content':None}
             
             return {'content':response, 'status':'success'}
 
@@ -414,7 +414,7 @@ class laserfocus:
                 return ({'status':'error'})
             
             except:
-                return {'status':'success', 'content':None}
+                return {'status':'no_data', 'content':None}
             
             return {'content':downloaded_file.getvalue(), 'status':'success'}
 
@@ -430,37 +430,6 @@ class laserfocus:
             print('Initialized client')
 
         def queryDocumentInCollection(self, database, table, query):
-
-            print('Querying entry in table in database.', {'database':database, 'table':table, 'query':query})
-
-            try:
-                query = ast.literal_eval(query)
-            except:
-                print('Malformed query query.')
-                return {'status':'error', 'content':'Malformed query.'}
-            
-            try:
-                collection = self.client[database]
-            except:
-                print('No database with that name found.')
-                return {'status':'error', 'content':'No database with that name found.'}
-
-            try:
-                collection = collection[table]
-            except:
-                print('No table with that name found.')
-                return {'status':'error', 'content':'No table with that name found.'}
-            
-            document = collection.find_one(query)
-            
-            if document is not None:
-                print('Successfully queried entry.', {'document':document})
-                return {'status':'success', 'content':document}
-            else:
-                print('Entry not found.')
-                return {'status':'success', 'content':None}
-        
-        def queryDocumentsInCollection(self, database, table, query):
 
             print('Querying entries in table in database.', {'database':database, 'table':table, 'query':query})
 
@@ -480,6 +449,36 @@ class laserfocus:
                 print('No table with that name found.')
                 return {'status':'error', 'content':'No table with that name found.'}
             
+            entry = table.find_one(query)
+            
+            if entry is not None:
+                print('Successfully queried entry.', {'content':entry})
+                return {'status':'success', 'content':entry}
+            else:
+                print('Entry not found.')
+                return {'status':'no_data', 'content':None}
+        
+        def queryDocumentsInCollection(self, database, table, query):
+
+            print('Querying entries in table in database.', {'database':database, 'table':table, 'query':query})
+
+            try:
+                query = ast.literal_eval(query)
+            except:
+                print('Malformed query query.')
+                return {'status':'error', 'content':'Malformed query.'}
+            
+            database = self.client[database]
+            print(database)
+            if database is None:
+                print('No database with that name found.')
+                return {'status':'error', 'content':'No database with that name found.'}
+            
+            table = database[table]
+            if table is None:
+                print('No table with that name found.')
+                return {'status':'error', 'content':'No table with that name found.'}
+            
             entry = table.find(query)
             
             if entry is not None:
@@ -487,7 +486,7 @@ class laserfocus:
                 return {'status':'success', 'content':entry}
             else:
                 print('Entry not found.')
-                return {'status':'success', 'content':None}
+                return {'status':'no_data', 'content':None}
         
 
         def updateDocumentInCollection(self, database, table, data, query):
