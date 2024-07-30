@@ -453,8 +453,8 @@ class laserfocus:
             print(entry)
             
             if entry is not None:
-                print('Successfully queried entry.', {'content':entry[0]})
-                return {'status':'success', 'content':entry[0]}
+                print('Successfully queried entry.', {'content':entry})
+                return {'status':'success', 'content':entry}
             else:
                 print('Entry not found.')
                 return {'status':'no_data', 'content':None}
