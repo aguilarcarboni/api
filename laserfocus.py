@@ -432,10 +432,25 @@ class laserfocus:
         def queryDocumentInCollection(self, database, table, query):
 
             print('Querying entry in table in database.', {'database':database, 'table':table, 'query':query})
-            query = ast.literal_eval(query)
-            collection = self.client[database]
 
-            collection = collection[table]
+            try:
+                query = ast.literal_eval(query)
+            except:
+                print('Malformed query query.')
+                return {'status':'error', 'content':'Malformed query.'}
+            
+            try:
+                collection = self.client[database]
+            except:
+                print('No database with that name found.')
+                return {'status':'error', 'content':'No database with that name found.'}
+
+            try:
+                collection = collection[table]
+            except:
+                print('No table with that name found.')
+                return {'status':'error', 'content':'No table with that name found.'}
+            
             document = collection.find_one(query)
             
             if document is not None:
@@ -445,6 +460,38 @@ class laserfocus:
                 print('Entry not found.')
                 return {'status':'success', 'content':None}
         
+        def queryDocumentsInCollection(self, database, table, query):
+
+            print('Querying entries in table in database.', {'database':database, 'table':table, 'query':query})
+
+            try:
+                query = ast.literal_eval(query)
+            except:
+                print('Malformed query query.')
+                return {'status':'error', 'content':'Malformed query.'}
+            
+            try:
+                collection = self.client[database]
+            except:
+                print('No database with that name found.')
+                return {'status':'error', 'content':'No database with that name found.'}
+
+            try:
+                collection = collection[table]
+            except:
+                print('No table with that name found.')
+                return {'status':'error', 'content':'No table with that name found.'}
+            
+            document = collection.find(query)
+            
+            if document is not None:
+                print('Successfully queried entry.', {'document':document})
+                return {'status':'success', 'content':document}
+            else:
+                print('Entry not found.')
+                return {'status':'success', 'content':None}
+        
+
         def updateDocumentInCollection(self, database, table, data, query):
 
             print('Updating entry in table in database.', {'database':database, 'table':table, 'data':data, 'query':query})

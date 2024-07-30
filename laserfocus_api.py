@@ -84,7 +84,7 @@ def mars():
 
 # Drive
 @app.route('/drive/query_files', methods=['POST'])
-async def drive_query_files_in_folder():
+async def drive_query_many():
 
     # Athena input
     input_json = request.get_json(force=True)
@@ -128,6 +128,14 @@ async def mongo_query():
     input_json = request.get_json(force=True)
     Mongo = laserfocus.Database()
     response = Mongo.queryDocumentInCollection(input_json['database'], input_json['table'], input_json['query'])
+    return json.loads(json_util.dumps(response))
+
+@app.route('/database/query_many', methods=['POST'])
+async def mongo_query_many():
+    # Athena input
+    input_json = request.get_json(force=True)
+    Mongo = laserfocus.Database()
+    response = Mongo.queryDocumentsInCollection(input_json['database'], input_json['table'], input_json['query'])
     return json.loads(json_util.dumps(response))
 
 @app.route('/database/update', methods=['POST'])
