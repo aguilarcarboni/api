@@ -8,7 +8,7 @@ from io import BytesIO, StringIO
 #make a POST request
 import requests as rq
 
-debug = True
+debug = False
 if debug:
     url = 'http://127.0.0.1:5000'
 else:
