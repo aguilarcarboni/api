@@ -11,6 +11,8 @@ from pandas.tseries.offsets import BDay
 
 import yfinance as yf
 
+from bs4 import BeautifulSoup
+
 import openmeteo_requests
 import requests_cache
 from retry_requests import retry
@@ -280,13 +282,32 @@ class laserfocus:
             return lastPrice
         
     class News:
+
         def __init__(self):
             self.state = 0
+
         def getSpaceFlightNews(self):
             url = "https://api.spaceflightnewsapi.net/v4/articles/"
             response = rq.get(url)
-            data = response.json()
-            return data
+            news = response.json()
+            return {'status':'success', 'content':news}
+        
+        def scrapeCNNHeadlines(self):
+
+            browser = laserfocus.Browser()
+            url = 'https://www.cnn.com'
+            soup = browser.scraper(url)
+
+            # Find the sections containing headlines
+            headlines = soup.find_all('div', class_='stack__items')
+
+            news  = []
+            for headline in headlines:
+                for link in headline.find_all('a'):
+                    if ('•' not in link.get_text().strip()):
+                        news.append({'title':link.get_text().strip(), 'url':url + link.get('href')})
+
+            return {'status':'success', 'content':news}
             
     class Calendar:
         def __init__(self):
@@ -593,3 +614,19 @@ class laserfocus:
                     distances.append([distanceData[i]['properties']['dist_m'],distanceData[i]['properties']['sol']])
                 distances = pd.DataFrame(distances) #data frame
                 return distances
+
+    class Browser:
+        def __init__(self):
+            self.state = 0
+
+        def scraper(url):
+            # Send a request to fetch the HTML content
+            response = rq.get(url)
+            if response.status_code != 200:
+                print("Failed to retrieve the web page.")
+                return
+
+            # Parse the HTML content using BeautifulSoup
+            soup = BeautifulSoup(response.content, 'html.parser')
+            
+            return soup

@@ -54,10 +54,7 @@ def market():
 @app.route("/news")
 def news():
     News = laserfocus.News()
-    newsData = {
-        'general':News.getNews(), 
-        'space':News.getSpaceFlightNews()
-    }
+    newsData = News.scrapeCNNHeadlines()
     return newsData
 
 # Weather
@@ -204,9 +201,9 @@ def bac_generate_statements():
     print(account, period)
 
     try:
-        df_debits.to_csv(f'/Users/andres/Google Drive/My Drive/Personal/Wallet/Statements/BAC/{account}/Processed/debits_{period}.csv')
-        df_credits.to_csv(f'/Users/andres/Google Drive/My Drive/Personal/Wallet/Statements/BAC/{account}/Processed/credits_{period}.csv')
-        df_all.to_csv(f'/Users/andres/Google Drive/My Drive/Personal/Wallet/Statements/BAC/{account}/Processed/{period}.csv')
+        #df_debits.to_csv(f'/Users/andres/Google Drive/My Drive/Personal/Wallet/Statements/BAC/{account}/Processed/debits_{period}.csv')
+        #df_credits.to_csv(f'/Users/andres/Google Drive/My Drive/Personal/Wallet/Statements/BAC/{account}/Processed/credits_{period}.csv')
+        df_all.to_csv(f'/Users/andres/Google Drive/My Drive/Personal/Wallet/Statements/BAC/{account}/Processed/{period}.csv', index=False)
 
     except:
         return {'error':'error'}
