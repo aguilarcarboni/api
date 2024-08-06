@@ -84,9 +84,7 @@ def databaseInterface():
             print('Query any entry in a table in the database.')
             database = input('Database:')
             table = input('Table:')
-            key = input('Key:')
-            value = input('Value:')
-            query = input('Query')
+            query = input('Query:')
 
             dictToSend = {'database':database, 'table':table, 'query':query}
 
