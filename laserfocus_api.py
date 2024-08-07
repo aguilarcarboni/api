@@ -141,7 +141,7 @@ async def mongo_update():
     input_json = request.get_json(force=True)
     Mongo = laserfocus.Database()
     response = Mongo.updateDocumentInCollection(input_json['database'], input_json['table'], input_json['data'], input_json['query'])
-    return response
+    return json.loads(json_util.dumps(response))
 
 @app.route('/database/insert', methods=['POST'])
 async def mongo_insert():

@@ -494,14 +494,15 @@ class laserfocus:
                 print('No database with that name found.')
                 return {'status':'error', 'content':'No database with that name found.'}
             
-            database = self.client[database]
+            db = self.client[database]
             
-            if table not in database.list_collection_names():
+            if table not in db.list_collection_names():
                 print('No table with that name found.')
                 return {'status':'error', 'content':'No table with that name found.'}
-            table = database[table]
             
-            entry = table.find(query)
+            tb = database[table]
+            
+            entry = tb.find(query)
             
             if entry is not None:
                 print('Successfully queried entry.', {'content':entry})
@@ -534,19 +535,34 @@ class laserfocus:
 
             print('Inserting entry to table in Database.', {'database':database, 'table':table, 'data':data})
             data = ast.literal_eval(data)
-            collection = self.client[database]
 
-            collection = collection[table]
+            db = self.client[database]
+            tb = db[table]
 
-            data = [data]
             try:
-                collection.insert_many(data)
+                insertedData = tb.insert_one(data)
             except:
                 print('Error inserting entry.')
                 return {'status':'error'}
 
-            print('Successfully inserted entry.', {'data':data})
-            return {'status':'success', 'content':data}
+            print('Successfully inserted entry.', {'data':insertedData})
+
+            print('Adding dependencies to entry.')
+            dependencies = {}
+            match table:
+                case 'user':
+
+                    # Insert user's new space
+                    space = self.client['spaces']['space']
+                    spaceData = space.insert_one({"name":f"{data['name']}'s Space"})
+
+                    # Insert user space relationship
+                    userSpace = self.client['users']['user-space']
+                    userSpaceData = userSpace.insert_one({'userId':insertedData.inserted_id, 'spaceId':spaceData.inserted_id})
+
+                    dependencies = {'space':str(spaceData.inserted_id), 'user-space':str(userSpaceData.inserted_id)}
+        
+            return {'status':'success', 'content':{'data':str(insertedData.inserted_id), 'dependencies':dependencies}}
                 
     class Explorer:
 

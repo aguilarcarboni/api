@@ -140,12 +140,14 @@ print('\n')
 
 match choice:
     case '1':
-        databaseInterface()
+        response = databaseInterface()
     case '2':
-        driveInterface()
+        response = driveInterface()
     case '3':
-        walletInterface()
+        response = walletInterface()
     case '':
         print('Exiting...')
     case _:
         print('Invalid choice')
+
+print(response)
