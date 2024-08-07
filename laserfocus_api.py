@@ -148,7 +148,7 @@ async def mongo_insert():
     # Athena input
     input_json = request.get_json(force=True)
     Mongo = laserfocus.Database()
-    response = Mongo.insertDocumentToCollection(input_json['database'], input_json['table'], input_json['data'])
+    response = Mongo.insertDocumentToCollection(input_json['database'], input_json['table'], input_json['data'], input_json['context'])
     return response
 
 # Wallet

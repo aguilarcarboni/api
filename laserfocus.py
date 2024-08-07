@@ -24,6 +24,7 @@ from googleapiclient.http import MediaIoBaseDownload
 
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
+from bson.objectid import ObjectId
 import certifi
 
 import time
@@ -531,7 +532,7 @@ class laserfocus:
             print('Successfully updated entry.', {'document':document})
             return {'status':'success', 'content':document}
 
-        def insertDocumentToCollection(self, database, table, data):
+        def insertDocumentToCollection(self, database, table, data, context):
 
             print('Inserting entry to table in Database.', {'database':database, 'table':table, 'data':data})
             data = ast.literal_eval(data)
@@ -545,9 +546,16 @@ class laserfocus:
                 print('Error inserting entry.')
                 return {'status':'error'}
 
-            print('Successfully inserted entry.', {'data':insertedData})
+            print('Successfully inserted entry.')
+            insertedId = insertedData.inserted_id
 
             print('Adding dependencies to entry.')
+            dependencies = self.insertDependencies(table, data, insertedId, context)
+        
+            return {'status':'success', 'content':{'data':str(insertedId), 'dependencies':dependencies}}
+                
+        def insertDependencies(self, table, data, insertedId, context):
+
             dependencies = {}
             match table:
                 case 'user':
@@ -555,15 +563,29 @@ class laserfocus:
                     # Insert user's new space
                     space = self.client['spaces']['space']
                     spaceData = space.insert_one({"name":f"{data['name']}'s Space"})
+                    spaceId = spaceData.inserted_id
 
                     # Insert user space relationship
                     userSpace = self.client['users']['user-space']
-                    userSpaceData = userSpace.insert_one({'userId':insertedData.inserted_id, 'spaceId':spaceData.inserted_id})
+                    userSpaceData = userSpace.insert_one({'userId':insertedId, 'spaceId':spaceId})
+                    userSpaceId = userSpaceData.inserted_id
 
-                    dependencies = {'space':str(spaceData.inserted_id), 'user-space':str(userSpaceData.inserted_id)}
-        
-            return {'status':'success', 'content':{'data':str(insertedData.inserted_id), 'dependencies':dependencies}}
-                
+                    dependencies = {'space':str(spaceId), 'user-space':str(userSpaceId)}
+
+                case 'event':
+                    # Insert space event relationship
+                    spaceEvent = self.client['spaces']['space-event']
+                    try:
+                        spaceId = context['spaceId']
+                    except:
+                        return {'status':'error', 'content':'No spaceId provided.'}
+                    
+                    spaceEventData = spaceEvent.insert_one({'eventId':insertedId, 'spaceId':ObjectId(spaceId)})
+                    spaceEventId = spaceEventData.inserted_id
+                    dependencies = {'space-event':str(spaceEventId)}
+
+            return dependencies
+
     class Explorer:
 
         def __init__(self):

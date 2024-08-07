@@ -113,8 +113,9 @@ def databaseInterface():
             database = input('Database:')
             table = input('Table:')
             data = input('Data:')
+            context = input('Context:')
 
-            dictToSend = {'database':database, 'table':table, 'data':data}
+            dictToSend = {'database':database, 'table':table, 'data':data, 'context':{'spaceId':'66a82587364a89ab61e5bae4'}}
 
             res = rq.post(url + '/database/insert', json=dictToSend)
             dictFromServer = res.json()
