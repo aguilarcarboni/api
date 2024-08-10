@@ -214,19 +214,36 @@ class laserfocus:
                 account_number = None
 
                 rows = []
-                    
-                for row in parsed_csv:
-                    try:
-                        if datetime.strptime(row[0], '%d/%m/%Y'):
-                            rows.append(row)
-                    except:
-                        if len(row) > 0 and row[0].isdigit():
-                            account_number = row[2]
-                        pass
 
+                write = False
+                previous_row = None
+                
+                for row in parsed_csv:
+                    if len(row) >  0:
+                        print(row)
+
+                        if previous_row is not None and len(previous_row) > 0 and previous_row[0] == 'Fecha de Transacción':
+                            write = True
+
+                        if row[0] == '':
+                            write = False
+                        
+                        if (write):
+                            rows.append(row)
+
+                        if row[0].isdigit():
+                            account_number = row[2]
+                        print(account_number)
+
+                    previous_row = row
+                    
                 data = []
                 for row in rows:
-                    date = datetime.strptime(row[0], '%d/%m/%Y')
+                    try:
+                        date = datetime.strptime(row[0], '%d/%m/%Y')
+                    except:
+                        date = datetime.strptime(row[0], '%d/%m/%y')
+                        
                     transaction = {'Date':date, 'Reference':row[1], 'Code':row[2], 'Description':row[3], 'Debit':row[4], 'Credit':row[5], 'Balance':row[6], 'Category':'', 'Q': 'Q1' if date.day < 15 else 'Q2'}
                     data.append(transaction)
 
