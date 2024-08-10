@@ -359,11 +359,7 @@ class laserfocus:
                         news.append({'title':link.get_text().strip(), 'url':url + link.get('href')})
 
             return {'status':'success', 'content':news}
-            
-    class Calendar:
-        def __init__(self):
-            self.state = 0
-            
+                
     class Sports:
 
         def __init__(self):
@@ -388,7 +384,14 @@ class laserfocus:
             
             self.service = build("drive", "v3", credentials=creds)
 
-        # Query a file inside Drive
+        # Add upload files
+        # Add create folder?
+
+        # Modify files?
+
+        # Delete files
+
+        # Remove this?
         def queryForFile(self, path, file_name):
 
             print(path, '/', file_name)
@@ -428,7 +431,6 @@ class laserfocus:
             
             return {'content':files[len(files) - 1], 'status':'success'}
 
-        # Query a file inside Drive
         def queryForFiles(self, path):
 
             path = path + '/'
@@ -502,7 +504,10 @@ class laserfocus:
             self.client = MongoClient(uri, server_api=ServerApi('1'), tlsCAFile=certifi.where())
             print('Initialized client')
 
-        # Delete query one?
+        # Replace individual CRUD operations?
+        # Find a new way of sending queries to the database
+        # Fix id typing
+
         def queryDocumentInCollection(self, database, table, query):
 
             print('Querying entries in table in database.', {'database':database, 'table':table, 'query':query})
@@ -564,7 +569,6 @@ class laserfocus:
                 print('Entry not found.')
                 return {'status':'no_data', 'content':None}
 
-        # Does this need dependencies?
         def updateDocumentInCollection(self, database, table, data, query):
 
             print('Updating entry in table in database.', {'database':database, 'table':table, 'data':data, 'query':query})
@@ -585,7 +589,6 @@ class laserfocus:
             print('Successfully updated entry.', {'document':entry})
             return {'status':'success', 'content':entry}
 
-        # Delete individual inserts and deletes?
         def insertDocumentToCollection(self, database, table, data, context):
 
             print('Inserting entry to table in Database.', {'database':database, 'table':table, 'data':data})
@@ -605,10 +608,10 @@ class laserfocus:
 
             print('Adding dependencies that relate to entry.')
 
-            dependencies = self.insertDependencies(table, data, insertedId, context)
+            dependencies = self.insertDependencies(table, data, ObjectId(insertedId), context)
         
             return {'status':'success', 'content':{'data':str(insertedId), 'dependencies':dependencies}}
-                
+
         def deleteDocumentInCollection(self, database, table, query):
 
             print('Deleting entry in table in Database.', {'database':database, 'table':table, 'query':query})
@@ -637,34 +640,41 @@ class laserfocus:
             dependencies = {}
             match table:
                 case 'user':
+                    
+                    result = self.insertDocumentToCollection('spaces', 'space', '{"name":"' + str(data['name']) + 's Space"}', {'userId':str(insertedId)})
+                    print(result['content'])
 
-                    # TODO recursive: check if exists, if not insert?
+                    dependencies = {'space':result['content']['data']}
 
-                    # Insert user's new space
-                    space = self.client['spaces']['space']
-                    spaceData = space.insert_one({"name":f"{data['name']}'s Space"})
-                    spaceId = spaceData.inserted_id
+                    for key in result['content']['dependencies']:
+                        dependencies[key] = result['content']['dependencies'][key]
 
-                    # Insert user space relationship
-                    userSpace = self.client['users']['user-space']
-                    userSpaceData = userSpace.insert_one({'userId':insertedId, 'spaceId':spaceId})
-                    userSpaceId = userSpaceData.inserted_id
-
-                    dependencies = {'space':str(spaceId), 'user-space':str(userSpaceId)}
+                    print(dependencies)
 
                 case 'event':
-                    # Insert space event relationship
-                    spaceEvent = self.client['spaces']['space-event']
-
-                    # TODO change this
-                    try:
-                        spaceId = context['spaceId']
-                    except:
-                        return {'status':'error', 'content':'No spaceId provided.'}
                     
-                    spaceEventData = spaceEvent.insert_one({'eventId':insertedId, 'spaceId':ObjectId(spaceId)})
-                    spaceEventId = spaceEventData.inserted_id
-                    dependencies = {'space-event':str(spaceEventId)}
+                    # Insert space event relationship
+                    result = self.insertDocumentToCollection('spaces', 'space-event', '{"eventId":"' + str(insertedId) + '", "spaceId":"'+ str(context['spaceId']) + '"}', {})
+                    print(result['content'])
+
+                    dependencies = {'space-event':result['content']['data']}
+
+                    for key in result['content']['dependencies']:
+                        dependencies[key] = result['content']['dependencies'][key]
+
+                case 'space':
+
+                    # Insert user space relationship
+                    result = self.insertDocumentToCollection('users', 'user-space', '{"userId":"' + str(context['userId']) + '", "spaceId":"'+ str(insertedId) + '"}', {})
+                    print(result['content'])
+
+                    dependencies = {'user-space':result['content']['data']}
+
+                    for key in result['content']['dependencies']:
+                        dependencies[key] = result['content']['dependencies'][key]
+
+                case _:
+                    pass
 
             return dependencies
 
@@ -674,18 +684,30 @@ class laserfocus:
             match table:
                 case 'user':
 
-                    # Delete user space relationship
-                    userSpace = self.client['users']['user-space']
-                    userSpaceData = userSpace.find_one_and_delete({'userId':deletedId})
-                    userSpaceId = userSpaceData['_id']
+                    result = self.deleteDocumentInCollection('users', 'user-space', '{"userId":"' + str(deletedId) + '}')
+                    print(result['content'])
 
-                    # Delete user's space 
-                    spaceId = userSpaceData['spaceId']
-                    space = self.client['spaces']['space']
-                    spaceData = space.find_one_and_delete({'spaceId':spaceId})
-                    spaceId = spaceData['_id']
+                    dependencies = {'space':result['content']['data']}
 
-                    dependencies = {'user-space':str(userSpaceId), 'space':str(spaceId)}
+                    for key in result['content']['dependencies']:
+                        dependencies[key] = result['content']['dependencies'][key]
+
+                    print(dependencies)
+
+                case 'space':
+                    pass
+
+                case 'user-space':
+                    
+                    result = self.deleteDocumentInCollection('spaces', 'space', '{"spaceId":"' + str(deletedId) + '}')
+                    print(result['content'])
+
+                    dependencies = {'space':result['content']['data']}
+
+                    for key in result['content']['dependencies']:
+                        dependencies[key] = result['content']['dependencies'][key]
+
+                    print(dependencies)
 
             return dependencies
 
