@@ -32,7 +32,7 @@ import time
 class laserfocus:
   
     def __init__(self):
-        pass
+        self.url = 'https://laserfocus-api.onrender.com'
 
     class DateAndTime:
         def __init__(self):
@@ -156,6 +156,56 @@ class laserfocus:
                         'account_id':'CR83010200009295665295'
                     }
                 ]
+
+            def generateStatements(self, account, file_name):
+
+                # Change path to account
+                path = 'Personal/Wallet/Statements/BAC/' +  account + '/Sources'
+                dictToSend = {'path':path, 'file_name':file_name}
+                res = rq.post('https://laserfocus-api.onrender.com' + '/drive/query_file', json=dictToSend)
+
+                # Get month that the statement is for
+                period = file_name.split('.')[0]
+
+                # Download file in plain text
+                binaryFile = res.content
+                file_text = binaryFile.decode('latin1')
+
+                # Parse statements
+                df_statements, account_number = self.parseStatements(file_text)
+
+                # Validate account
+                accounts = [{'id':'CR83010200009295665295', 'name':'Cash'}]
+                account_number = account_number.strip()
+                for acct in accounts:
+                    if acct['id'] == account_number and acct['name'] == account:
+                        acct = acct['name']
+
+                # Get debits and credits
+                df_debits, df_credits = self.getEntries(df_statements)
+
+                # Categorize entries
+                df_debits = self.categorizeStatements(df_debits)
+                df_credits = self.categorizeStatements(df_credits)
+
+                # Post process data
+                df_all = pd.concat([df_debits, df_credits])
+                df_all['Total'] = df_all['Credit'].astype(float) - df_all['Debit'].astype(float)
+                df_all = df_all.sort_values(by='Date')
+
+                # Save to drive TODO CREATE FUNCTION
+                # Output path: Personal/Wallet/Statements/{Bank}/{AccountNumber}
+                # Output file name: MMYYYY.csv
+
+                try:
+                    df_all.to_csv(f'/Users/andres/Google Drive/My Drive/Personal/Wallet/Statements/BAC/{account}/Processed/{period}.csv', index=False)
+                except:
+                    print('Error saving file.')
+                    return {'error':'error'}
+                
+                print('Processed data.')
+                
+                return {'status':'success'}
 
             def parseStatements(self, file_text):
 
@@ -441,6 +491,7 @@ class laserfocus:
             return {'content':downloaded_file.getvalue(), 'status':'success'}
 
     class Database:
+
         def __init__(self):
 
             # Create a new client and connect to the server
@@ -451,6 +502,7 @@ class laserfocus:
             self.client = MongoClient(uri, server_api=ServerApi('1'), tlsCAFile=certifi.where())
             print('Initialized client')
 
+        # Delete query one?
         def queryDocumentInCollection(self, database, table, query):
 
             print('Querying entries in table in database.', {'database':database, 'table':table, 'query':query})
@@ -512,6 +564,7 @@ class laserfocus:
                 print('Entry not found.')
                 return {'status':'no_data', 'content':None}
 
+        # Does this need dependencies?
         def updateDocumentInCollection(self, database, table, data, query):
 
             print('Updating entry in table in database.', {'database':database, 'table':table, 'data':data, 'query':query})
@@ -522,16 +575,17 @@ class laserfocus:
 
             collection = collection[table]
             try:
-                document = collection.update_one(query, {
+                entry = collection.update_one(query, {
                     '$set': data
                 })
             except:
                 print('Error updating document.')
                 return {'error':'Error updating document.'}
             
-            print('Successfully updated entry.', {'document':document})
-            return {'status':'success', 'content':document}
+            print('Successfully updated entry.', {'document':entry})
+            return {'status':'success', 'content':entry}
 
+        # Delete individual inserts and deletes?
         def insertDocumentToCollection(self, database, table, data, context):
 
             print('Inserting entry to table in Database.', {'database':database, 'table':table, 'data':data})
@@ -549,16 +603,42 @@ class laserfocus:
             print('Successfully inserted entry.')
             insertedId = insertedData.inserted_id
 
-            print('Adding dependencies to entry.')
+            print('Adding dependencies that relate to entry.')
+
             dependencies = self.insertDependencies(table, data, insertedId, context)
         
             return {'status':'success', 'content':{'data':str(insertedId), 'dependencies':dependencies}}
                 
+        def deleteDocumentInCollection(self, database, table, query):
+
+            print('Deleting entry in table in Database.', {'database':database, 'table':table, 'query':query})
+            query = ast.literal_eval(query)
+
+            db = self.client[database]
+            tb = db[table]
+
+            try:
+                deletedData = tb.find_one_and_delete(query)
+            except:
+                print('Error deleting entry.')
+                return {'status':'error'}
+
+            print('Successfully deleted entry.')
+            deletedId = deletedData['_id']
+            print(deletedId, type(deletedId))
+
+            print('Deleting dependencies that relate to entry.')
+            dependencies = self.deleteDependencies(table, deletedId)
+
+            return {'status':'success', 'content':{'data':str(deletedData), 'dependencies':dependencies}}
+
         def insertDependencies(self, table, data, insertedId, context):
 
             dependencies = {}
             match table:
                 case 'user':
+
+                    # TODO recursive: check if exists, if not insert?
 
                     # Insert user's new space
                     space = self.client['spaces']['space']
@@ -575,6 +655,8 @@ class laserfocus:
                 case 'event':
                     # Insert space event relationship
                     spaceEvent = self.client['spaces']['space-event']
+
+                    # TODO change this
                     try:
                         spaceId = context['spaceId']
                     except:
@@ -583,6 +665,27 @@ class laserfocus:
                     spaceEventData = spaceEvent.insert_one({'eventId':insertedId, 'spaceId':ObjectId(spaceId)})
                     spaceEventId = spaceEventData.inserted_id
                     dependencies = {'space-event':str(spaceEventId)}
+
+            return dependencies
+
+        def deleteDependencies(self, table, deletedId):
+
+            dependencies = {}
+            match table:
+                case 'user':
+
+                    # Delete user space relationship
+                    userSpace = self.client['users']['user-space']
+                    userSpaceData = userSpace.find_one_and_delete({'userId':deletedId})
+                    userSpaceId = userSpaceData['_id']
+
+                    # Delete user's space 
+                    spaceId = userSpaceData['spaceId']
+                    space = self.client['spaces']['space']
+                    spaceData = space.find_one_and_delete({'spaceId':spaceId})
+                    spaceId = spaceData['_id']
+
+                    dependencies = {'user-space':str(userSpaceId), 'space':str(spaceId)}
 
             return dependencies
 

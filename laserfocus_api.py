@@ -18,12 +18,6 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 
 laserfocus = laserfocus()
 
-debug = True
-if debug:
-    url = 'http://127.0.0.1:5000'
-else:
-    url = 'https://laserfocus-api.onrender.com'
-
 @app.route("/")
 def root():
     data = {
@@ -118,7 +112,10 @@ async def drive_query_id():
 
     return response
 
+# TODO ADD UPLOAD FILE
+
 # Database
+# TODO MAYBE REMOVE THIS
 @app.route('/database/query', methods=['POST'])
 async def mongo_query():
     # Athena input
@@ -135,6 +132,7 @@ async def mongo_query_many():
     response = Mongo.queryDocumentsInCollection(input_json['database'], input_json['table'], input_json['query'])
     return json.loads(json_util.dumps(response))
 
+# TODO THIS NEEDS CHECKING
 @app.route('/database/update', methods=['POST'])
 async def mongo_update():
     # Athena input
@@ -143,12 +141,21 @@ async def mongo_update():
     response = Mongo.updateDocumentInCollection(input_json['database'], input_json['table'], input_json['data'], input_json['query'])
     return json.loads(json_util.dumps(response))
 
+# TODO CREATE BULK INSERTS
 @app.route('/database/insert', methods=['POST'])
 async def mongo_insert():
     # Athena input
     input_json = request.get_json(force=True)
     Mongo = laserfocus.Database()
     response = Mongo.insertDocumentToCollection(input_json['database'], input_json['table'], input_json['data'], input_json['context'])
+    return response
+
+@app.route('/database/delete', methods=['POST'])
+async def mongo_delete():
+    # Athena input
+    input_json = request.get_json(force=True)
+    Mongo = laserfocus.Database()
+    response = Mongo.deleteDocumentInCollection(input_json['database'], input_json['table'], input_json['query'])
     return response
 
 # Wallet
@@ -161,55 +168,13 @@ def bac_generate_statements():
 
     # Query drive for document
     input_json = request.get_json(force=True)
-    path = 'Personal/Wallet/Statements/BAC/' +  input_json['path'] + '/Sources'
-    dictToSend = {'path':path, 'file_name':input_json['file_name']}
-    res = rq.post(url + '/drive/query_file', json=dictToSend)
 
-    period = input_json['file_name'].split('.')[0]
+    # Acccccc
+    account = input_json['account']
+    file_name = input_json['file_name']
 
-    # Download file in plain text
-    binaryFile = res.content
-    file_text = binaryFile.decode('latin1')
-
-    df_statements, account_number = BAC.parseStatements(file_text)
-    account_number = account_number.strip()
-    print(account_number)
-
-    accounts = [{'id':'CR83010200009295665295', 'name':'Cash'}]
-
-    # Query database
-    for account in accounts:
-        if account['id'] == account_number and account['name'] == input_json['path']:
-            account = account['name']
-
-    # Get account number
-
-    df_debits, df_credits = BAC.getEntries(df_statements)
-
-    df_debits = BAC.categorizeStatements(df_debits)
-    df_credits = BAC.categorizeStatements(df_credits)
-
-    df_all = pd.concat([df_debits, df_credits])
-    df_all['Total'] = df_all['Credit'].astype(float) - df_all['Debit'].astype(float)
-    df_all = df_all.sort_values(by='Date')
-
-    # Save to drive
-    # Output path: Personal/Wallet/Statements/{Bank}/{AccountNumber}
-    # /Users/andres/Library/CloudStorage/GoogleDrive-aguilarcarboni@gmail.com/My Drive/Personal/Wallet/Statements/BAC/Cash/Processed
-    # Output file name: MMYYYY.csv
-
-    print(account, period)
-
-    try:
-        #df_debits.to_csv(f'/Users/andres/Google Drive/My Drive/Personal/Wallet/Statements/BAC/{account}/Processed/debits_{period}.csv')
-        #df_credits.to_csv(f'/Users/andres/Google Drive/My Drive/Personal/Wallet/Statements/BAC/{account}/Processed/credits_{period}.csv')
-        df_all.to_csv(f'/Users/andres/Google Drive/My Drive/Personal/Wallet/Statements/BAC/{account}/Processed/{period}.csv', index=False)
-
-    except:
-        return {'error':'error'}
-
-    print('Processed data.')
-    return {'account':account_number}
+    response = BAC.generateStatements(account, file_name)
+    return response
 
 debug = True
 if debug:

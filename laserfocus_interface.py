@@ -14,10 +14,10 @@ def walletInterface():
         case '1':
             
             print('Generate your monthly statements.')
-            path = input('Path/Account:')
+            account = input('Account:')
             file_name = input('File name:')
 
-            dictToSend = {'path': path, 'file_name':file_name}
+            dictToSend = {'account': account, 'file_name':file_name}
             res = rq.post(url + '/wallet/bac/generateStatements', json=dictToSend)
             dictFromServer = res.json()
 
@@ -71,7 +71,7 @@ def driveInterface():
 def databaseInterface():
 
     print('Database Interface')
-    print('1. Query\n2. Update\n3. Insert\n')
+    print('1. Query\n2. Update\n3. Insert\n4. Delete\n')
     choice = input(message)
 
 
@@ -109,7 +109,7 @@ def databaseInterface():
 
         case '3':
 
-            print('Insert any entry (document) in your database.')
+            print('Insert any entry in a table in the database.')
             database = input('Database:')
             table = input('Table:')
             data = input('Data:')
@@ -118,6 +118,18 @@ def databaseInterface():
             dictToSend = {'database':database, 'table':table, 'data':data, 'context':{'spaceId':'66a82587364a89ab61e5bae4'}}
 
             res = rq.post(url + '/database/insert', json=dictToSend)
+            dictFromServer = res.json()
+
+        case '4':
+
+            print('Delete any entry in a table in the database.')
+            database = input('Database:')
+            table = input('Table:')
+            query = input('Query:')
+
+            dictToSend = {'database':database, 'table':table, 'query':query}
+
+            res = rq.post(url + '/database/delete', json=dictToSend)
             dictFromServer = res.json()
         
     return dictFromServer
