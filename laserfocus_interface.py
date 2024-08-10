@@ -41,7 +41,7 @@ def driveInterface():
             dictToSend = {'path':path, 'file_name':file_name}
             res = rq.post(url + '/drive/query_file', json=dictToSend)
 
-            if file_name.endswith('.xlsx'):
+            if file_name.endswith('.xlsx') or file_name.endswith('.csv'):
                 df = pd.read_excel(BytesIO(res.content))
                 dictFromServer = df.to_dict(orient='records')
             else:
