@@ -522,8 +522,6 @@ class laserfocus:
             print('Initialized client')
 
         # Replace individual CRUD operations?
-        # Find a new way of sending queries to the database
-        # Fix id typing
 
         def queryDocumentInCollection(self, database, table, query):
 
@@ -534,6 +532,11 @@ class laserfocus:
             except:
                 print('Malformed query query.')
                 return {'status':'error', 'content':'Malformed query.'}
+            
+            for key in query:
+                if 'id' in key or 'Id' in key:
+                    print(f'Converting id {key} to ObjectId.')
+                    query[key] = ObjectId(query[key])
         
             if database not in self.client.list_database_names():
                 print('No database with that name found.')
@@ -546,7 +549,6 @@ class laserfocus:
             table = database[table]
             
             entry = table.find_one(query)
-            print(entry)
             
             if entry is not None:
                 print('Successfully queried entry.', {'content':entry})
@@ -564,6 +566,11 @@ class laserfocus:
             except:
                 print('Malformed query query.')
                 return {'status':'error', 'content':'Malformed query.'}
+            
+            for key in query:
+                if 'id' in key or 'Id' in key:
+                    print(f'Converting id {key} to ObjectId.')
+                    query[key] = ObjectId(query[key])
         
             if database not in self.client.list_database_names():
                 print('No database with that name found.')
@@ -589,8 +596,28 @@ class laserfocus:
         def updateDocumentInCollection(self, database, table, data, query):
 
             print('Updating entry in table in database.', {'database':database, 'table':table, 'data':data, 'query':query})
-            query = ast.literal_eval(query)
-            data = ast.literal_eval(data)
+            
+            try:
+                query = ast.literal_eval(query)
+            except:
+                print('Malformed query.')
+                return {'status':'error', 'content':'Malformed query.'}
+            
+            for key in query:
+                if 'id' in key:
+                    print(f'Converting id {key} to ObjectId.')
+                    query[key] = ObjectId(query[key])
+
+            try:
+                data = ast.literal_eval(data)
+            except:
+                print('Malformed data.')
+                return {'status':'error', 'content':'Malformed data.'}
+            
+            for key in data:
+                if 'id' in key or 'Id' in key:
+                    print(f'Converting id {key} to ObjectId.')
+                    data[key] = ObjectId(data[key])
 
             collection = self.client[database]
 
@@ -609,7 +636,21 @@ class laserfocus:
         def insertDocumentToCollection(self, database, table, data, context):
 
             print('Inserting entry to table in Database.', {'database':database, 'table':table, 'data':data})
-            data = ast.literal_eval(data)
+            try:
+                data = ast.literal_eval(data)
+            except:
+                print('Malformed data.')
+                return {'status':'error', 'content':'Malformed data.'}
+            
+            for key in data:
+                if 'id' in key or 'Id' in key:
+                    print(f'Converting id {key} to ObjectId.')
+                    data[key] = ObjectId(data[key])
+
+            for key in context:
+                if 'id' in key or 'Id' in key:
+                    print(f'Converting id {key} to ObjectId.')
+                    context[key] = ObjectId(context[key])
 
             db = self.client[database]
             tb = db[table]
@@ -633,6 +674,11 @@ class laserfocus:
 
             print('Deleting entry in table in Database.', {'database':database, 'table':table, 'query':query})
             query = ast.literal_eval(query)
+
+            for key in query:
+                if 'id' in key or 'Id' in key:
+                    print(f'Converting id {key} to ObjectId.')
+                    query[key] = ObjectId(query[key])
 
             db = self.client[database]
             tb = db[table]
@@ -797,9 +843,10 @@ class laserfocus:
 
     class Browser:
         def __init__(self):
+
             self.state = 0
 
-        def scraper(url):
+        def scraper(self, url):
             # Send a request to fetch the HTML content
             response = rq.get(url)
             if response.status_code != 200:
