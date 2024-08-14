@@ -541,9 +541,10 @@ class laserfocus:
             if database not in self.client.list_database_names():
                 print('No database with that name found.')
                 return {'status':'error', 'content':'No database with that name found.'}
+            
             db = self.client[database]
             
-            if table not in database.list_collection_names():
+            if table not in db.list_collection_names():
                 print('No table with that name found.')
                 return {'status':'error', 'content':'No table with that name found.'}
             
