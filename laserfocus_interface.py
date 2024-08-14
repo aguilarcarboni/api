@@ -88,7 +88,7 @@ def databaseInterface():
 
             dictToSend = {'database':database, 'table':table, 'query':query}
 
-            res = rq.post(url + '/database/query', json=dictToSend)
+            res = rq.post(url + '/database/query_many', json=dictToSend)
             dictFromServer = res.json()
 
         case '2':

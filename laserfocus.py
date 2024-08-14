@@ -541,14 +541,15 @@ class laserfocus:
             if database not in self.client.list_database_names():
                 print('No database with that name found.')
                 return {'status':'error', 'content':'No database with that name found.'}
-            database = self.client[database]
+            db = self.client[database]
             
             if table not in database.list_collection_names():
                 print('No table with that name found.')
                 return {'status':'error', 'content':'No table with that name found.'}
-            table = database[table]
             
-            entry = table.find_one(query)
+            tb = db[table]
+            
+            entry = tb.find_one(query)
             
             if entry is not None:
                 print('Successfully queried entry.', {'content':entry})
@@ -582,7 +583,7 @@ class laserfocus:
                 print('No table with that name found.')
                 return {'status':'error', 'content':'No table with that name found.'}
             
-            tb = database[table]
+            tb = db[table]
             
             entry = tb.find(query)
             
