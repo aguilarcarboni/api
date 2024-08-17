@@ -526,12 +526,6 @@ class laserfocus:
         def queryDocumentInCollection(self, database, table, query):
 
             print('Querying entries in table in database.', {'database':database, 'table':table, 'query':query})
-
-            try:
-                query = ast.literal_eval(query)
-            except:
-                print('Malformed query query.')
-                return {'status':'error', 'content':'Malformed query.'}
             
             for key in query:
                 if 'id' in key or 'Id' in key:
@@ -562,12 +556,6 @@ class laserfocus:
         def queryDocumentsInCollection(self, database, table, query):
 
             print('Querying entries in table in database.', {'database':database, 'table':table, 'query':query})
-
-            try:
-                query = ast.literal_eval(query)
-            except:
-                print('Malformed query query.')
-                return {'status':'error', 'content':'Malformed query.'}
             
             for key in query:
                 if 'id' in key or 'Id' in key:
@@ -599,22 +587,10 @@ class laserfocus:
 
             print('Updating entry in table in database.', {'database':database, 'table':table, 'data':data, 'query':query})
             
-            try:
-                query = ast.literal_eval(query)
-            except:
-                print('Malformed query.')
-                return {'status':'error', 'content':'Malformed query.'}
-            
             for key in query:
                 if 'id' in key:
                     print(f'Converting id {key} to ObjectId.')
                     query[key] = ObjectId(query[key])
-
-            try:
-                data = ast.literal_eval(data)
-            except:
-                print('Malformed data.')
-                return {'status':'error', 'content':'Malformed data.'}
             
             for key in data:
                 if 'id' in key or 'Id' in key:
@@ -638,11 +614,6 @@ class laserfocus:
         def insertDocumentToCollection(self, database, table, data, context):
 
             print('Inserting entry to table in Database.', {'database':database, 'table':table, 'data':data})
-            try:
-                data = ast.literal_eval(data)
-            except:
-                print('Malformed data.')
-                return {'status':'error', 'content':'Malformed data.'}
             
             for key in data:
                 if 'id' in key or 'Id' in key:
@@ -675,7 +646,6 @@ class laserfocus:
         def deleteDocumentInCollection(self, database, table, query):
 
             print('Deleting entry in table in Database.', {'database':database, 'table':table, 'query':query})
-            query = ast.literal_eval(query)
 
             for key in query:
                 if 'id' in key or 'Id' in key:
@@ -706,7 +676,7 @@ class laserfocus:
             match table:
                 case 'user':
                     
-                    result = self.insertDocumentToCollection('spaces', 'space', '{"name":"' + str(data['name']) + 's Space"}', {'userId':str(insertedId)})
+                    result = self.insertDocumentToCollection('spaces', 'space', {'name':str(data['name']) + 's Space"}'}, {'userId':str(insertedId)})
                     print(result['content'])
 
                     dependencies = {'space':result['content']['data']}
@@ -719,7 +689,7 @@ class laserfocus:
                 case 'event':
                     
                     # Insert space event relationship
-                    result = self.insertDocumentToCollection('spaces', 'space-event', '{"eventId":"' + str(insertedId) + '", "spaceId":"'+ str(context['spaceId']) + '"}', {})
+                    result = self.insertDocumentToCollection('spaces', 'space-event', {'eventId':str(insertedId), 'spaceId':str(context['spaceId'])}, {})
                     print(result['content'])
 
                     dependencies = {'space-event':result['content']['data']}
@@ -730,7 +700,7 @@ class laserfocus:
                 case 'space':
 
                     # Insert user space relationship
-                    result = self.insertDocumentToCollection('users', 'user-space', '{"userId":"' + str(context['userId']) + '", "spaceId":"'+ str(insertedId) + '"}', {})
+                    result = self.insertDocumentToCollection('users', 'user-space', {'userId':str(context['userId']), 'spaceId':str(insertedId)}, {})
                     print(result['content'])
 
                     dependencies = {'user-space':result['content']['data']}

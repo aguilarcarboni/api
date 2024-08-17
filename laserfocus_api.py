@@ -1,8 +1,6 @@
 from flask import Flask, request, send_file
 from flask_cors import CORS
 
-import pandas as pd
-
 from io import BytesIO
 
 from laserfocus import laserfocus
@@ -10,7 +8,7 @@ from laserfocus import laserfocus
 from bson import json_util
 import json
 
-import requests as rq
+import time
 
 app = Flask(__name__)
 cors = CORS(app)

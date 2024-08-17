@@ -2,6 +2,7 @@
 import requests as rq
 import pandas as pd
 from io import BytesIO
+import ast
 
 def walletInterface():
 
@@ -86,6 +87,8 @@ def databaseInterface():
             table = input('Table:')
             query = input('Query:')
 
+            query = ast.literal_eval(query)
+
             dictToSend = {'database':database, 'table':table, 'query':query}
 
             res = rq.post(url + '/database/query', json=dictToSend)
@@ -98,9 +101,12 @@ def databaseInterface():
             table = input('Table:')
             key = input('Key:')
             value = input('Value:')
-            query = '{' + f'"{key}":"{value}"' + '}'
-
             data = input('Data:')
+
+            query = '{' + f'"{key}":"{value}"' + '}'
+            query = ast.literal_eval(query)
+
+            data = ast.literal_eval(data)
 
             dictToSend = {'database':database, 'table':table, 'data':data, 'query':query}
 
@@ -115,7 +121,10 @@ def databaseInterface():
             data = input('Data:')
             context = input('Context:')
 
-            dictToSend = {'database':database, 'table':table, 'data':data, 'context':{'spaceId':'66a82587364a89ab61e5bae4'}}
+            data = ast.literal_eval(data)
+            context = ast.literal_eval(context)
+
+            dictToSend = {'database':database, 'table':table, 'data':data, 'context':context}
 
             res = rq.post(url + '/database/insert', json=dictToSend)
             dictFromServer = res.json()
@@ -126,6 +135,8 @@ def databaseInterface():
             database = input('Database:')
             table = input('Table:')
             query = input('Query:')
+
+            query = ast.literal_eval(query)
 
             dictToSend = {'database':database, 'table':table, 'query':query}
 
