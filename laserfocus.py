@@ -526,7 +526,7 @@ class laserfocus:
             if isinstance(data, dict):
                 for key, value in data.items():
 
-                    if ('id' in key or '_id' in key):
+                    if 'id' in key or 'Id' in key:
                         canConvert = True
 
                     data[key] = self.convertIds(value, canConvert)
@@ -547,9 +547,8 @@ class laserfocus:
         def queryDocumentInCollection(self, database, table, query):
 
             print('Querying entries in table in database.', {'database':database, 'table':table, 'query':query})
-
+            
             query = self.convertIds(query, False)
-            print(query)
         
             if database not in self.client.list_database_names():
                 print('No database with that name found.')
@@ -577,7 +576,6 @@ class laserfocus:
             print('Querying entries in table in database.', {'database':database, 'table':table, 'query':query})
             
             query = self.convertIds(query, False)
-            print(query)
         
             if database not in self.client.list_database_names():
                 print('No database with that name found.')
