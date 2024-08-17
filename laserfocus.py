@@ -524,8 +524,9 @@ class laserfocus:
         def convertIds(self, data, canConvert):
 
             if isinstance(data, dict):
+                        
                 for key, value in data.items():
-
+                    
                     if 'id' in key or 'Id' in key:
                         canConvert = True
 
@@ -533,8 +534,12 @@ class laserfocus:
                         
             if isinstance(data, str):
                 if (canConvert):
-                    print('Converting id to ObjectId.', data)
-                    return ObjectId(data)
+                    print(f'Converting ({data}) to ObjectId.')
+                    try:
+                        return ObjectId(data)
+                    except:
+                        print(f'({data}) is not an ObjectId. Returning original data.')
+                        return data
                 
             elif isinstance(data, list):
                 for index, item in enumerate(data):
