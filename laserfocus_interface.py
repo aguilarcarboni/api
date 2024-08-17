@@ -91,27 +91,12 @@ def databaseInterface():
 
             dictToSend = {'database':database, 'table':table, 'query':query}
 
-            res = rq.post(url + '/database/query', json=dictToSend)
+            res = rq.post(url + '/database/query_many', json=dictToSend)
             dictFromServer = res.json()
 
         case '2':
 
             print('Update any entry in a table in the database.')
-            database = input('Database:')
-            table = input('Table:')
-            key = input('Key:')
-            value = input('Value:')
-            data = input('Data:')
-
-            query = '{' + f'"{key}":"{value}"' + '}'
-            query = ast.literal_eval(query)
-
-            data = ast.literal_eval(data)
-
-            dictToSend = {'database':database, 'table':table, 'data':data, 'query':query}
-
-            res = rq.post(url + '/database/update', json=dictToSend)
-            dictFromServer = res.json()
 
         case '3':
 

@@ -521,16 +521,35 @@ class laserfocus:
             self.client = MongoClient(uri, server_api=ServerApi('1'), tlsCAFile=certifi.where())
             print('Initialized client')
 
+        def convertIds(self, data, canConvert):
+
+            if isinstance(data, dict):
+                for key, value in data.items():
+
+                    if ('id' in key or '_id' in key):
+                        canConvert = True
+
+                    data[key] = self.convertIds(value, canConvert)
+                        
+            if isinstance(data, str):
+                if (canConvert):
+                    print('Converting id to ObjectId.', data)
+                    return ObjectId(data)
+                
+            elif isinstance(data, list):
+                for index, item in enumerate(data):
+                    data[index] = self.convertIds(item, canConvert)
+
+            return data
+
         # Replace individual CRUD operations?
 
         def queryDocumentInCollection(self, database, table, query):
 
             print('Querying entries in table in database.', {'database':database, 'table':table, 'query':query})
-            
-            for key in query:
-                if 'id' in key or 'Id' in key:
-                    print(f'Converting id {key} to ObjectId.')
-                    query[key] = ObjectId(query[key])
+
+            query = self.convertIds(query, False)
+            print(query)
         
             if database not in self.client.list_database_names():
                 print('No database with that name found.')
@@ -557,10 +576,8 @@ class laserfocus:
 
             print('Querying entries in table in database.', {'database':database, 'table':table, 'query':query})
             
-            for key in query:
-                if 'id' in key or 'Id' in key:
-                    print(f'Converting id {key} to ObjectId.')
-                    query[key] = ObjectId(query[key])
+            query = self.convertIds(query, False)
+            print(query)
         
             if database not in self.client.list_database_names():
                 print('No database with that name found.')
@@ -583,34 +600,6 @@ class laserfocus:
                 print('Entry not found.')
                 return {'status':'no_data', 'content':None}
 
-        def updateDocumentInCollection(self, database, table, data, query):
-
-            print('Updating entry in table in database.', {'database':database, 'table':table, 'data':data, 'query':query})
-            
-            for key in query:
-                if 'id' in key:
-                    print(f'Converting id {key} to ObjectId.')
-                    query[key] = ObjectId(query[key])
-            
-            for key in data:
-                if 'id' in key or 'Id' in key:
-                    print(f'Converting id {key} to ObjectId.')
-                    data[key] = ObjectId(data[key])
-
-            collection = self.client[database]
-
-            collection = collection[table]
-            try:
-                entry = collection.update_one(query, {
-                    '$set': data
-                })
-            except:
-                print('Error updating document.')
-                return {'error':'Error updating document.'}
-            
-            print('Successfully updated entry.', {'document':entry})
-            return {'status':'success', 'content':entry}
-
         def insertDocumentToCollection(self, database, table, data, context):
 
             print('Inserting entry to table in Database.', {'database':database, 'table':table, 'data':data})
@@ -625,7 +614,16 @@ class laserfocus:
                     print(f'Converting id {key} to ObjectId.')
                     context[key] = ObjectId(context[key])
 
+            if database not in self.client.list_database_names():
+                print('No database with that name found.')
+                return {'status':'error', 'content':'No database with that name found.'}
+
             db = self.client[database]
+
+            if table not in db.list_collection_names():
+                print('No table with that name found.')
+                return {'status':'error', 'content':'No table with that name found.'}
+        
             tb = db[table]
 
             try:
@@ -652,7 +650,17 @@ class laserfocus:
                     print(f'Converting id {key} to ObjectId.')
                     query[key] = ObjectId(query[key])
 
+
+            if database not in self.client.list_database_names():
+                print('No database with that name found.')
+                return {'status':'error', 'content':'No database with that name found.'}
+            
             db = self.client[database]
+
+            if table not in db.list_collection_names():
+                print('No table with that name found.')
+                return {'status':'error', 'content':'No table with that name found.'}
+            
             tb = db[table]
 
             try:
@@ -719,7 +727,7 @@ class laserfocus:
             match table:
                 case 'user':
 
-                    result = self.deleteDocumentInCollection('users', 'user-space', '{"userId":"' + str(deletedId) + '}')
+                    result = self.deleteDocumentInCollection('users', 'user-space', {'userId':str(deletedId)})
                     print(result['content'])
 
                     dependencies = {'space':result['content']['data']}
@@ -734,7 +742,7 @@ class laserfocus:
 
                 case 'user-space':
                     
-                    result = self.deleteDocumentInCollection('spaces', 'space', '{"spaceId":"' + str(deletedId) + '}')
+                    result = self.deleteDocumentInCollection('spaces', 'space', {'spaceId':str(deletedId)})
                     print(result['content'])
 
                     dependencies = {'space':result['content']['data']}

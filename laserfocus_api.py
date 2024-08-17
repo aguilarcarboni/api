@@ -130,15 +130,6 @@ async def mongo_query_many():
     response = Mongo.queryDocumentsInCollection(input_json['database'], input_json['table'], input_json['query'])
     return json.loads(json_util.dumps(response))
 
-# TODO THIS NEEDS CHECKING
-@app.route('/database/update', methods=['POST'])
-async def mongo_update():
-    # Athena input
-    input_json = request.get_json(force=True)
-    Mongo = laserfocus.Database()
-    response = Mongo.updateDocumentInCollection(input_json['database'], input_json['table'], input_json['data'], input_json['query'])
-    return json.loads(json_util.dumps(response))
-
 # TODO CREATE BULK INSERTS
 @app.route('/database/insert', methods=['POST'])
 async def mongo_insert():
