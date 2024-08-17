@@ -165,10 +165,11 @@ def bac_generate_statements():
     response = BAC.generateStatements(account, file_name)
     return response
 
-debug = True
-if debug:
 
-    if __name__ == "__main__": 
-        app.run(debug=True)
-        
-    print('Service live.')
+if __name__ == '__main__':
+    debug = True
+    if debug:
+        app.run()
+    else:
+        app.run(host='0.0.0.0', port=136)
+        print('Service live.')
