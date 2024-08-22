@@ -169,7 +169,7 @@ def bac_generate_statements():
 if __name__ == '__main__':
     debug = True
     if debug:
-        app.run()
+        app.run(debug=True)
     else:
         app.run(host='0.0.0.0', port=136)
         print('Service live.')

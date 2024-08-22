@@ -605,7 +605,8 @@ class laserfocus:
 
         def insertDocumentToCollection(self, database, table, data, context):
 
-            print('Inserting entry to table in Database.', {'database':database, 'table':table, 'data':data})
+            print('Inserting entry to table in Database.')
+            print('Data:', {'database':database, 'table':table, 'data':data})
             
             for key in data:
                 if 'id' in key or 'Id' in key:
@@ -635,7 +636,7 @@ class laserfocus:
                 print('Error inserting entry.')
                 return {'status':'error'}
 
-            print('Successfully inserted entry.')
+            print('Successfully inserted entry.\n')
             insertedId = insertedData.inserted_id
 
             print('Adding dependencies that relate to entry.')
@@ -652,7 +653,6 @@ class laserfocus:
                 if 'id' in key or 'Id' in key:
                     print(f'Converting id {key} to ObjectId.')
                     query[key] = ObjectId(query[key])
-
 
             if database not in self.client.list_database_names():
                 print('No database with that name found.')
@@ -673,11 +673,12 @@ class laserfocus:
                 return {'status':'error'}
 
             print('Successfully deleted entry.')
+            print(deletedData)
             deletedId = deletedData['_id']
             print(deletedId, type(deletedId))
 
             print('Deleting dependencies that relate to entry.')
-            dependencies = self.deleteDependencies(table, deletedId)
+            dependencies = self.deleteDependencies(table, ObjectId(deletedId), deletedData)
 
             return {'status':'success', 'content':{'data':str(deletedData), 'dependencies':dependencies}}
 
@@ -688,72 +689,113 @@ class laserfocus:
                 case 'user':
                     
                     result = self.insertDocumentToCollection('spaces', 'space', {'name':str(data['name']) + 's Space"}'}, {'userId':str(insertedId)})
-                    print(result['content'])
-
-                    dependencies = {'space':result['content']['data']}
-
+                    dependencies['space'] = result['content']['data']
                     for key in result['content']['dependencies']:
                         dependencies[key] = result['content']['dependencies'][key]
-
-                    print(dependencies)
 
                 case 'event':
                     
                     # Insert space event relationship
                     result = self.insertDocumentToCollection('spaces', 'space-event', {'eventId':str(insertedId), 'spaceId':str(context['spaceId'])}, {})
-                    print(result['content'])
-
-                    dependencies = {'space-event':result['content']['data']}
-
+                    dependencies['space-event'] = result['content']['data']
                     for key in result['content']['dependencies']:
                         dependencies[key] = result['content']['dependencies'][key]
 
                 case 'space':
 
                     # Insert user space relationship
-                    result = self.insertDocumentToCollection('users', 'user-space', {'userId':str(context['userId']), 'spaceId':str(insertedId)}, {})
-                    print(result['content'])
+                    if ('userId' in list(context.keys())):
+                        result = self.insertDocumentToCollection('users', 'user-space', {'userId':str(context['userId']), 'spaceId':str(insertedId)}, {})
+                        dependencies['user-space'] = result['content']['data']
 
-                    dependencies = {'user-space':result['content']['data']}
+                    # Insert project space relationship
+                    elif ('projectId' in list(context.keys())):
+                        result = self.insertDocumentToCollection('projects', 'project-space', {'projectId':str(context['projectId']), 'spaceId':str(insertedId)}, {})
+                        dependencies['project-space'] = result['content']['data']
 
+                    for key in result['content']['dependencies']:
+                        dependencies[key] = result['content']['dependencies'][key]
+
+                case 'project':
+
+                    # Insert user project relationship
+                    result = self.insertDocumentToCollection('users', 'user-project', {'userId':str(context['userId']), 'projectId':str(insertedId)}, {})
+                    dependencies['user-project'] = result['content']['data']
+                    for key in result['content']['dependencies']:
+                        dependencies[key] = result['content']['dependencies'][key]
+
+                    # Create project's space
+                    result = self.insertDocumentToCollection('spaces', 'space', {'name':'Test Space'}, {'projectId':str(insertedId)})
+                    dependencies['space'] = result['content']['data']
                     for key in result['content']['dependencies']:
                         dependencies[key] = result['content']['dependencies'][key]
 
                 case _:
                     pass
 
+            print('Dependencies:', dependencies)
             return dependencies
 
-        def deleteDependencies(self, table, deletedId):
+        def deleteDependencies(self, table, deletedId, context):
 
             dependencies = {}
             match table:
+
                 case 'user':
 
-                    result = self.deleteDocumentInCollection('users', 'user-space', {'userId':str(deletedId)})
-                    print(result['content'])
+                    # Remove users's space
+                    result = self.deleteDocumentInCollection('projects', 'user-space', {'userId':str(deletedId)})
 
-                    dependencies = {'space':result['content']['data']}
-
+                    dependencies['space'] = result['content']['data']
                     for key in result['content']['dependencies']:
                         dependencies[key] = result['content']['dependencies'][key]
 
-                    print(dependencies)
+                case 'user-space':
+
+                    result = self.deleteDocumentInCollection('spaces', 'space', {'spaceId':str(context['spaceId'])})
+                    dependencies['space'] = result['content']['data']
+                    for key in result['content']['dependencies']:
+                        dependencies[key] = result['content']['dependencies'][key]
+                                    
+                case 'user-project':
+                    pass
+
 
                 case 'space':
                     pass
 
-                case 'user-space':
-                    
-                    result = self.deleteDocumentInCollection('spaces', 'space', {'spaceId':str(deletedId)})
-                    print(result['content'])
 
-                    dependencies = {'space':result['content']['data']}
+                case 'event':
 
+                    result = self.deleteDocumentInCollection('spaces', 'space-event', {'eventId':str(deletedId)})
+                    dependencies['space-event'] = result['content']['data']
                     for key in result['content']['dependencies']:
                         dependencies[key] = result['content']['dependencies'][key]
 
-                    print(dependencies)
+
+                case 'project-space':
+
+                    result = self.deleteDocumentInCollection('spaces', 'space', {'_id':str(context['spaceId'])})
+                    dependencies['space'] = result['content']['data']
+                    for key in result['content']['dependencies']:
+                        dependencies[key] = result['content']['dependencies'][key]
+
+                case 'project':
+
+                    # Remove project's space
+                    result = self.deleteDocumentInCollection('projects', 'project-space', {'projectId':str(deletedId)})
+                    dependencies['project-space'] = result['content']['data']
+                    for key in result['content']['dependencies']:
+                        dependencies[key] = result['content']['dependencies'][key]
+
+                    # Remove user's project
+                    result = self.deleteDocumentInCollection('users', 'user-project', {'projectId':str(deletedId)})
+                    dependencies['user-project'] = result['content']['data']
+                    for key in result['content']['dependencies']:
+                        dependencies[key] = result['content']['dependencies'][key]
+
+                case _:
+                    pass
 
             return dependencies
 

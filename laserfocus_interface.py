@@ -159,4 +159,4 @@ match choice:
     case _:
         print('Invalid choice')
 
-print(response)
+print('Response:', response)
