@@ -27,8 +27,6 @@ from pymongo.server_api import ServerApi
 from bson.objectid import ObjectId
 import certifi
 
-import time
-
 class laserfocus:
   
     def __init__(self):
