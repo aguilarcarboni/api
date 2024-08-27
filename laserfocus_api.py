@@ -8,10 +8,8 @@ from laserfocus import laserfocus
 from bson import json_util
 import json
 
-import time
-
 app = Flask(__name__)
-cors = CORS(app)
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 laserfocus = laserfocus()
