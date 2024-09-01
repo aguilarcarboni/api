@@ -40,7 +40,6 @@ df_processed = pd.read_csv('/Users/andres/Library/CloudStorage/GoogleDrive-aguil
 # Categorize transactions
 categorized_expenses, categorized_income = categorize_transactions(df_processed)
 
-
 """
 # Print results
 print("Expenses:")

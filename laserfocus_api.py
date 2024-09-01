@@ -8,6 +8,8 @@ from laserfocus import laserfocus
 from bson import json_util
 import json
 
+import time
+
 app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
 app.config['CORS_HEADERS'] = 'Content-Type'
@@ -25,18 +27,12 @@ def root():
 
 @app.route("/market")
 def market():
-    tickers = ['SPY', 'QQQ', 'TSLA', 'NVDA', 'AAPL', 'AMZN', 'NVDA', 'AMD', 'GOOGL', 'MSFT', 'V']
-    Market = laserfocus.Market(tickers)
+    Market = laserfocus.Market()
     marketData = {
         'stocks':{
-            'last':{
-            },
-            'historical': Market.historicalStocksData
+            'historical': Market.getMarketData(Market.tickers)
         },
     }
-
-    for ticker in tickers:
-        marketData['stocks']['last'][ticker] = Market.getLastPrice(ticker)
 
     return marketData
 
@@ -116,16 +112,14 @@ async def drive_query_id():
 async def mongo_query():
     # Athena input
     input_json = request.get_json(force=True)
-    Mongo = laserfocus.Database()
-    response = Mongo.queryDocumentInCollection(input_json['database'], input_json['table'], input_json['query'])
+    response = laserfocus.Database.queryDocumentInCollection(input_json['database'], input_json['table'], input_json['query'])
     return json.loads(json_util.dumps(response))
 
 @app.route('/database/query_many', methods=['POST'])
 async def mongo_query_many():
     # Athena input
     input_json = request.get_json(force=True)
-    Mongo = laserfocus.Database()
-    response = Mongo.queryDocumentsInCollection(input_json['database'], input_json['table'], input_json['query'])
+    response = laserfocus.Database.queryDocumentsInCollection(input_json['database'], input_json['table'], input_json['query'])
     return json.loads(json_util.dumps(response))
 
 # TODO CREATE BULK INSERTS
@@ -133,16 +127,14 @@ async def mongo_query_many():
 async def mongo_insert():
     # Athena input
     input_json = request.get_json(force=True)
-    Mongo = laserfocus.Database()
-    response = Mongo.insertDocumentToCollection(input_json['database'], input_json['table'], input_json['data'], input_json['context'])
+    response = laserfocus.Database.insertDocumentToCollection(input_json['database'], input_json['table'], input_json['data'], input_json['context'])
     return response
 
 @app.route('/database/delete', methods=['POST'])
 async def mongo_delete():
     # Athena input
     input_json = request.get_json(force=True)
-    Mongo = laserfocus.Database()
-    response = Mongo.deleteDocumentInCollection(input_json['database'], input_json['table'], input_json['query'])
+    response = laserfocus.Database.deleteDocumentInCollection(input_json['database'], input_json['table'], input_json['query'])
     return response
 
 # Wallet

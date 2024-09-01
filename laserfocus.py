@@ -1,7 +1,6 @@
 from datetime import datetime
 import pytz
 
-import ast
 import io
 import csv
 
@@ -30,7 +29,10 @@ import certifi
 class laserfocus:
   
     def __init__(self):
+
+        print('Initializing laserfocus...')
         self.url = 'https://laserfocus-api.onrender.com'
+        self.Database = self.Database()
 
     class DateAndTime:
         def __init__(self):
@@ -96,12 +98,12 @@ class laserfocus:
             # Current values. The order of variables needs to be the same as requested.
             current = self.service.Current()
             data = {
-                'current_temperature_2m':current.Variables(0).Value(),
-                'current_relative_humidity_2m':current.Variables(1).Value(),
-                'current_is_day':current.Variables(2).Value(),
-                'current_rain':current.Variables(3).Value(),
-                'current_showers':current.Variables(4).Value(),
-                'current_weather_code':current.Variables(5).Value()
+                'temperature':current.Variables(0).Value(),
+                'humidity':current.Variables(1).Value(),
+                'is_day':current.Variables(2).Value(),
+                'rain':current.Variables(3).Value(),
+                'showers':current.Variables(4).Value(),
+                'weather_code':current.Variables(5).Value()
             }
             return data
         
@@ -128,8 +130,8 @@ class laserfocus:
                 inclusive = "left"
             )}
 
-            hourly_data["temperature_2m"] = hourly_temperature_2m
-            hourly_data["relative_humidity_2m"] = hourly_relative_humidity_2m
+            hourly_data["temperature"] = hourly_temperature_2m
+            hourly_data["humidity"] = hourly_relative_humidity_2m
             hourly_data["precipitation_probability"] = hourly_precipitation_probability
             hourly_data["rain"] = hourly_rain
             hourly_data["showers"] = hourly_showers
@@ -305,9 +307,9 @@ class laserfocus:
                 return df_statements
 
     class Market:
-        def __init__(self, tickers):
+        def __init__(self):
 
-            self.historicalStocksData = self.getMarketData(tickers)
+            self.tickers = ['SPY', 'QQQ', 'TSLA', 'NVDA', 'AAPL', 'AMZN', 'NVDA', 'AMD', 'GOOGL', 'MSFT', 'V']
 
         def getMarketData(self, tickers):
             
@@ -317,35 +319,27 @@ class laserfocus:
                 
                 tickerData = yf.Ticker(ticker)
 
-                end_date = datetime.now().strftime('%Y%m%d')
-                end_date_f = datetime.now().strftime('%Y-%m-%d')
+                end_date = datetime.now().strftime('%Y-%m-%d')
 
                 # get all stock info
-                tickerData = tickerData.history(start='2024-03-15', end=end_date_f)
+                tickerData = tickerData.history(start='2024-03-15', end=end_date)
                 tickerHistory = {}
                 prevDate = '20240315'
 
                 for date in (tickerData.index):
                     date = str('%04d' % date.year) + str('%02d' % date.month) + str('%02d' % date.day)
                     tickerHistory[date] = {}
-                    for cat in tickerData.iloc[0,:].index:
-                        info = tickerData.loc[date,:][cat]
-                        tickerHistory[date][cat] = info
+                    for category in tickerData.iloc[0,:].index:
+                        info = tickerData.loc[date,:][category]
+                        tickerHistory[date][category] = info
+                    
+                    tickerHistory[date]['Change $'] = tickerHistory[date]['Close'] - tickerHistory[prevDate]['Close']
+                    tickerHistory[date]['Change %'] = tickerHistory[date]['Change $'] / tickerHistory[prevDate]['Close']
+                    prevDate = date
 
                 marketData[ticker] = tickerHistory
 
-            for ticker in marketData:
-                for date in marketData[ticker]:
-                    marketData[ticker][date]['Change $'] = marketData[ticker][date]['Close'] - marketData[ticker][prevDate]['Close']
-                    marketData[ticker][date]['Change %'] = (marketData[ticker][date]['Close'] - marketData[ticker][prevDate]['Close'])/marketData[ticker][date]['Close'] * 100
-                    prevDate = date
-
             return marketData
-
-        def getLastPrice(self, ticker):
-            lastWorkingDate = laserfocus.DateAndTime().lastWorkingDate
-            lastPrice = self.historicalStocksData[ticker][lastWorkingDate]['Close']
-            return lastPrice
         
     class News:
 
@@ -517,7 +511,7 @@ class laserfocus:
             uri = "mongodb+srv://aguilarcarboni:B5A1OqHHOJ409OH2@owner.bg1trmz.mongodb.net/?retryWrites=true&w=majority&appName=owner"
 
             self.client = MongoClient(uri, server_api=ServerApi('1'), tlsCAFile=certifi.where())
-            print('Initialized client')
+            print('Initialized database client.')
 
         def convertIds(self, data, canConvert):
 
