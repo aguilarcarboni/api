@@ -5,8 +5,6 @@ from email.message import EmailMessage
 import gspread
 import pandas as pd
 
-
-
 # todo
 def authenticateGoogleDrive():
     
