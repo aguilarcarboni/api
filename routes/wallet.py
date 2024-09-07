@@ -1,14 +1,16 @@
 from flask import Blueprint, request
-import laserfocus
+from laserfocus import Wallet
 
 bp = Blueprint('wallet', __name__)
+
+Wallet = Wallet()
 
 @bp.route("/wallet/bac/generateStatements", methods=['POST'])
 def bac_generate_statements():
 
     # Is document given?
 
-    BAC = laserfocus.Wallet.BAC()
+    BAC = Wallet.BAC()
 
     # Query drive for document
     input_json = request.get_json(force=True)

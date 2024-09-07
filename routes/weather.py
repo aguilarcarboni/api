@@ -1,12 +1,14 @@
 from flask import Blueprint
-import laserfocus
+from laserfocus import Weather
 
 bp = Blueprint('weather', __name__)
+
+Weather = Weather('9', '-84')
 
 @bp.route("/weather")
 def weather():
     weatherData = {
-        'forecast':laserfocus.Weather.forecast, 
-        'currentWeather': laserfocus.Weather.currentWeather,
+        'forecast': Weather.forecast, 
+        'currentWeather': Weather.currentWeather,
     }
     return weatherData

@@ -35,6 +35,9 @@ from rich.logging import RichHandler
 from rich.console import Console
 from rich.theme import Theme
 
+from websocket import create_connection
+import json
+
 
 # Configure logging with Rich
 custom_theme = Theme({
@@ -54,21 +57,9 @@ logger = logging.getLogger("rich")
 
 def __init__(flask_app):
     logger.info('Initializing laserfocus...')
-    global url, app, Database, DateAndTime, Weather, Wallet, Market, News, Sports, Betting, Home, Drive, Explorer, Browser
+    global url, app
     url = 'https://laserfocus-api.onrender.com'
     app = flask_app
-    Database = Database()
-    DateAndTime = DateAndTime()
-    Weather = Weather('10.3111', '-85.8333')
-    Wallet = Wallet()
-    Market = Market()
-    News = News()
-    Sports = Sports()
-    Betting = Betting()
-    Home = Home()
-    Drive = Drive()
-    Explorer = Explorer()
-    Browser = Browser()
 
 class DateAndTime:
     def __init__(self):
@@ -385,7 +376,7 @@ class News:
     def scrapeCNNHeadlines(self):
 
         url = 'https://www.cnn.com'
-        soup = Browser.scraper(url)
+        soup = Browser().scraper(url)
 
         # Find the sections containing headlines
         headlines = soup.find_all('div', class_='stack__items')
@@ -408,8 +399,44 @@ class Betting:
         state = 0
 
 class Home:
+
     def __init__(self):
-        self.state = 0
+        token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiI0NDhhOWQ2MDFkYzk0YzgxYWI3YThhNDQ1NzY3OGYwOCIsImlhdCI6MTcyNTczNjk4OSwiZXhwIjoyMDQxMDk2OTg5fQ.bepKyJyKb4mS5lbDzfXFRC25pk53oiChreza4rvL3q8"
+        self.ws = create_connection("ws://oasis.local:8123/api/websocket")
+        self.nextId = 0
+        print(self.ws.recv())
+        self.ws.send(json.dumps({'type': 'auth', 'access_token': token}))
+        print(self.ws.recv())
+    
+    def getNextId(self):
+        self.nextId += 1
+        return self.nextId
+
+    def light_on(self, lightId):
+        payload = {
+        "id": self.getNextId(),
+        "type": "call_service",
+        "domain": "light",
+        "service": "turn_on",
+        "target": {
+            "entity_id": lightId
+            },
+        }
+        self.ws.send(json.dumps(payload))
+        return {'status':'success', 'content':self.ws.recv()}
+
+    def light_off(self, lightId):
+        payload = {
+        "id": self.getNextId(),
+        "type": "call_service",
+        "domain": "light",
+        "service": "turn_off",
+        "target": {
+            "entity_id": lightId
+            },
+        }
+        self.ws.send(json.dumps(payload))
+        return {'status':'success', 'content':self.ws.recv()}
 
 class Drive:
 

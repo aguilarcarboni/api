@@ -1,9 +1,11 @@
 from flask import Blueprint
-import laserfocus
+from laserfocus import News
 
 bp = Blueprint('news', __name__)
 
+News = News()
+
 @bp.route("/news")
 def news():
-    newsData = laserfocus.News.scrapeCNNHeadlines()
+    newsData = News.scrapeCNNHeadlines()
     return newsData

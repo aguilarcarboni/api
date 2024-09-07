@@ -1,9 +1,11 @@
 from flask import Blueprint
-import laserfocus
+from laserfocus import Explorer
 
 bp = Blueprint('explorer', __name__)
 
+Explorer = Explorer()
+
 @bp.route("/explorer/mars")
 def mars():
-    marsData = laserfocus.Explorer.Mars.data
+    marsData = Explorer.Mars.data
     return marsData

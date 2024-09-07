@@ -1,13 +1,15 @@
 from flask import Blueprint, jsonify
-import laserfocus
+from laserfocus import DateAndTime
 
 bp = Blueprint('main', __name__)
+
+DateAndTime = DateAndTime()
 
 @bp.route("/")
 def root():
     data = {
         'title': 'any path to success starts with laserfocus.',
-        'date': laserfocus.DateAndTime.currentDate,
-        'time': laserfocus.DateAndTime.currentTime,
+        'date': DateAndTime.currentDate,
+        'time': DateAndTime.currentTime,
     }
     return jsonify(data)

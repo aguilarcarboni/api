@@ -1,13 +1,15 @@
 from flask import Blueprint, jsonify
-import laserfocus
+from laserfocus import Market
 
 bp = Blueprint('market', __name__)
+
+Market = Market()
 
 @bp.route("/market")
 def market():
     marketData = {
         'stocks':{
-            'historical': laserfocus.Market.getMarketData()
+            'historical': Market.getMarketData()
         },
     }
 

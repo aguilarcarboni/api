@@ -10,7 +10,7 @@ def start_laserfocus():
     cors = CORS(app, resources={r"/*": {"origins": "*"}})
     app.config['CORS_HEADERS'] = 'Content-Type'
 
-    from routes import main, database, explorer, weather, news, sports, wallet, market
+    from routes import main, database, explorer, weather, news, sports, wallet, market, home
     app.register_blueprint(main.bp)
     app.register_blueprint(database.bp)
     app.register_blueprint(explorer.bp)
@@ -19,7 +19,8 @@ def start_laserfocus():
     app.register_blueprint(sports.bp)
     app.register_blueprint(wallet.bp)
     app.register_blueprint(market.bp)
-
+    app.register_blueprint(home.bp)
+    
     @app.errorhandler(404)
     def not_found_error(error):
         return {"error": "Not found"}, 404
@@ -32,13 +33,9 @@ def start_laserfocus():
 
 if __name__ == '__main__':
     start_laserfocus()
-    app = laserfocus.app
-
-
-if __name__ == '__main__':
     debug = True
     if debug:
-        app.run(debug=True)
+        laserfocus.app.run(debug=True)
     else:
-        app.run(host='0.0.0.0', port=136)
+        laserfocus.app.run(host='0.0.0.0', port=136)
         print('Service live.')
