@@ -18,3 +18,10 @@ async def home_light_on():
     input_json = request.get_json(force=True)
     response = Home.light_on(input_json['lightId'])
     return response
+
+
+# TODO THIS SHOULD BE GET
+@bp.route('/home/get_states', methods=['POST'])
+async def get_states():
+    response = Home.get_states()
+    return response

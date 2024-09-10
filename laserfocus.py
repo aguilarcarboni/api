@@ -437,6 +437,14 @@ class Home:
         }
         self.ws.send(json.dumps(payload))
         return {'status':'success', 'content':self.ws.recv()}
+    
+    def get_states(self):
+        payload = {
+        "id": self.getNextId(),
+        "type": "get_states",
+        }
+        self.ws.send(json.dumps(payload))
+        return {'status':'success', 'content':self.ws.recv()}
 
 class Drive:
 

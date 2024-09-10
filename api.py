@@ -33,9 +33,9 @@ def start_laserfocus():
 
 if __name__ == '__main__':
     start_laserfocus()
-    debug = True
+    debug = False
     if debug:
         laserfocus.app.run(debug=True)
     else:
-        laserfocus.app.run(host='0.0.0.0', port=136)
+        laserfocus.app.run(host='0.0.0.0', port=5001)
         print('Service live.')
