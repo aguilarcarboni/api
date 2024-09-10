@@ -502,7 +502,7 @@ class Drive:
         except HttpError as error:
             logger.info(f"[red]An error occurred: {error}[/red]", extra={'markup':True})
             downloaded_file = None
-            return ({'status':'error'})
+            return ({'status':'error', 'content':error})
         
         except:
             logger.info("[red]Error downloading file.[/red]", extra={'markup':True})
@@ -575,7 +575,7 @@ class Database:
             return {'status':'success', 'content':entry}
         else:
             logger.info('[red]Entry not found.[/red]', extra={'markup':True})
-            return {'status':'no_data', 'content':None}
+            return {'status':'success', 'content':'Entry not found'}
     
     def queryDocumentsInCollection(self, database, table, query):
 
@@ -602,22 +602,15 @@ class Database:
             return {'status':'success', 'content':entry}
         else:
             logger.info('[red]Entry not found.[/red]', extra={'markup':True})
-            return {'status':'no_data', 'content':None}
+            return {'status':'success', 'content':'Entry not found'}
 
     def insertDocumentToCollection(self, database, table, data, context):
 
         logger.info('Inserting entry to table in Database.')
         logger.info('Data:', {'database':database, 'table':table, 'data':data})
-        
-        for key in data:
-            if 'id' in key or 'Id' in key:
-                logger.info(f'Converting id {key} to ObjectId.')
-                data[key] = ObjectId(data[key])
 
-        for key in context:
-            if 'id' in key or 'Id' in key:
-                logger.info(f'Converting id {key} to ObjectId.')
-                context[key] = ObjectId(context[key])
+        data = self.convertIds(data, False)
+        context = self.convertIds(context, False)
 
         if database not in self.client.list_database_names():
             logger.info('No database with that name found.')
@@ -635,7 +628,7 @@ class Database:
             insertedData = tb.insert_one(data)
         except:
             logger.info('Error inserting entry.')
-            return {'status':'error'}
+            return {'status':'error', 'content':'Error inserting entry.'}
 
         logger.info('Successfully inserted entry.\n')
         insertedId = insertedData.inserted_id
@@ -646,61 +639,38 @@ class Database:
     
         return {'status':'success', 'content':{'data':str(insertedId), 'dependencies':dependencies}}
 
-    def deleteDocumentInCollection(self, database, table, query):
-
-        logger.info('Deleting entry in table in Database.', {'database':database, 'table':table, 'query':query})
-
-        for key in query:
-            if 'id' in key or 'Id' in key:
-                logger.info(f'Converting id {key} to ObjectId.')
-                query[key] = ObjectId(query[key])
-
-        if database not in self.client.list_database_names():
-            logger.info('No database with that name found.')
-            return {'status':'error', 'content':'No database with that name found.'}
-        
-        db = self.client[database]
-
-        if table not in db.list_collection_names():
-            logger.info('No table with that name found.')
-            return {'status':'error', 'content':'No table with that name found.'}
-        
-        tb = db[table]
-
-        try:
-            deletedData = tb.find_one_and_delete(query)
-        except:
-            logger.info('Error deleting entry.')
-            return {'status':'error'}
-
-        logger.info('Successfully deleted entry.')
-        logger.info(deletedData)
-        deletedId = deletedData['_id']
-        logger.info(deletedId, type(deletedId))
-
-        logger.info('Deleting dependencies that relate to entry.')
-        dependencies = self.deleteDependencies(table, ObjectId(deletedId), deletedData)
-
-        return {'status':'success', 'content':{'data':str(deletedData), 'dependencies':dependencies}}
-
     def insertDependencies(self, table, data, insertedId, context):
 
         dependencies = {}
         match table:
+
             case 'user':
                 
+                # Insert user's space and add it to dependencies
                 result = self.insertDocumentToCollection('spaces', 'space', {'name':str(data['name']) + 's Space"}'}, {'userId':str(insertedId)})
                 dependencies['space'] = result['content']['data']
+
+                # Add space's dependencies to dependencies
                 for key in result['content']['dependencies']:
                     dependencies[key] = result['content']['dependencies'][key]
 
             case 'event':
                 
-                # Insert space event relationship
+                # Insert space event relationship 
                 result = self.insertDocumentToCollection('spaces', 'space-event', {'eventId':str(insertedId), 'spaceId':str(context['spaceId'])}, {})
                 dependencies['space-event'] = result['content']['data']
                 for key in result['content']['dependencies']:
                     dependencies[key] = result['content']['dependencies'][key]
+
+            case 'task':
+
+                # Insert space task relationship
+                result = self.insertDocumentToCollection('spaces', 'space-task', {'taskId':str(insertedId), 'spaceId':str(context['spaceId'])}, {})
+                dependencies['space-task'] = result['content']['data']
+                for key in result['content']['dependencies']:
+                    dependencies[key] = result['content']['dependencies'][key]
+
+                # Insert tasks's dependencies
 
             case 'space':
 
@@ -737,23 +707,57 @@ class Database:
         logger.info('Dependencies:', dependencies)
         return dependencies
 
-    def deleteDependencies(self, table, deletedId, context):
+    def deleteDocumentInCollection(self, database, table, query):
 
+        logger.info('Deleting entry in table in Database.', {'database':database, 'table':table, 'query':query})
+
+        query = self.convertIds(query, False)
+
+        if database not in self.client.list_database_names():
+            logger.info('No database with that name found.')
+            return {'status':'error', 'content':'No database with that name found.'}
+        
+        db = self.client[database]
+
+        if table not in db.list_collection_names():
+            logger.info('No table with that name found.')
+            return {'status':'error', 'content':'No table with that name found.'}
+        
+        tb = db[table]
+
+        try:
+            deletedData = tb.find_one_and_delete(query)
+        except:
+            logger.info('Error deleting entry.')
+            return {'status':'error'}
+
+        logger.info('Successfully deleted entry.')
+        logger.info(deletedData)
+
+        logger.info('Deleting dependencies that relate to entry.')
+        dependencies = self.deleteDependencies(table, deletedData)
+
+        return {'status':'success', 'content':{'data':str(deletedData), 'dependencies':dependencies}}
+
+    def deleteDependencies(self, table, deletedData):
+
+        logger.info('Testing... 123123123', deletedData)
         dependencies = {}
         match table:
 
             case 'user':
 
                 # Remove users's space
-                result = self.deleteDocumentInCollection('projects', 'user-space', {'userId':str(deletedId)})
-
+                result = self.deleteDocumentInCollection('projects', 'user-space', {'userId':str(deletedData['_id'])})
                 dependencies['space'] = result['content']['data']
                 for key in result['content']['dependencies']:
                     dependencies[key] = result['content']['dependencies'][key]
 
             case 'user-space':
 
-                result = self.deleteDocumentInCollection('spaces', 'space', {'spaceId':str(context['spaceId'])})
+                # Check deleted data for userId
+            
+                result = self.deleteDocumentInCollection('spaces', 'space', {'_id':str(deletedData['spaceId'])})
                 dependencies['space'] = result['content']['data']
                 for key in result['content']['dependencies']:
                     dependencies[key] = result['content']['dependencies'][key]
@@ -763,20 +767,29 @@ class Database:
 
 
             case 'space':
+                # Delete user space relationship IF NOT YET DELETED
+                # Delete everything in space
                 pass
 
 
             case 'event':
 
-                result = self.deleteDocumentInCollection('spaces', 'space-event', {'eventId':str(deletedId)})
+                result = self.deleteDocumentInCollection('spaces', 'space-event', {'eventId':str(deletedData['_id'])})
                 dependencies['space-event'] = result['content']['data']
+                for key in result['content']['dependencies']:
+                    dependencies[key] = result['content']['dependencies'][key]
+
+            case 'task':
+
+                result = self.deleteDocumentInCollection('spaces', 'space-task', {'taskId':str(deletedData['_id'])})
+                dependencies['space-task'] = result['content']['data']
                 for key in result['content']['dependencies']:
                     dependencies[key] = result['content']['dependencies'][key]
 
 
             case 'project-space':
 
-                result = self.deleteDocumentInCollection('spaces', 'space', {'_id':str(context['spaceId'])})
+                result = self.deleteDocumentInCollection('spaces', 'space', {'_id':str(deletedData['spaceId'])})
                 dependencies['space'] = result['content']['data']
                 for key in result['content']['dependencies']:
                     dependencies[key] = result['content']['dependencies'][key]
@@ -784,13 +797,13 @@ class Database:
             case 'project':
 
                 # Remove project's space
-                result = self.deleteDocumentInCollection('projects', 'project-space', {'projectId':str(deletedId)})
+                result = self.deleteDocumentInCollection('projects', 'project-space', {'projectId':str(deletedData['_id'])})
                 dependencies['project-space'] = result['content']['data']
                 for key in result['content']['dependencies']:
                     dependencies[key] = result['content']['dependencies'][key]
 
                 # Remove user's project
-                result = self.deleteDocumentInCollection('users', 'user-project', {'projectId':str(deletedId)})
+                result = self.deleteDocumentInCollection('users', 'user-project', {'projectId':str(deletedData['_id'])})
                 dependencies['user-project'] = result['content']['data']
                 for key in result['content']['dependencies']:
                     dependencies[key] = result['content']['dependencies'][key]
