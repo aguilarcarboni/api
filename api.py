@@ -1,7 +1,5 @@
-from flask import Flask, request, send_file
+from flask import Flask, render_template
 from flask_cors import CORS
-
-from io import BytesIO
 
 import laserfocus
 
@@ -20,6 +18,10 @@ def start_laserfocus():
     app.register_blueprint(wallet.bp)
     app.register_blueprint(market.bp)
     #app.register_blueprint(home.bp)
+    
+    @app.route('/dashboard')
+    def index():
+        return render_template('index.html')
     
     @app.errorhandler(404)
     def not_found_error(error):
