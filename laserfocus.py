@@ -38,7 +38,6 @@ from rich.theme import Theme
 from websocket import create_connection
 import json
 
-
 # Configure logging with Rich
 custom_theme = Theme({
     "info": "cyan",
@@ -172,168 +171,6 @@ class Weather:
         self.data = hourly_dataframe.to_dict(orient="records")
         return self.data
 
-class Wallet:
-
-    class BAC:
-
-        def __init__(self):
-            self.accounts = [
-                {
-                    'name':'Cash',
-                    'account_id':'CR83010200009295665295'
-                }
-            ]
-
-        def generateStatements(self, account, file_name):
-            logger.info(f"Generating statements for account: {account}, file: {file_name}")
-            # Change path to account
-            path = 'Personal/Wallet/Statements/BAC/' +  account + '/Sources'
-            dictToSend = {'path':path, 'file_name':file_name}
-            res = rq.post('https://laserfocus-api.onrender.com' + '/drive/query_file', json=dictToSend)
-
-            # Get month that the statement is for
-            period = file_name.split('.')[0]
-
-            # Download file in plain text
-            binaryFile = res.content
-            file_text = binaryFile.decode('latin1')
-
-            # Parse statements
-            df_statements, account_number = self.parseStatements(file_text)
-
-            # Validate account
-            accounts = [{'id':'CR83010200009295665295', 'name':'Cash'}]
-            account_number = account_number.strip()
-            for acct in accounts:
-                if acct['id'] == account_number and acct['name'] == account:
-                    acct = acct['name']
-
-            # Get debits and credits
-            df_debits, df_credits = self.getEntries(df_statements)
-
-            # Categorize entries
-            df_debits = self.categorizeStatements(df_debits)
-            df_credits = self.categorizeStatements(df_credits)
-
-            # Post process data
-            df_all = pd.concat([df_debits, df_credits])
-            df_all['Total'] = df_all['Credit'].astype(float) - df_all['Debit'].astype(float)
-            df_all = df_all.sort_values(by='Date')
-
-            # Save to drive TODO CREATE FUNCTION
-            # Output path: Personal/Wallet/Statements/{Bank}/{AccountNumber}
-            # Output file name: MMYYYY.csv
-
-            try:
-                df_all.to_csv(f'/Users/andres/Google Drive/My Drive/Personal/Wallet/Statements/BAC/{account}/Processed/{period}.csv', index=False)
-                logger.info(f"Successfully saved processed data to {period}.csv")
-            except Exception as e:
-                logger.error(f"Error saving file: {str(e)}")
-                return {'error':'error'}
-            
-            logger.info('Processed data.')
-            
-            return {'status':'success'}
-
-        def parseStatements(self, file_text):
-            logger.info("Parsing statements")
-            rows = file_text.splitlines()
-            parsed_csv = csv.reader(rows)
-            account_number = None
-
-            rows = []
-
-            write = False
-            previous_row = None
-            
-            for row in parsed_csv:
-                if len(row) >  0:
-                    logger.debug(f"Parsing row: {row}")
-
-                    if previous_row is not None and len(previous_row) > 0 and previous_row[0] == 'Fecha de Transacción':
-                        write = True
-
-                    if row[0] == '':
-                        write = False
-                    
-                    if (write):
-                        rows.append(row)
-
-                    if row[0].isdigit():
-                        account_number = row[2]
-                    logger.debug(f"Account number: {account_number}")
-
-                previous_row = row
-                
-            data = []
-            for row in rows:
-                try:
-                    date = datetime.strptime(row[0], '%d/%m/%Y')
-                except:
-                    date = datetime.strptime(row[0], '%d/%m/%y')
-                    
-                transaction = {'Date':date, 'Reference':row[1], 'Code':row[2], 'Description':row[3], 'Debit':row[4], 'Credit':row[5], 'Balance':row[6], 'Category':'', 'Q': 'Q1' if date.day < 15 else 'Q2'}
-                data.append(transaction)
-
-            df_statements = pd.DataFrame(data)
-            df_statements['Date'] = pd.to_datetime(df_statements['Date'], format='%d/%m/%Y')
-
-            return df_statements, account_number
-
-        def getEntries(self, df_statements):
-            logger.info("Getting entries from statements")
-            df_debits = df_statements[df_statements['Credit'].astype(float) == 0].copy()
-
-            df_credits = df_statements[df_statements['Debit'].astype(float) == 0].copy()
-
-            return df_debits, df_credits
-        
-        def categorizeStatements(self, df_statements):
-            logger.info("Categorizing statements")
-            # Debits
-            if len(df_statements[df_statements['Debit'].astype(float) == 0]) == 0:
-            
-                for index, row in df_statements.iterrows():
-
-                    for subscription in ['COMPA', 'SEGURO BELD', 'COMPASS']:
-                        if subscription in row['Description']:
-                            df_statements.loc[index, 'Category'] = 'Subscriptions'
-
-                    # Categorize income
-                    for gas_station in ['DELTA', 'SERVICIO', 'SERVICENTRO', 'GAS', 'Uber Rides']:
-                        if gas_station in row['Description']:
-                            df_statements.loc[index,'Category'] = 'Transportation'
-
-                    for savings_account in ['960587293', 'SAVINGS']:
-                        if savings_account in row['Description']:
-                            df_statements.loc[index,'Category'] = 'Savings'
-
-
-            # Credits             
-            else:
-
-                for index, row in df_statements.iterrows():
-
-                    for savings_account in ['960587293', 'SAVINGS']:
-                        if savings_account in row['Description']:
-                            df_statements.loc[index,'Category'] = 'Savings'
-
-                    for income_source in ['DEP', '1Q', '2Q', 'INCOME']:
-                        if income_source in row['Description']:
-                            df_statements.loc[index,'Category'] = 'Income'
-                
-                    
-            return df_statements
-
-        def manuallyCategorizeStatements(self, df_statements):
-            logger.info("Manually categorizing statements")
-            for index, row in df_statements[df_statements['Category'] == ''].iterrows():
-                logger.info(f"\n{row}")
-                category = input('Enter category for statement:')
-                df_statements.loc[index, 'Category'] = category
-
-            return df_statements
-
 class Market:
     def __init__(self):
         self.tickers = ['SPY', 'QQQ', 'TSLA', 'NVDA', 'AAPL', 'AMZN', 'NVDA', 'AMD', 'GOOGL', 'MSFT', 'V']
@@ -397,6 +234,99 @@ class Sports:
 class Betting:
     def __init__(self):
         state = 0
+
+class Explorer:
+
+    def __init__(self):
+        self.state = 0
+    class Mars:
+        def __init__(self):
+            self.state = 0
+
+            self.manifestUrl = 'https://api.nasa.gov/mars-photos/api/v1/manifests/perseverance/?api_key=kQwoyoXi4rQeY0lXWt1RZln6mLeatlYKLmYfGENB'
+            self.manifest = self.getManifestData(self.manifestUrl)
+            
+            self.sol = self.getSol(self.manifest)
+
+            self.imagesUrl = 'https://api.nasa.gov/mars-photos/api/v1/rovers/perseverance/photos?sol='+ str(self.sol) + '&api_key=kQwoyoXi4rQeY0lXWt1RZln6mLeatlYKLmYfGENB'
+            self.waypointsUrl = 'https://mars.nasa.gov/mmgis-maps/M20/Layers/json/M20_waypoints.json'
+
+            self.images = self.getImages(self.imagesUrl)
+            self.coordinates = self.getWaypoints(self.waypointsUrl)
+
+            self.data = {
+                'images': self.images,
+                'coords': self.coordinates
+            }
+
+        def getManifestData(self,url): # gets manifest data
+            self.data = rq.get(url).json()
+            self.data = self.data['photo_manifest'] # pandas
+            return self.data
+
+        def getSol(self,manifestData):
+            self.sol = manifestData['max_sol']
+            return self.sol
+
+        def getImages(self,url):
+
+            self.images = []
+            self.data = rq.get(url).json()
+
+            self.photos = self.data['photos'] # returns a list of all img dictionaries
+
+            for photo in range(len(self.photos)):
+                self.imageURL = self.photos[photo]['img_src'] # retrieves all photos
+                if self.photos[photo]['camera']['name'] != 'SKYCAM':
+                    self.images.append(self.imageURL)
+
+            return self.images
+
+        def getWaypoints(self,url):
+
+            self.coords = []
+            self.coord = {}
+            self.data = rq.get(url).json()
+            self.data = self.data['features']
+
+            for waypoint in range(len(self.data)):
+                self.coord = {'lon': float(self.data[waypoint]['properties']['lon']), 'lat': float(self.data[waypoint]['properties']['lat']),'sol':int(self.data[waypoint]['properties']['sol'])}
+                self.coords.append(self.coord)
+            return self.coords
+
+        def getDistance(self,coordsJson):
+            distances = []
+            distanceData = coordsJson
+            for i in range(len(distanceData)):
+                distances.append([distanceData[i]['properties']['dist_m'],distanceData[i]['properties']['sol']])
+            distances = pd.DataFrame(distances) #data frame
+            return distances
+
+class Browser:
+    def __init__(self):
+
+        self.state = 0
+
+    def scraper(self, url):
+        logger.info(f"Scraping URL: {url}")
+        # Send a request to fetch the HTML content
+        response = rq.get(url)
+        if response.status_code != 200:
+            logger.info("[red]Failed to retrieve the web page.[/red]", extra={'markup':True})
+            return
+
+        # Parse the HTML content using BeautifulSoup
+        soup = BeautifulSoup(response.content, 'html.parser')
+
+        logger.info(f"[green]Successfully scraped URL.[/green]", extra={'markup':True})
+        return soup
+
+
+# TODO WORK ON THIS
+# TODO MAKE THIS MANY FILES
+# TODO ADD DATABASE STUFF
+# TODO FINISH WALLET STUFF
+# TODO ADD SOME HOME STUFF
 
 class Home:
 
@@ -580,92 +510,6 @@ class Drive:
         
         logger.info(f"[green]Successfully downloaded file.[/green]", extra={'markup':True})
         return {'content':downloaded_file.getvalue(), 'status':'success'}
-
-class Explorer:
-
-    def __init__(self):
-        self.state = 0
-    class Mars:
-        def __init__(self):
-            self.state = 0
-
-            self.manifestUrl = 'https://api.nasa.gov/mars-photos/api/v1/manifests/perseverance/?api_key=kQwoyoXi4rQeY0lXWt1RZln6mLeatlYKLmYfGENB'
-            self.manifest = self.getManifestData(self.manifestUrl)
-            
-            self.sol = self.getSol(self.manifest)
-
-            self.imagesUrl = 'https://api.nasa.gov/mars-photos/api/v1/rovers/perseverance/photos?sol='+ str(self.sol) + '&api_key=kQwoyoXi4rQeY0lXWt1RZln6mLeatlYKLmYfGENB'
-            self.waypointsUrl = 'https://mars.nasa.gov/mmgis-maps/M20/Layers/json/M20_waypoints.json'
-
-            self.images = self.getImages(self.imagesUrl)
-            self.coordinates = self.getWaypoints(self.waypointsUrl)
-
-            self.data = {
-                'images': self.images,
-                'coords': self.coordinates
-            }
-
-        def getManifestData(self,url): # gets manifest data
-            self.data = rq.get(url).json()
-            self.data = self.data['photo_manifest'] # pandas
-            return self.data
-
-        def getSol(self,manifestData):
-            self.sol = manifestData['max_sol']
-            return self.sol
-
-        def getImages(self,url):
-
-            self.images = []
-            self.data = rq.get(url).json()
-
-            self.photos = self.data['photos'] # returns a list of all img dictionaries
-
-            for photo in range(len(self.photos)):
-                self.imageURL = self.photos[photo]['img_src'] # retrieves all photos
-                if self.photos[photo]['camera']['name'] != 'SKYCAM':
-                    self.images.append(self.imageURL)
-
-            return self.images
-
-        def getWaypoints(self,url):
-
-            self.coords = []
-            self.coord = {}
-            self.data = rq.get(url).json()
-            self.data = self.data['features']
-
-            for waypoint in range(len(self.data)):
-                self.coord = {'lon': float(self.data[waypoint]['properties']['lon']), 'lat': float(self.data[waypoint]['properties']['lat']),'sol':int(self.data[waypoint]['properties']['sol'])}
-                self.coords.append(self.coord)
-            return self.coords
-
-        def getDistance(self,coordsJson):
-            distances = []
-            distanceData = coordsJson
-            for i in range(len(distanceData)):
-                distances.append([distanceData[i]['properties']['dist_m'],distanceData[i]['properties']['sol']])
-            distances = pd.DataFrame(distances) #data frame
-            return distances
-
-class Browser:
-    def __init__(self):
-
-        self.state = 0
-
-    def scraper(self, url):
-        logger.info(f"Scraping URL: {url}")
-        # Send a request to fetch the HTML content
-        response = rq.get(url)
-        if response.status_code != 200:
-            logger.info("[red]Failed to retrieve the web page.[/red]", extra={'markup':True})
-            return
-
-        # Parse the HTML content using BeautifulSoup
-        soup = BeautifulSoup(response.content, 'html.parser')
-
-        logger.info(f"[green]Successfully scraped URL.[/green]", extra={'markup':True})
-        return soup
 
 class Database:
 
@@ -955,3 +799,165 @@ class Database:
                 pass
 
         return dependencies
+
+class Wallet:
+
+    class BAC:
+
+        def __init__(self):
+            self.accounts = [
+                {
+                    'name':'Cash',
+                    'account_id':'CR83010200009295665295'
+                }
+            ]
+
+        def generateStatements(self, account, file_name):
+            logger.info(f"Generating statements for account: {account}, file: {file_name}")
+            # Change path to account
+            path = 'Personal/Wallet/Statements/BAC/' +  account + '/Sources'
+            dictToSend = {'path':path, 'file_name':file_name}
+            res = rq.post('https://laserfocus-api.onrender.com' + '/drive/query_file', json=dictToSend)
+
+            # Get month that the statement is for
+            period = file_name.split('.')[0]
+
+            # Download file in plain text
+            binaryFile = res.content
+            file_text = binaryFile.decode('latin1')
+
+            # Parse statements
+            df_statements, account_number = self.parseStatements(file_text)
+
+            # Validate account
+            accounts = [{'id':'CR83010200009295665295', 'name':'Cash'}]
+            account_number = account_number.strip()
+            for acct in accounts:
+                if acct['id'] == account_number and acct['name'] == account:
+                    acct = acct['name']
+
+            # Get debits and credits
+            df_debits, df_credits = self.getEntries(df_statements)
+
+            # Categorize entries
+            df_debits = self.categorizeStatements(df_debits)
+            df_credits = self.categorizeStatements(df_credits)
+
+            # Post process data
+            df_all = pd.concat([df_debits, df_credits])
+            df_all['Total'] = df_all['Credit'].astype(float) - df_all['Debit'].astype(float)
+            df_all = df_all.sort_values(by='Date')
+
+            # Save to drive TODO CREATE FUNCTION
+            # Output path: Personal/Wallet/Statements/{Bank}/{AccountNumber}
+            # Output file name: MMYYYY.csv
+
+            try:
+                df_all.to_csv(f'/Users/andres/Google Drive/My Drive/Personal/Wallet/Statements/BAC/{account}/Processed/{period}.csv', index=False)
+                logger.info(f"Successfully saved processed data to {period}.csv")
+            except Exception as e:
+                logger.error(f"Error saving file: {str(e)}")
+                return {'error':'error'}
+            
+            logger.info('Processed data.')
+            
+            return {'status':'success'}
+
+        def parseStatements(self, file_text):
+            logger.info("Parsing statements")
+            rows = file_text.splitlines()
+            parsed_csv = csv.reader(rows)
+            account_number = None
+
+            rows = []
+
+            write = False
+            previous_row = None
+            
+            for row in parsed_csv:
+                if len(row) >  0:
+                    logger.debug(f"Parsing row: {row}")
+
+                    if previous_row is not None and len(previous_row) > 0 and previous_row[0] == 'Fecha de Transacción':
+                        write = True
+
+                    if row[0] == '':
+                        write = False
+                    
+                    if (write):
+                        rows.append(row)
+
+                    if row[0].isdigit():
+                        account_number = row[2]
+                    logger.debug(f"Account number: {account_number}")
+
+                previous_row = row
+                
+            data = []
+            for row in rows:
+                try:
+                    date = datetime.strptime(row[0], '%d/%m/%Y')
+                except:
+                    date = datetime.strptime(row[0], '%d/%m/%y')
+                    
+                transaction = {'Date':date, 'Reference':row[1], 'Code':row[2], 'Description':row[3], 'Debit':row[4], 'Credit':row[5], 'Balance':row[6], 'Category':'', 'Q': 'Q1' if date.day < 15 else 'Q2'}
+                data.append(transaction)
+
+            df_statements = pd.DataFrame(data)
+            df_statements['Date'] = pd.to_datetime(df_statements['Date'], format='%d/%m/%Y')
+
+            return df_statements, account_number
+
+        def getEntries(self, df_statements):
+            logger.info("Getting entries from statements")
+            df_debits = df_statements[df_statements['Credit'].astype(float) == 0].copy()
+
+            df_credits = df_statements[df_statements['Debit'].astype(float) == 0].copy()
+
+            return df_debits, df_credits
+        
+        def categorizeStatements(self, df_statements):
+            logger.info("Categorizing statements")
+            # Debits
+            if len(df_statements[df_statements['Debit'].astype(float) == 0]) == 0:
+            
+                for index, row in df_statements.iterrows():
+
+                    for subscription in ['COMPA', 'SEGURO BELD', 'COMPASS']:
+                        if subscription in row['Description']:
+                            df_statements.loc[index, 'Category'] = 'Subscriptions'
+
+                    # Categorize income
+                    for gas_station in ['DELTA', 'SERVICIO', 'SERVICENTRO', 'GAS', 'Uber Rides']:
+                        if gas_station in row['Description']:
+                            df_statements.loc[index,'Category'] = 'Transportation'
+
+                    for savings_account in ['960587293', 'SAVINGS']:
+                        if savings_account in row['Description']:
+                            df_statements.loc[index,'Category'] = 'Savings'
+
+
+            # Credits             
+            else:
+
+                for index, row in df_statements.iterrows():
+
+                    for savings_account in ['960587293', 'SAVINGS']:
+                        if savings_account in row['Description']:
+                            df_statements.loc[index,'Category'] = 'Savings'
+
+                    for income_source in ['DEP', '1Q', '2Q', 'INCOME']:
+                        if income_source in row['Description']:
+                            df_statements.loc[index,'Category'] = 'Income'
+                
+                    
+            return df_statements
+
+        def manuallyCategorizeStatements(self, df_statements):
+            logger.info("Manually categorizing statements")
+            for index, row in df_statements[df_statements['Category'] == ''].iterrows():
+                logger.info(f"\n{row}")
+                category = input('Enter category for statement:')
+                df_statements.loc[index, 'Category'] = category
+
+            return df_statements
