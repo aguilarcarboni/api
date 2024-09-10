@@ -131,7 +131,7 @@ def databaseInterface():
 
 debug = True
 if debug:
-    url = 'http://127.0.0.1:5001'
+    url = 'http://192.168.0.13:5001'
 else:
     url = 'https://laserfocus-api.onrender.com'
 
