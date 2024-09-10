@@ -11,11 +11,21 @@ async def drive_query_many():
 
     # Athena input
     input_json = request.get_json(force=True)
-    response = Drive.queryForFiles(input_json['path'])
+    response = Drive.queryFiles(input_json['path'])
     return response
 
 @bp.route('/drive/query_file', methods=['POST'])
 async def drive_query_file():
+
+    # Athena input
+    input_json = request.get_json(force=True)
+
+    response = Drive.queryFile(input_json['path'], input_json['file_name'])
+
+    return response
+
+@bp.route('/drive/download_file', methods=['POST'])
+async def drive_get_file():
 
     # Athena input
     input_json = request.get_json(force=True)
@@ -25,18 +35,8 @@ async def drive_query_file():
     else:
         return {'status':'error', 'content':'File type not supported.'}
 
-    response = Drive.queryForFile(input_json['path'], input_json['file_name'])
+    response = Drive.queryFile(input_json['path'], input_json['file_name'])
     response = Drive.downloadFile(response['content']['id'])
     f = BytesIO(response['content'])
 
     return send_file(f, mimetype=mimetype)
-
-@bp.route('/drive/query_id', methods=['POST'])
-async def drive_query_id():
-
-    # Athena input
-    input_json = request.get_json(force=True)
-
-    response = Drive.queryForFile(input_json['path'], input_json['file_name'])
-
-    return response
