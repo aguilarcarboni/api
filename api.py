@@ -10,7 +10,7 @@ def start_laserfocus():
     cors = CORS(app, resources={r"/*": {"origins": "*"}})
     app.config['CORS_HEADERS'] = 'Content-Type'
 
-    from routes import main, database, explorer, weather, news, sports, wallet, market, home
+    from routes import main, database, explorer, weather, news, sports, wallet, market
     app.register_blueprint(main.bp)
     app.register_blueprint(database.bp)
     app.register_blueprint(explorer.bp)
@@ -19,7 +19,7 @@ def start_laserfocus():
     app.register_blueprint(sports.bp)
     app.register_blueprint(wallet.bp)
     app.register_blueprint(market.bp)
-    app.register_blueprint(home.bp)
+    #app.register_blueprint(home.bp)
     
     @app.errorhandler(404)
     def not_found_error(error):
