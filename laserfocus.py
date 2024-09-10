@@ -402,7 +402,7 @@ class Drive:
     # Delete files
 
     # Remove this?
-    def queryForFile(self, path, file_name):
+    def queryFile(self, path, file_name):
 
         logger.info(f"Querying for file: {path}/{file_name}")
 
@@ -442,7 +442,7 @@ class Drive:
         logger.info(f"[green]Successfully queried file: {files[len(files) - 1]}[/green]", extra={'markup':True})
         return {'content':files[len(files) - 1], 'status':'success'}
 
-    def queryForFiles(self, path):
+    def queryFiles(self, path):
 
         logger.info(f"Querying for files in: {path}")
 
@@ -548,8 +548,6 @@ class Database:
 
         return data
 
-    # Replace individual CRUD operations?
-
     def queryDocumentInCollection(self, database, table, query):
 
         logger.info('Querying entries in table in database.', {'database':database, 'table':table, 'query':query})
@@ -606,8 +604,8 @@ class Database:
 
     def insertDocumentToCollection(self, database, table, data, context):
 
-        logger.info('Inserting entry to table in Database.')
-        logger.info('Data:', {'database':database, 'table':table, 'data':data})
+        logger.info(f'Inserting {data} to {table} in {database}.')
+        logger.info(f'Context: {context}')
 
         data = self.convertIds(data, False)
         context = self.convertIds(context, False)
@@ -624,21 +622,24 @@ class Database:
     
         tb = db[table]
 
+        # Check if item can be inserted
+
         try:
             insertedData = tb.insert_one(data)
         except:
             logger.info('Error inserting entry.')
             return {'status':'error', 'content':'Error inserting entry.'}
 
-        logger.info('Successfully inserted entry.\n')
+        logger.info(f'Successfully inserted {data} to table: {table} in database: {database}.')
         insertedId = insertedData.inserted_id
 
-        logger.info('Adding dependencies that relate to entry.')
+        logger.info(f'Adding dependencies that relate to table: {table}.' + '\n')
 
         dependencies = self.insertDependencies(table, data, ObjectId(insertedId), context)
     
         return {'status':'success', 'content':{'data':str(insertedId), 'dependencies':dependencies}}
 
+    # TODO Dont do this recursively?
     def insertDependencies(self, table, data, insertedId, context):
 
         dependencies = {}
@@ -704,12 +705,13 @@ class Database:
             case _:
                 pass
 
-        logger.info('Dependencies:', dependencies)
+        logger.info('No more dependencies, going up a level.')
         return dependencies
 
     def deleteDocumentInCollection(self, database, table, query):
 
-        logger.info('Deleting entry in table in Database.', {'database':database, 'table':table, 'query':query})
+        logger.info(f'Deleting entry in {table} in {database}.')
+        logger.info(f'Query: {query}')
 
         query = self.convertIds(query, False)
 
@@ -725,31 +727,43 @@ class Database:
         
         tb = db[table]
 
+        # Check if item can be deleted
+
         try:
             deletedData = tb.find_one_and_delete(query)
         except:
-            logger.info('Error deleting entry.')
-            return {'status':'error'}
+            logger.info('Error executing deletion.')
+            return {'status':'error', 'content':'Error executing deletion.'}
 
-        logger.info('Successfully deleted entry.')
-        logger.info(deletedData)
+        # If nothing was deleted
+        if (deletedData is None):
+            logger.info('[red]Entry not found. This may indicate a broken dependency. Check database for orphaned data.[/red]', extra={'markup':True})
+            logger.info(f'Error location: database: {database}, table: {table}, query: {query}')
+            return {'status':'error', 'content':{'data':None, 'dependencies':{}}}
+        
+        logger.info(f'Successfully deleted {deletedData} from table: {table} in database: {database}.')
+        logger.info(f'Deleting dependencies that relate to table: {table}.' + '\n')
 
-        logger.info('Deleting dependencies that relate to entry.')
         dependencies = self.deleteDependencies(table, deletedData)
 
-        return {'status':'success', 'content':{'data':str(deletedData), 'dependencies':dependencies}}
+        status = 'success'
+        for key in list(dependencies.keys()):
+            if dependencies[key] is None:
+                status = 'requires_attention'
 
+        return {'status':status, 'content':{'data':str(deletedData['_id']), 'dependencies':dependencies}}
+
+    # TODO Dont do this recursively?
     def deleteDependencies(self, table, deletedData):
 
-        logger.info('Testing... 123123123', deletedData)
         dependencies = {}
         match table:
 
             case 'user':
 
                 # Remove users's space
-                result = self.deleteDocumentInCollection('projects', 'user-space', {'userId':str(deletedData['_id'])})
-                dependencies['space'] = result['content']['data']
+                result = self.deleteDocumentInCollection('users', 'user-space', {'userId':str(deletedData['_id'])})
+                dependencies['user-space'] = result['content']['data']
                 for key in result['content']['dependencies']:
                     dependencies[key] = result['content']['dependencies'][key]
 
@@ -811,6 +825,7 @@ class Database:
             case _:
                 pass
 
+        logger.info('No more dependencies, going up a level.')
         return dependencies
 
 class Wallet:
@@ -826,11 +841,13 @@ class Wallet:
             ]
 
         def generateStatements(self, account, file_name):
+
             logger.info(f"Generating statements for account: {account}, file: {file_name}")
+
             # Change path to account
             path = 'Personal/Wallet/Statements/BAC/' +  account + '/Sources'
             dictToSend = {'path':path, 'file_name':file_name}
-            res = rq.post('https://laserfocus-api.onrender.com' + '/drive/query_file', json=dictToSend)
+            res = rq.post('https://laserfocus-api.onrender.com' + '/drive/get_file', json=dictToSend)
 
             # Get month that the statement is for
             period = file_name.split('.')[0]
