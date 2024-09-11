@@ -90,7 +90,6 @@ class ColorLogger:
 # Create a global instance of ColorLogger
 color_logger = ColorLogger()
 
-# Redo this
 class Location:
     def __init__(self):
         color_logger.info("Initializing Location.")
@@ -98,21 +97,14 @@ class Location:
         self.timezone = pytz.timezone('America/Costa_Rica')
         color_logger.success("Successfully initialized Location.")
 
+Location = Location()
+
 class DateAndTime:
     def __init__(self):
         color_logger.info("Initializing Date and Time.")
-        self.timezone = Location().timezone
+        self.timezone = Location.timezone
         self.currentDateTime = datetime.now(self.timezone)
-        self.currentDateTimeString = self.getCurrentDateTimeString()
-        self.currentDate = self.getCurrentDate()
-        self.currentTime = self.getCurrentTime()
-        self.lastWorkingDate = self.getLastWorkingDate()
         color_logger.success("Successfully initialized Date and Time.")
-        
-    def getCurrentDateTimeString(self):
-        # Get the current time in CST
-        dateTimeString = self.currentDateTime.strftime('%Y%m%d%H%M%S')
-        return dateTimeString
 
     def getCurrentTime(self):
         currentTime = self.currentDateTime.strftime("%I:%M%p")
@@ -129,11 +121,15 @@ class DateAndTime:
         last_working_date = (cst_time - BDay(1)).strftime('%Y%m%d')
         return last_working_date
 
-# Location gets called twice here, how to deal with this?
+
+""""""
+# TODO
+""""""
+
 # Get rid of this api
 class Weather:
     def __init__(self,lat,lon):
-        color_logger.info(f"Initializing Weather for lat: {Location().coordinates['lat']}, lon: {Location().coordinates['lon']}.")
+        color_logger.info(f"Initializing Weather for lat: {Location.coordinates['lat']}, lon: {Location.coordinates['lon']}.")
         self.service = self.connectToOpenMeteo(lat,lon)
         self.forecast = self.getHourlyFourDayForecast()
         self.currentWeather = self.getCurrentWeather()
@@ -242,106 +238,8 @@ class Sports:
         self.state = 0
         color_logger.success("Successfully initialized Sports client")
 
-# Dont care for now
-class Betting:
-    def __init__(self):
-        state = 0
 
-class Explorer:
-
-    def __init__(self):
-        self.state = 0
-    class Mars:
-        def __init__(self):
-            self.state = 0
-
-            self.manifestUrl = 'https://api.nasa.gov/mars-photos/api/v1/manifests/perseverance/?api_key=kQwoyoXi4rQeY0lXWt1RZln6mLeatlYKLmYfGENB'
-            self.manifest = self.getManifestData(self.manifestUrl)
-            
-            self.sol = self.getSol(self.manifest)
-
-            self.imagesUrl = 'https://api.nasa.gov/mars-photos/api/v1/rovers/perseverance/photos?sol='+ str(self.sol) + '&api_key=kQwoyoXi4rQeY0lXWt1RZln6mLeatlYKLmYfGENB'
-            self.waypointsUrl = 'https://mars.nasa.gov/mmgis-maps/M20/Layers/json/M20_waypoints.json'
-
-            self.images = self.getImages(self.imagesUrl)
-            self.coordinates = self.getWaypoints(self.waypointsUrl)
-
-            self.data = {
-                'images': self.images,
-                'coords': self.coordinates
-            }
-
-        def getManifestData(self,url): # gets manifest data
-            self.data = rq.get(url).json()
-            self.data = self.data['photo_manifest'] # pandas
-            return self.data
-
-        def getSol(self,manifestData):
-            self.sol = manifestData['max_sol']
-            return self.sol
-
-        def getImages(self,url):
-
-            self.images = []
-            self.data = rq.get(url).json()
-
-            self.photos = self.data['photos'] # returns a list of all img dictionaries
-
-            for photo in range(len(self.photos)):
-                self.imageURL = self.photos[photo]['img_src'] # retrieves all photos
-                if self.photos[photo]['camera']['name'] != 'SKYCAM':
-                    self.images.append(self.imageURL)
-
-            return self.images
-
-        def getWaypoints(self,url):
-
-            self.coords = []
-            self.coord = {}
-            self.data = rq.get(url).json()
-            self.data = self.data['features']
-
-            for waypoint in range(len(self.data)):
-                self.coord = {'lon': float(self.data[waypoint]['properties']['lon']), 'lat': float(self.data[waypoint]['properties']['lat']),'sol':int(self.data[waypoint]['properties']['sol'])}
-                self.coords.append(self.coord)
-            return self.coords
-
-        def getDistance(self,coordsJson):
-            distances = []
-            distanceData = coordsJson
-            for i in range(len(distanceData)):
-                distances.append([distanceData[i]['properties']['dist_m'],distanceData[i]['properties']['sol']])
-            distances = pd.DataFrame(distances) #data frame
-            return distances
-
-class Browser:
-    def __init__(self):
-
-        self.state = 0
-
-    def scraper(self, url):
-        color_logger.info(f"Scraping URL: {url}")
-        # Send a request to fetch the HTML content
-        response = rq.get(url)
-        if response.status_code != 200:
-            color_logger.error("Failed to retrieve the web page.")
-            return Response.error("Failed to retrieve the web page.")
-
-        # Parse the HTML content using BeautifulSoup
-        soup = BeautifulSoup(response.content, 'html.parser')
-
-        color_logger.success("Successfully scraped URL.")
-        return soup
-
-
-# TODO ADD DATABASE STUFF
 # TODO ADD SOME HOME STUFF
-
-class TV:
-    def __init__(self):
-        color_logger.info("Initializing TV.")
-        self.state = 0
-        color_logger.success("Successfully initialized TV.")
 
 class Home:
 
@@ -397,6 +295,7 @@ class Home:
         self.ws.send(json.dumps(payload))
         return Response.success(self.ws.recv())
 
+# TODO ADD DATABASE STUFF
 class Database:
 
     def __init__(self):
@@ -715,6 +614,9 @@ class Database:
         return dependencies
     
 
+
+"""""" 
+""""""
 
 # Happy with this
 class Drive:
@@ -1138,3 +1040,96 @@ class Market:
 
         color_logger.info(f"Retrieved market data for {len(marketData)} tickers")
         return marketData
+
+
+
+# Dont care for now
+class Betting:
+    def __init__(self):
+        state = 0
+
+class Explorer:
+
+    def __init__(self):
+        self.state = 0
+    class Mars:
+        def __init__(self):
+            self.state = 0
+
+            self.manifestUrl = 'https://api.nasa.gov/mars-photos/api/v1/manifests/perseverance/?api_key=kQwoyoXi4rQeY0lXWt1RZln6mLeatlYKLmYfGENB'
+            self.manifest = self.getManifestData(self.manifestUrl)
+            
+            self.sol = self.getSol(self.manifest)
+
+            self.imagesUrl = 'https://api.nasa.gov/mars-photos/api/v1/rovers/perseverance/photos?sol='+ str(self.sol) + '&api_key=kQwoyoXi4rQeY0lXWt1RZln6mLeatlYKLmYfGENB'
+            self.waypointsUrl = 'https://mars.nasa.gov/mmgis-maps/M20/Layers/json/M20_waypoints.json'
+
+            self.images = self.getImages(self.imagesUrl)
+            self.coordinates = self.getWaypoints(self.waypointsUrl)
+
+            self.data = {
+                'images': self.images,
+                'coords': self.coordinates
+            }
+
+        def getManifestData(self,url): # gets manifest data
+            self.data = rq.get(url).json()
+            self.data = self.data['photo_manifest'] # pandas
+            return self.data
+
+        def getSol(self,manifestData):
+            self.sol = manifestData['max_sol']
+            return self.sol
+
+        def getImages(self,url):
+
+            self.images = []
+            self.data = rq.get(url).json()
+
+            self.photos = self.data['photos'] # returns a list of all img dictionaries
+
+            for photo in range(len(self.photos)):
+                self.imageURL = self.photos[photo]['img_src'] # retrieves all photos
+                if self.photos[photo]['camera']['name'] != 'SKYCAM':
+                    self.images.append(self.imageURL)
+
+            return self.images
+
+        def getWaypoints(self,url):
+
+            self.coords = []
+            self.coord = {}
+            self.data = rq.get(url).json()
+            self.data = self.data['features']
+
+            for waypoint in range(len(self.data)):
+                self.coord = {'lon': float(self.data[waypoint]['properties']['lon']), 'lat': float(self.data[waypoint]['properties']['lat']),'sol':int(self.data[waypoint]['properties']['sol'])}
+                self.coords.append(self.coord)
+            return self.coords
+
+        def getDistance(self,coordsJson):
+            distances = []
+            distanceData = coordsJson
+            for i in range(len(distanceData)):
+                distances.append([distanceData[i]['properties']['dist_m'],distanceData[i]['properties']['sol']])
+            distances = pd.DataFrame(distances) #data frame
+            return distances
+
+class Browser:
+    def __init__(self):
+
+        self.state = 0
+
+    def scraper(self, url):
+        color_logger.info(f"Scraping URL: {url}")
+        # Send a request to fetch the HTML content
+        response = rq.get(url)
+        if response.status_code != 200:
+            color_logger.error("Failed to retrieve the web page.")
+            return Response.error("Failed to retrieve the web page.")
+
+        # Parse the HTML content using BeautifulSoup
+        soup = BeautifulSoup(response.content, 'html.parser')
+
+        color_logger.success("Successfully scraped URL.")
+        return soup

@@ -9,7 +9,7 @@ DateAndTime = DateAndTime()
 def root():
     data = {
         'title': 'any path to success starts with laserfocus.',
-        'date': DateAndTime.currentDate,
-        'time': DateAndTime.currentTime,
+        'date': DateAndTime.getCurrentDate(),
+        'time': DateAndTime.getCurrentTime(),
     }
     return jsonify(data)
