@@ -9,6 +9,8 @@ import requests as rq
 import pandas as pd
 from pandas.tseries.offsets import BDay
 
+from googleapiclient.http import MediaIoBaseUpload, MediaFileUpload
+
 import yfinance as yf
 
 from bs4 import BeautifulSoup
@@ -38,37 +40,74 @@ from rich.theme import Theme
 from websocket import create_connection
 import json
 
-# Configure logging with Rich
-custom_theme = Theme({
-    "info": "cyan",
-    "warning": "yellow",
-    "error": "bold red",
-    "critical": "bold white on red",
-})
-console = Console(theme=custom_theme)
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(message)s",
-    datefmt="[%X]",
-    handlers=[RichHandler(console=console, rich_tracebacks=True)]
-)
-logger = logging.getLogger("rich")
+from typing import Any, Dict, Union
 
-def __init__(flask_app):
-    logger.info('Initializing laserfocus...')
-    global url, app
-    url = 'https://laserfocus-api.onrender.com'
-    app = flask_app
+class Response:
+    def __init__(self, status: str, content: Any):
+        self.status = status
+        self.content = content
+
+    @classmethod
+    def success(cls, content: Any) -> Dict[str, Union[str, Any]]:
+        return cls("success", content).to_dict()
+
+    @classmethod
+    def error(cls, content: Any) -> Dict[str, Union[str, Any]]:
+        return cls("error", content).to_dict()
+
+    def to_dict(self) -> Dict[str, Union[str, Any]]:
+        return {
+            "status": self.status,
+            "content": self.content
+        }
+
+class ColorLogger:
+    def __init__(self):
+        custom_theme = Theme({
+            "info": "cyan",
+            "warning": "yellow",
+            "error": "bold red",
+            "critical": "bold white on red",
+        })
+        self.console = Console(theme=custom_theme)
+        logging.basicConfig(
+            level=logging.INFO,
+            format="%(message)s",
+            datefmt="[%X]",
+            handlers=[RichHandler(console=self.console, rich_tracebacks=True)]
+        )
+        self.logger = logging.getLogger("rich")
+
+    def info(self, message):
+        self.logger.info(f"[blue]{message}[/blue]", extra={'markup': True})
+
+    def success(self, message):
+        self.logger.info(f"[green]{message}[/green]\n", extra={'markup': True})
+
+    def error(self, message):
+        self.logger.error(f"[red]{message}[/red]", extra={'markup': True})
+
+# Create a global instance of ColorLogger
+color_logger = ColorLogger()
+
+# Redo this
+class Location:
+    def __init__(self):
+        color_logger.info("Initializing Location.")
+        self.coordinates = {'lat': 9.9281, 'lon': -84.2376}
+        self.timezone = pytz.timezone('America/Costa_Rica')
+        color_logger.success("Successfully initialized Location.")
 
 class DateAndTime:
     def __init__(self):
-        self.timezone = pytz.timezone('America/Costa_Rica')
+        color_logger.info("Initializing Date and Time.")
+        self.timezone = Location().timezone
         self.currentDateTime = datetime.now(self.timezone)
-
         self.currentDateTimeString = self.getCurrentDateTimeString()
         self.currentDate = self.getCurrentDate()
         self.currentTime = self.getCurrentTime()
         self.lastWorkingDate = self.getLastWorkingDate()
+        color_logger.success("Successfully initialized Date and Time.")
         
     def getCurrentDateTimeString(self):
         # Get the current time in CST
@@ -90,15 +129,17 @@ class DateAndTime:
         last_working_date = (cst_time - BDay(1)).strftime('%Y%m%d')
         return last_working_date
 
+# Location gets called twice here, how to deal with this?
+# Get rid of this api
 class Weather:
     def __init__(self,lat,lon):
-        logger.info(f"Initializing Weather for lat: {lat}, lon: {lon}")
+        color_logger.info(f"Initializing Weather for lat: {Location().coordinates['lat']}, lon: {Location().coordinates['lon']}.")
         self.service = self.connectToOpenMeteo(lat,lon)
         self.forecast = self.getHourlyFourDayForecast()
         self.currentWeather = self.getCurrentWeather()
+        color_logger.success("Successfully initialized Weather.")
 
     def connectToOpenMeteo(self,lat,lon):
-        logger.info("Connecting to OpenMeteo API")
         # Setup the Open-Meteo API client with cache and retry on error
         cache_session = requests_cache.CachedSession('.cache', expire_after = 3600)
         retry_session = retry(cache_session, retries = 5, backoff_factor = 0.2)
@@ -120,7 +161,6 @@ class Weather:
         return responses[0]
 
     def getCurrentWeather(self):
-        logger.info("Getting current weather")
         # Current values. The order of variables needs to be the same as requested.
         current = self.service.Current()
         data = {
@@ -135,7 +175,6 @@ class Weather:
     
     
     def getHourlyFourDayForecast(self):
-        logger.info("Getting hourly four-day forecast")
         # Process hourly data. The order of variables needs to be the same as requested.
         hourly = self.service.Hourly()
         hourly_temperature_2m = hourly.Variables(0).ValuesAsNumpy()
@@ -171,44 +210,14 @@ class Weather:
         self.data = hourly_dataframe.to_dict(orient="records")
         return self.data
 
-class Market:
-    def __init__(self):
-        self.tickers = ['SPY', 'QQQ', 'TSLA', 'NVDA', 'AAPL', 'AMZN', 'NVDA', 'AMD', 'GOOGL', 'MSFT', 'V']
 
-    def getMarketData(self):
-        marketData = {}
-
-        for ticker in self.tickers:
-            
-            tickerData = yf.Ticker(ticker)
-
-            end_date = datetime.now().strftime('%Y-%m-%d')
-
-            # get all stock info
-            tickerData = tickerData.history(start='2024-03-15', end=end_date)
-            tickerHistory = {}
-            prevDate = '20240315'
-
-            for date in (tickerData.index):
-                date = str('%04d' % date.year) + str('%02d' % date.month) + str('%02d' % date.day)
-                tickerHistory[date] = {}
-                for category in tickerData.iloc[0,:].index:
-                    info = tickerData.loc[date,:][category]
-                    tickerHistory[date][category] = info
-                
-                tickerHistory[date]['Change $'] = tickerHistory[date]['Close'] - tickerHistory[prevDate]['Close']
-                tickerHistory[date]['Change %'] = tickerHistory[date]['Change $'] / tickerHistory[prevDate]['Close']
-                prevDate = date
-
-            marketData[ticker] = tickerHistory
-
-        logger.info(f"[green]Retrieved market data for {len(marketData)} tickers[/green]", extra={'markup':True})
-        return marketData
-    
+# Get news I'm interested in?
 class News:
 
     def __init__(self):
+        color_logger.info("Initializing News.")
         self.state = 0
+        color_logger.success("Successfully initialized News.")
     
     def scrapeCNNHeadlines(self):
 
@@ -224,13 +233,16 @@ class News:
                 if ('•' not in link.get_text().strip()):
                     news.append({'title':link.get_text().strip(), 'url':url + link.get('href')})
 
-        return {'status':'success', 'content':news}
-            
+        return Response.success(news)
+
 class Sports:
 
     def __init__(self):
+        color_logger.info("Initializing Sports client")
         self.state = 0
+        color_logger.success("Successfully initialized Sports client")
 
+# Dont care for now
 class Betting:
     def __init__(self):
         state = 0
@@ -308,35 +320,44 @@ class Browser:
         self.state = 0
 
     def scraper(self, url):
-        logger.info(f"Scraping URL: {url}")
+        color_logger.info(f"Scraping URL: {url}")
         # Send a request to fetch the HTML content
         response = rq.get(url)
         if response.status_code != 200:
-            logger.info("[red]Failed to retrieve the web page.[/red]", extra={'markup':True})
-            return
+            color_logger.error("Failed to retrieve the web page.")
+            return Response.error("Failed to retrieve the web page.")
 
         # Parse the HTML content using BeautifulSoup
         soup = BeautifulSoup(response.content, 'html.parser')
 
-        logger.info(f"[green]Successfully scraped URL.[/green]", extra={'markup':True})
+        color_logger.success("Successfully scraped URL.")
         return soup
 
 
-# TODO WORK ON THIS
-# TODO MAKE THIS MANY FILES
 # TODO ADD DATABASE STUFF
-# TODO FINISH WALLET STUFF
 # TODO ADD SOME HOME STUFF
+
+class TV:
+    def __init__(self):
+        color_logger.info("Initializing TV.")
+        self.state = 0
+        color_logger.success("Successfully initialized TV.")
 
 class Home:
 
     def __init__(self):
+        color_logger.info("Initializing Oasis.")
         token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiI0NDhhOWQ2MDFkYzk0YzgxYWI3YThhNDQ1NzY3OGYwOCIsImlhdCI6MTcyNTczNjk4OSwiZXhwIjoyMDQxMDk2OTg5fQ.bepKyJyKb4mS5lbDzfXFRC25pk53oiChreza4rvL3q8"
-        self.ws = create_connection("ws://oasis.local:8123/api/websocket")
+        try:
+            self.ws = create_connection("ws://oasis.local:8123/api/websocket")
+        except:
+            color_logger.error("Failed to initialize Oasis.")
+            return None
         self.nextId = 0
         print(self.ws.recv())
         self.ws.send(json.dumps({'type': 'auth', 'access_token': token}))
         print(self.ws.recv())
+        color_logger.success("Successfully initialized Oasis.")
     
     def getNextId(self):
         self.nextId += 1
@@ -353,7 +374,7 @@ class Home:
             },
         }
         self.ws.send(json.dumps(payload))
-        return {'status':'success', 'content':self.ws.recv()}
+        return Response.success(self.ws.recv())
 
     def light_off(self, lightId):
         payload = {
@@ -366,7 +387,7 @@ class Home:
             },
         }
         self.ws.send(json.dumps(payload))
-        return {'status':'success', 'content':self.ws.recv()}
+        return Response.success(self.ws.recv())
     
     def get_states(self):
         payload = {
@@ -374,153 +395,18 @@ class Home:
         "type": "get_states",
         }
         self.ws.send(json.dumps(payload))
-        return {'status':'success', 'content':self.ws.recv()}
-
-class Drive:
-
-    def __init__(self):
-
-        logger.info("Initializing Google Drive client")
-
-        SCOPES = ['https://www.googleapis.com/auth/drive']
-
-        # TODO replace with env
-        flow = InstalledAppFlow.from_client_secrets_file(
-          "creds/credentials.json", SCOPES
-      )
-        creds = flow.run_local_server(port=0)
-        
-        self.service = build("drive", "v3", credentials=creds)
-
-        logger.info("[green]Successfully initialized Google Drive client[/green]", extra={'markup':True})
-
-    # Add upload files
-    # Add create folder?
-
-    # Modify files?
-
-    # Delete files
-
-    # Remove this?
-    def queryFile(self, path, file_name):
-
-        logger.info(f"Querying for file: {path}/{file_name}")
-
-        path = path + '/' + file_name
-        paths = path.split('/')
-
-        parentId = 'root'
-        files = []
-
-        for index, path in enumerate(paths):
-            try:
-
-                    response = (
-                        self.service.files()
-                        .list(
-                            q=f"name='{path}' and trashed = false and '{parentId}' in parents",
-                            spaces="drive",
-                            fields="files(id, name)",
-                        )
-                        .execute()
-                    )
-                    
-                    filesResponse = response.get("files")
-                    logger.info(filesResponse)
-                    files.append(filesResponse[0])
-
-                    parentId = files[index]['id']
-
-            except HttpError as error:
-                logger.info(f"[red]An error occurred. {error}[/red]", extra={'markup':True})
-                return {'status':'error'}
-            
-            except:
-                logger.info("[red]Error querying file.[/red]", extra={'markup':True})
-                return {'status':'no_data', 'content':None}
-        
-        logger.info(f"[green]Successfully queried file: {files[len(files) - 1]}[/green]", extra={'markup':True})
-        return {'content':files[len(files) - 1], 'status':'success'}
-
-    def queryFiles(self, path):
-
-        logger.info(f"Querying for files in: {path}")
-
-        path = path + '/'
-        paths = path.split('/')
-
-        parentID = 'root'
-
-        for index, currentPath in enumerate(paths):
-
-            query = f"trashed = false and '{parentID}' in parents"
-
-            if index < len(paths) - 1:
-                query =f"name='{currentPath}' and trashed = false and '{parentID}' in parents"
-
-            if path == '/':
-                query =f"trashed = false and 'root' in parents"
-
-            try:
-
-                    response = (
-                        self.service.files()
-                        .list(
-                            q=query,
-                            spaces="drive",
-                            fields="files(id, name)",
-                        )
-                        .execute()
-                    )
-
-                    parentID = response['files'][0]['id']
-
-            except HttpError as error:
-                logger.info(f"[red]An error occurred. {error}[/red]", extra={'markup':True})
-                return {'status':'error'}
-        
-            except:
-                logger.info("[red]Error querying files.[/red]", extra={'markup':True})
-                return {'status':'no_data', 'content':None}
-        
-        logger.info(f"[green]Successfully queried files in: {paths[len(paths) - 1]}[/green]", extra={'markup':True})
-        return {'content':response, 'status':'success'}
-
-    def downloadFile(self, fileId):
-
-        logger.info(f"Downloading file with ID: {fileId}")
-
-        try:
-            request = self.service.files().get_media(fileId=fileId)
-            downloaded_file = io.BytesIO()
-            downloader = MediaIoBaseDownload(downloaded_file, request)
-            done = False
-            while done is False:
-                status, done = downloader.next_chunk()
-                logger.info(f"[green]Download {int(status.progress() * 100)}.[/green]", extra={'markup':True})
-
-        except HttpError as error:
-            logger.info(f"[red]An error occurred: {error}[/red]", extra={'markup':True})
-            downloaded_file = None
-            return ({'status':'error', 'content':error})
-        
-        except:
-            logger.info("[red]Error downloading file.[/red]", extra={'markup':True})
-            return {'status':'no_data', 'content':None}
-        
-        logger.info(f"[green]Successfully downloaded file.[/green]", extra={'markup':True})
-        return {'content':downloaded_file.getvalue(), 'status':'success'}
+        return Response.success(self.ws.recv())
 
 class Database:
 
     def __init__(self):
         
-        logger.info("Initializing database client.")
+        color_logger.info("Initializing Database.")
         # Create a new client and connect to the server
         uri = os.getenv("MONGODB_URI")
 
         self.client = MongoClient(uri, server_api=ServerApi('1'), tlsCAFile=certifi.where())
-        logger.info("[green]Successfully initialized database client.[/green]", extra={'markup':True})
+        color_logger.success("Successfully initialized Database.")
 
     def convertIds(self, data, canConvert):
 
@@ -535,11 +421,11 @@ class Database:
                     
         if isinstance(data, str):
             if (canConvert):
-                logger.info(f'Converting ({data}) to ObjectId.')
+                color_logger.info(f'Converting ({data}) to ObjectId.')
                 try:
                     return ObjectId(data)
                 except:
-                    logger.info(f'({data}) is not an ObjectId. Returning original data.')
+                    color_logger.info(f'({data}) is not an ObjectId. Returning original data.')
                     return data
             
         elif isinstance(data, list):
@@ -550,75 +436,75 @@ class Database:
 
     def queryDocumentInCollection(self, database, table, query):
 
-        logger.info('Querying entries in table in database.', {'database':database, 'table':table, 'query':query})
+        color_logger.info('Querying entries in table in database.', {'database':database, 'table':table, 'query':query})
         
         query = self.convertIds(query, False)
     
         if database not in self.client.list_database_names():
-            logger.info('No database with that name found.')
-            return {'status':'error', 'content':'No database with that name found.'}
+            color_logger.error('No database with that name found.')
+            return Response.error('No database with that name found.')
         
         db = self.client[database]
         
         if table not in db.list_collection_names():
-            logger.info('No table with that name found.')
-            return {'status':'error', 'content':'No table with that name found.'}
+            color_logger.error('No table with that name found.')
+            return Response.error('No table with that name found.')
         
         tb = db[table]
         
         entry = tb.find_one(query)
         
         if entry is not None:
-            logger.info('[green]Successfully queried entry.[/green]', {'content':entry}, extra={'markup':True})
-            return {'status':'success', 'content':entry}
+            color_logger.success('Successfully queried entry.', {'content':entry})
+            return Response.success(entry)
         else:
-            logger.info('[red]Entry not found.[/red]', extra={'markup':True})
-            return {'status':'success', 'content':'Entry not found'}
+            color_logger.error('Entry not found.')
+            return Response.error('Entry not found')
     
     def queryDocumentsInCollection(self, database, table, query):
 
-        logger.info('Querying entries in table in database.', {'database':database, 'table':table, 'query':query})
+        color_logger.info('Querying entries in table in database.', {'database':database, 'table':table, 'query':query})
         
         query = self.convertIds(query, False)
     
         if database not in self.client.list_database_names():
-            logger.info('[red]No database with that name found.[/red]', extra={'markup':True})
-            return {'status':'error', 'content':'No database with that name found.'}
+            color_logger.error('No database with that name found.')
+            return Response.error('No database with that name found.')
         
         db = self.client[database]
         
         if table not in db.list_collection_names():
-            logger.info('[red]No table with that name found.[/red]', extra={'markup':True})
-            return {'status':'error', 'content':'No table with that name found.'}
+            color_logger.error('No table with that name found.')
+            return Response.error('No table with that name found.')
         
         tb = db[table]
         
         entry = tb.find(query)
         
         if entry is not None:
-            logger.info('[green]Successfully queried entry.[/green]', {'content':entry}, extra={'markup':True})
-            return {'status':'success', 'content':entry}
+            color_logger.success('Successfully queried entry.', {'content':entry})
+            return Response.success(entry)
         else:
-            logger.info('[red]Entry not found.[/red]', extra={'markup':True})
-            return {'status':'success', 'content':'Entry not found'}
+            color_logger.error('Entry not found.')
+            return Response.error('Entry not found')
 
     def insertDocumentToCollection(self, database, table, data, context):
 
-        logger.info(f'Inserting {data} to {table} in {database}.')
-        logger.info(f'Context: {context}')
+        color_logger.info(f'Inserting {data} to {table} in {database}.')
+        color_logger.info(f'Context: {context}')
 
         data = self.convertIds(data, False)
         context = self.convertIds(context, False)
 
         if database not in self.client.list_database_names():
-            logger.info('No database with that name found.')
-            return {'status':'error', 'content':'No database with that name found.'}
+            color_logger.error('No database with that name found.')
+            return Response.error('No database with that name found.')
 
         db = self.client[database]
 
         if table not in db.list_collection_names():
-            logger.info('No table with that name found.')
-            return {'status':'error', 'content':'No table with that name found.'}
+            color_logger.error('No table with that name found.')
+            return Response.error('No table with that name found.')
     
         tb = db[table]
 
@@ -627,17 +513,17 @@ class Database:
         try:
             insertedData = tb.insert_one(data)
         except:
-            logger.info('Error inserting entry.')
-            return {'status':'error', 'content':'Error inserting entry.'}
+            color_logger.error('Error inserting entry.')
+            return Response.error('Error inserting entry.')
 
-        logger.info(f'Successfully inserted {data} to table: {table} in database: {database}.')
+        color_logger.info(f'Successfully inserted {data} to table: {table} in database: {database}.')
         insertedId = insertedData.inserted_id
 
-        logger.info(f'Adding dependencies that relate to table: {table}.' + '\n')
+        color_logger.info(f'Adding dependencies that relate to table: {table}.')
 
         dependencies = self.insertDependencies(table, data, ObjectId(insertedId), context)
     
-        return {'status':'success', 'content':{'data':str(insertedId), 'dependencies':dependencies}}
+        return Response.success({'data':str(insertedId), 'dependencies':dependencies})
 
     # TODO Dont do this recursively?
     def insertDependencies(self, table, data, insertedId, context):
@@ -705,25 +591,25 @@ class Database:
             case _:
                 pass
 
-        logger.info('No more dependencies, going up a level.')
+        color_logger.info('No more dependencies, going up a level.')
         return dependencies
 
     def deleteDocumentInCollection(self, database, table, query):
 
-        logger.info(f'Deleting entry in {table} in {database}.')
-        logger.info(f'Query: {query}')
+        color_logger.info(f'Deleting entry in {table} in {database}.')
+        color_logger.info(f'Query: {query}')
 
         query = self.convertIds(query, False)
 
         if database not in self.client.list_database_names():
-            logger.info('No database with that name found.')
-            return {'status':'error', 'content':'No database with that name found.'}
+            color_logger.error('No database with that name found.')
+            return Response.error('No database with that name found.')
         
         db = self.client[database]
 
         if table not in db.list_collection_names():
-            logger.info('No table with that name found.')
-            return {'status':'error', 'content':'No table with that name found.'}
+            color_logger.error('No table with that name found.')
+            return Response.error('No table with that name found.')
         
         tb = db[table]
 
@@ -732,17 +618,17 @@ class Database:
         try:
             deletedData = tb.find_one_and_delete(query)
         except:
-            logger.info('Error executing deletion.')
-            return {'status':'error', 'content':'Error executing deletion.'}
+            color_logger.error('Error executing deletion.')
+            return Response.error('Error executing deletion.')
 
         # If nothing was deleted
         if (deletedData is None):
-            logger.info('[red]Entry not found. This may indicate a broken dependency. Check database for orphaned data.[/red]', extra={'markup':True})
-            logger.info(f'Error location: database: {database}, table: {table}, query: {query}')
-            return {'status':'error', 'content':{'data':None, 'dependencies':{}}}
+            color_logger.error('Entry not found. This may indicate a broken dependency. Check database for orphaned data.')
+            color_logger.info(f'Error location: database: {database}, table: {table}, query: {query}')
+            return Response.error({'data':None, 'dependencies':{}})
         
-        logger.info(f'Successfully deleted {deletedData} from table: {table} in database: {database}.')
-        logger.info(f'Deleting dependencies that relate to table: {table}.' + '\n')
+        color_logger.info(f'Successfully deleted {deletedData} from table: {table} in database: {database}.')
+        color_logger.info(f'Deleting dependencies that relate to table: {table}.')
 
         dependencies = self.deleteDependencies(table, deletedData)
 
@@ -751,7 +637,7 @@ class Database:
             if dependencies[key] is None:
                 status = 'requires_attention'
 
-        return {'status':status, 'content':{'data':str(deletedData['_id']), 'dependencies':dependencies}}
+        return Response.success({'data':str(deletedData['_id']), 'dependencies':dependencies})
 
     # TODO Dont do this recursively?
     def deleteDependencies(self, table, deletedData):
@@ -825,8 +711,211 @@ class Database:
             case _:
                 pass
 
-        logger.info('No more dependencies, going up a level.')
+        color_logger.info('No more dependencies, going up a level.')
         return dependencies
+    
+
+
+# Happy with this
+class Drive:
+
+    def __init__(self):
+
+        color_logger.info("Initializing Drive.")
+
+        SCOPES = ['https://www.googleapis.com/auth/drive']
+
+        # TODO replace with env
+        creds = Credentials.from_authorized_user_file("creds/token.json", SCOPES)
+        self.service = build("drive", "v3", credentials=creds)
+
+        color_logger.success("Successfully initialized Drive.")
+
+    def createFolder(self, folderName, parentFolderId):
+
+        color_logger.info(f"Creating folder: {folderName} in folder: {parentFolderId}")
+
+        fileMetadata = {
+            'name': folderName,
+            'mimeType': 'application/vnd.google-apps.folder'
+        }
+        if parentFolderId is not None:
+            fileMetadata['parents'] = [parentFolderId]
+        else:
+            color_logger.error("No parent folder ID provided.")
+            return Response.error('No parent folder ID provided.')
+        
+        folder = self.service.files().create(body=fileMetadata, fields='id, name, parents, mimeType, size, modifiedTime, createdTime').execute()
+        color_logger.success(f"Successfully created folder: {folderName} in folder: {parentFolderId}")
+        return Response.success(folder)
+
+    # Upload folder
+
+    # Upload files
+
+    def uploadFileWithPath(self, filePath, parentFolderId):
+        color_logger.info(f"Uploading file: {filePath} to folder: {parentFolderId}")
+        fileMetadata = {'name': os.path.basename(filePath)}
+
+        if parentFolderId is not None:
+            fileMetadata['parents'] = [parentFolderId]
+        else:
+            color_logger.error("No parent folder ID provided.")
+            return Response.error('No parent folder ID provided.')
+        
+        media = MediaFileUpload(filePath, resumable=True)
+        f = self.service.files().create(body=fileMetadata, media_body=media, fields='id, name, parents, mimeType, size, modifiedTime').execute()
+        print(f)
+        color_logger.success(f"Successfully uploaded file: {filePath} to folder: {parentFolderId}")
+        return Response.success(f)
+
+    def uploadFile(self, fileName, rawFile, parentFolderId):
+        color_logger.info(f"Uploading file: {fileName} to folder: {parentFolderId}")
+        fileMetadata = {'name': fileName}
+
+        if parentFolderId is not None:
+            fileMetadata['parents'] = [parentFolderId]
+        else:
+            color_logger.error("No parent folder ID provided.")
+            return Response.error('No parent folder ID provided.')
+        print(f)
+        try:
+            media = MediaIoBaseUpload(rawFile, resumable=True)
+            f = self.service.files().create(body=fileMetadata, media_body=media, fields='id, name, parents, mimeType, size, modifiedTime').execute()
+            color_logger.success(f"Successfully uploaded file: {fileName} to folder: {parentFolderId}")
+            return Response.success(f)
+        except Exception as e:
+            color_logger.error(f"Error uploading file: {fileName}. Error: {str(e)}")
+            return Response.error(f'Error uploading file: {str(e)}')
+        
+    # Modify files?
+
+    def deleteFiles(self, file_ids):
+
+        color_logger.info(f"Deleting files with IDs: {file_ids}")
+
+        results = []
+        for file_id in file_ids:
+            try:
+                response = self.service.files().delete(fileId=file_id).execute()
+                color_logger.success(f"Successfully deleted file with ID: {file_id}")
+                results.append(Response.success({'content': response, 'file_id': file_id}))
+            except Exception as e:
+                color_logger.error(f"Error deleting file with ID: {file_id}. Error: {str(e)}")
+                results.append(Response.error({'content': f'Error deleting file: {str(e)}', 'file_id': file_id}))
+
+        color_logger.success(f"Deletion process completed for {len(file_ids)} files.")
+        return results  
+
+    def queryFile(self, path, file_name):
+
+        color_logger.info(f"Querying for file: {path}/{file_name}")
+
+        path = path + '/' + file_name
+        paths = path.split('/')
+
+        parentId = 'root'
+        files = []
+
+        for index, path in enumerate(paths):
+            try:
+
+                    response = (
+                        self.service.files()
+                        .list(
+                            q=f"name='{path}' and trashed = false and '{parentId}' in parents",
+                            spaces="drive",
+                            fields="files(id, name, mimeType, size, modifiedTime, parents)",
+                        )
+                        .execute()
+                    )
+                    
+                    filesResponse = response.get("files")
+                    color_logger.info(f'Current path: {filesResponse[0]["name"]}')
+                    files.append(filesResponse[0])
+
+                    parentId = files[index]['id']
+
+            except HttpError as error:
+                color_logger.error(f"An error occurred. {error}")
+                return Response.error(error)
+            
+            except:
+                color_logger.error("Error querying file.")
+                return Response.error('Error querying file.')
+        
+        color_logger.success(f"Successfully queried file: {files[len(files) - 1]}")
+        return Response.success(files[len(files) - 1])
+
+    def queryFilesInFolder(self, path):
+
+        color_logger.info(f"Querying for files in: {path}")
+
+        path = path + '/'
+        paths = path.split('/')
+
+        parentID = 'root'
+
+        for index, currentPath in enumerate(paths):
+
+            query = f"trashed = false and '{parentID}' in parents"
+
+            if index < len(paths) - 1:
+                query =f"name='{currentPath}' and trashed = false and '{parentID}' in parents"
+
+            if path == '/':
+                query =f"trashed = false and 'root' in parents"
+
+            try:
+
+                    response = (
+                        self.service.files()
+                        .list(
+                            q=query,
+                            spaces="drive",
+                            fields="files(id, name, mimeType, size, modifiedTime, parents)",
+                        )
+                        .execute()
+                    )
+
+                    parentID = response['files'][0]['id']
+
+            except HttpError as error:
+                color_logger.error(f"An error occurred. {error}")
+                return Response.error(error)
+        
+            except:
+                color_logger.error("Error querying files.")
+                return Response.error('Error querying files.')
+        
+        color_logger.success(f"Successfully queried files in: {paths[len(paths) - 1]}")
+        return Response.success(response)
+
+    def downloadFile(self, fileId):
+
+        color_logger.info(f"Downloading file with ID: {fileId}")
+
+        try:
+            request = self.service.files().get_media(fileId=fileId)
+            downloaded_file = io.BytesIO()
+            downloader = MediaIoBaseDownload(downloaded_file, request)
+            done = False
+            while done is False:
+                status, done = downloader.next_chunk()
+                color_logger.info(f"Download {int(status.progress() * 100)}.")
+
+        except HttpError as error:
+            color_logger.error(f"An error occurred: {error}")
+            return Response.error(error)
+        
+        except:
+            color_logger.error("Error downloading file.")
+            return Response.error('Error downloading file.')
+        
+        color_logger.success("Successfully downloaded file.")
+        return Response.success(downloaded_file.getvalue())
+
+    # Download zip?
 
 class Wallet:
 
@@ -842,18 +931,22 @@ class Wallet:
 
         def generateStatements(self, account, file_name):
 
-            logger.info(f"Generating statements for account: {account}, file: {file_name}")
+            color_logger.info(f"Generating statements for account: {account}, file: {file_name}")
 
             # Change path to account
+
+            # TODO SHOULD I USE API OR DRIVE 
             path = 'Personal/Wallet/Statements/BAC/' +  account + '/Sources'
             dictToSend = {'path':path, 'file_name':file_name}
-            res = rq.post('https://laserfocus-api.onrender.com' + '/drive/get_file', json=dictToSend)
+            response = rq.post('http://127.0.0.1:5001' + '/drive/download_file', json=dictToSend)
+            if response.status_code != 200:
+                raise Exception('Error downloading file.')
 
             # Get month that the statement is for
             period = file_name.split('.')[0]
 
             # Download file in plain text
-            binaryFile = res.content
+            binaryFile = response.content
             file_text = binaryFile.decode('latin1')
 
             # Parse statements
@@ -878,23 +971,40 @@ class Wallet:
             df_all['Total'] = df_all['Credit'].astype(float) - df_all['Debit'].astype(float)
             df_all = df_all.sort_values(by='Date')
 
-            # Save to drive TODO CREATE FUNCTION
-            # Output path: Personal/Wallet/Statements/{Bank}/{AccountNumber}
-            # Output file name: MMYYYY.csv
+            # Save to drive as Bytes IO or save cache?
+            drivePath = f'Personal/Wallet/Statements/BAC/{account}'
+            cachePath = f'cache/statements/processed/{period}.csv'
 
+            # Find processed folder
+            response = rq.post('http://127.0.0.1:5001' + '/drive/query_file', json={'path':drivePath, 'file_name':'Processed'})
+            if response.status_code != 200:
+                raise Exception('Error querying Processed folder.')
+            
+            processed_folder_id = response.json()['content']['id']
+
+            # Save file to cache
             try:
-                df_all.to_csv(f'/Users/andres/Google Drive/My Drive/Personal/Wallet/Statements/BAC/{account}/Processed/{period}.csv', index=False)
-                logger.info(f"Successfully saved processed data to {period}.csv")
+                df_all.to_csv(cachePath, index=False)
+                color_logger.success(f"Successfully saved file {drivePath}/Processed/{period}.csv")
             except Exception as e:
-                logger.error(f"Error saving file: {str(e)}")
-                return {'error':'error'}
+                color_logger.error(f"Error saving file: {str(e)}")
+                return Response.error('Error saving file.')
             
-            logger.info('Processed data.')
+            # Upload file to drive
+            try:
+                response = rq.post('http://127.0.0.1:5001' + '/drive/upload_file_with_path', json={'file_path':cachePath, 'parent_folder_id':processed_folder_id})
+                if response.status_code != 200:
+                    raise Exception('Error uploading file.')
+                color_logger.success(f"Successfully saved file {drivePath}/Processed/{period}.csv")
+            except Exception as e:
+                color_logger.error(f"Error uploading file: {str(e)}")
+                return Response.error('Error uploading file.')
             
-            return {'status':'success'}
+            return Response.success(f'Successfully processed {period} financial statements for account: {account}. Saved to {drivePath}/Processed/{period}.csv')
 
         def parseStatements(self, file_text):
-            logger.info("Parsing statements")
+
+            color_logger.info("Parsing statements")
             rows = file_text.splitlines()
             parsed_csv = csv.reader(rows)
             account_number = None
@@ -906,7 +1016,6 @@ class Wallet:
             
             for row in parsed_csv:
                 if len(row) >  0:
-                    logger.debug(f"Parsing row: {row}")
 
                     if previous_row is not None and len(previous_row) > 0 and previous_row[0] == 'Fecha de Transacción':
                         write = True
@@ -919,7 +1028,6 @@ class Wallet:
 
                     if row[0].isdigit():
                         account_number = row[2]
-                    logger.debug(f"Account number: {account_number}")
 
                 previous_row = row
                 
@@ -936,18 +1044,21 @@ class Wallet:
             df_statements = pd.DataFrame(data)
             df_statements['Date'] = pd.to_datetime(df_statements['Date'], format='%d/%m/%Y')
 
+            color_logger.success("Successfully parsed statements.")
+
             return df_statements, account_number
 
         def getEntries(self, df_statements):
-            logger.info("Getting entries from statements")
+            color_logger.info("Getting entries from statements")
             df_debits = df_statements[df_statements['Credit'].astype(float) == 0].copy()
-
+            color_logger.info("Successfully got debits.")
             df_credits = df_statements[df_statements['Debit'].astype(float) == 0].copy()
-
+            color_logger.success("Successfully got credits.")
             return df_debits, df_credits
         
         def categorizeStatements(self, df_statements):
-            logger.info("Categorizing statements")
+            color_logger.info("Categorizing statements")
+
             # Debits
             if len(df_statements[df_statements['Debit'].astype(float) == 0]) == 0:
             
@@ -965,7 +1076,8 @@ class Wallet:
                     for savings_account in ['960587293', 'SAVINGS']:
                         if savings_account in row['Description']:
                             df_statements.loc[index,'Category'] = 'Savings'
-
+                
+                color_logger.success("Successfully categorized debits.")
 
             # Credits             
             else:
@@ -980,14 +1092,49 @@ class Wallet:
                         if income_source in row['Description']:
                             df_statements.loc[index,'Category'] = 'Income'
                 
-                    
+                color_logger.success("Successfully categorized credits.")
+
             return df_statements
 
         def manuallyCategorizeStatements(self, df_statements):
-            logger.info("Manually categorizing statements")
             for index, row in df_statements[df_statements['Category'] == ''].iterrows():
-                logger.info(f"\n{row}")
                 category = input('Enter category for statement:')
                 df_statements.loc[index, 'Category'] = category
 
             return df_statements
+
+class Market:
+    def __init__(self):
+        color_logger.info("Initializing Markets.")
+        self.tickers = ['SPY', 'QQQ', 'TSLA', 'NVDA', 'AAPL', 'AMZN', 'NVDA', 'AMD', 'GOOGL', 'MSFT', 'V']
+        color_logger.success("Successfully initialized Markets.")
+
+    def getMarketData(self):
+        marketData = {}
+
+        for ticker in self.tickers:
+            
+            tickerData = yf.Ticker(ticker)
+
+            end_date = datetime.now().strftime('%Y-%m-%d')
+
+            # get all stock info
+            tickerData = tickerData.history(start='2024-03-15', end=end_date)
+            tickerHistory = {}
+            prevDate = '20240315'
+
+            for date in (tickerData.index):
+                date = str('%04d' % date.year) + str('%02d' % date.month) + str('%02d' % date.day)
+                tickerHistory[date] = {}
+                for category in tickerData.iloc[0,:].index:
+                    info = tickerData.loc[date,:][category]
+                    tickerHistory[date][category] = info
+                
+                tickerHistory[date]['Change $'] = tickerHistory[date]['Close'] - tickerHistory[prevDate]['Close']
+                tickerHistory[date]['Change %'] = tickerHistory[date]['Change $'] / tickerHistory[prevDate]['Close']
+                prevDate = date
+
+            marketData[ticker] = tickerHistory
+
+        color_logger.info(f"Retrieved market data for {len(marketData)} tickers")
+        return marketData
