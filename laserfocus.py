@@ -261,6 +261,40 @@ class Home:
         self.nextId += 1
         return self.nextId
 
+    def get_states(self):
+        payload = {
+            "id": self.getNextId(),
+            "type": "get_states",
+        }
+        self.ws.send(json.dumps(payload))
+        return Response.success(self.ws.recv())
+    
+    def get_services(self):
+        payload = {
+            "id": self.getNextId(),
+            "type": "get_services",
+        }
+        self.ws.send(json.dumps(payload))
+        return Response.success(self.ws.recv())
+    
+    def call_service(self, service):
+        payload = {
+            "id": self.getNextId(),
+            "type": "call_service",
+            "domain": "homeassistant",
+            "service": service,
+        }
+        self.ws.send(json.dumps(payload))
+        return Response.success(self.ws.recv())
+
+    def get_panels(self):
+        payload = {
+            "id": self.getNextId(),
+            "type": "get_panels",
+        }
+        self.ws.send(json.dumps(payload))
+        return Response.success(self.ws.recv())
+    
     def light_on(self, lightId):
         payload = {
         "id": self.getNextId(),
@@ -287,21 +321,6 @@ class Home:
         self.ws.send(json.dumps(payload))
         return Response.success(self.ws.recv())
     
-    def get_states(self):
-        payload = {
-            "id": self.getNextId(),
-            "type": "get_states",
-        }
-        self.ws.send(json.dumps(payload))
-        return Response.success(self.ws.recv())
-    
-    def get_services(self):
-        payload = {
-            "id": self.getNextId(),
-            "type": "get_services",
-        }
-        self.ws.send(json.dumps(payload))
-        return Response.success(self.ws.recv())
 
 # TODO ADD DATABASE STUFF
 class Database:
