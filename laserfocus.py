@@ -379,7 +379,7 @@ class Database:
         entry = tb.find_one(query)
         
         if entry is not None:
-            color_logger.success('Successfully queried entry.', {'content':entry})
+            color_logger.success(f'Successfully queried entry in table: {table} in database: {database}.')
             return Response.success(entry)
         else:
             color_logger.error('Entry not found.')
@@ -387,7 +387,8 @@ class Database:
     
     def queryDocumentsInCollection(self, database, table, query):
 
-        color_logger.info('Querying entries in table in database.', {'database':database, 'table':table, 'query':query})
+        color_logger.info(f'Querying entries in table in database. database: {database}, table: {table}')
+        color_logger.info(f'Query: {query}')
         
         query = self.convertIds(query, False)
     
@@ -406,7 +407,7 @@ class Database:
         entry = tb.find(query)
         
         if entry is not None:
-            color_logger.success('Successfully queried entry.', {'content':entry})
+            color_logger.success(f'Successfully queried entries in table: {table} in database: {database}.')
             return Response.success(entry)
         else:
             color_logger.error('Entry not found.')
