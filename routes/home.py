@@ -18,7 +18,7 @@ async def get_services():
     return response
 
 # Call service actions on your entities
-@bp.route('home/call_service', methods=['POST'])
+@bp.route('/home/call_service', methods=['POST'])
 async def home_call_service():
     input_json = request.get_json(force=True)
     response = Home.call_service(input_json['service'])
