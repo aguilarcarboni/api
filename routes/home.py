@@ -19,9 +19,13 @@ async def home_light_on():
     response = Home.light_on(input_json['lightId'])
     return response
 
-
-# TODO THIS SHOULD BE GET
-@bp.route('/home/get_states', methods=['POST'])
+@bp.route('/home/get_states', methods=['GET'])
 async def get_states():
     response = Home.get_states()
     return response
+
+@bp.route('/home/get_services', methods=['GET'])
+async def get_services():
+    response = Home.get_services()
+    return response
+

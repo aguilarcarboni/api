@@ -289,8 +289,16 @@ class Home:
     
     def get_states(self):
         payload = {
-        "id": self.getNextId(),
-        "type": "get_states",
+            "id": self.getNextId(),
+            "type": "get_states",
+        }
+        self.ws.send(json.dumps(payload))
+        return Response.success(self.ws.recv())
+    
+    def get_services(self):
+        payload = {
+            "id": self.getNextId(),
+            "type": "get_services",
         }
         self.ws.send(json.dumps(payload))
         return Response.success(self.ws.recv())
