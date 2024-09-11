@@ -264,16 +264,24 @@ class Home:
     def get_states(self, payload):
         payload["id"] = self.getNextId()
         payload["type"] = "get_states"
-        
+
         self.ws.send(json.dumps(payload))
-        return Response.success(self.ws.recv())
+        response = json.loads(self.ws.recv())
+
+        devices = []
+        for entity in response['result']:
+            devices.append(entity['entity_id'])
+
+        return Response.success(devices)
     
     def get_services(self, payload):
         payload["id"] = self.getNextId()
         payload["type"] = "get_services"
 
         self.ws.send(json.dumps(payload))
-        return Response.success(self.ws.recv())
+        response = json.loads(self.ws.recv())
+
+        return Response.success(response)
     
     def call_service(self, payload):
         payload["id"] = self.getNextId()
