@@ -261,48 +261,35 @@ class Home:
         self.nextId += 1
         return self.nextId
 
-    def get_states(self):
-        payload = {
-            "id": self.getNextId(),
-            "type": "get_states",
-        }
+    def get_states(self, payload):
+        payload["id"] = self.getNextId()
+        payload["type"] = "get_states"
+        
         self.ws.send(json.dumps(payload))
         return Response.success(self.ws.recv())
     
-    def get_services(self):
-        payload = {
-            "id": self.getNextId(),
-            "type": "get_services",
-        }
+    def get_services(self, payload):
+        payload["id"] = self.getNextId()
+        payload["type"] = "get_services"
+
         self.ws.send(json.dumps(payload))
         return Response.success(self.ws.recv())
     
-    def call_service(self, service):
-        payload = {
-            "id": self.getNextId(),
-            "type": "call_service",
-            "domain": "homeassistant",
-            "service": service,
-        }
+    def call_service(self, payload):
+        payload["id"] = self.getNextId()
+        payload["type"] = "call_service"
+
         self.ws.send(json.dumps(payload))
         return Response.success(self.ws.recv())
 
-    def get_panels(self):
-        payload = {
-            "id": self.getNextId(),
-            "type": "get_panels",
-        }
-        self.ws.send(json.dumps(payload))
-        return Response.success(self.ws.recv())
-    
     def light_on(self, lightId):
         payload = {
-        "id": self.getNextId(),
-        "type": "call_service",
-        "domain": "light",
-        "service": "turn_on",
-        "target": {
-            "entity_id": lightId
+            "id": self.getNextId(),
+            "type": "call_service",
+            "domain": "light",
+            "service": "turn_on",
+            "target": {
+                "entity_id": lightId
             },
         }
         self.ws.send(json.dumps(payload))
