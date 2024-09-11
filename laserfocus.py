@@ -270,7 +270,7 @@ class Home:
 
         devices = []
         for entity in response['result']:
-            devices.append(entity['entity_id'])
+            devices.append(entity)
 
         return Response.success(devices)
     
@@ -280,8 +280,11 @@ class Home:
 
         self.ws.send(json.dumps(payload))
         response = json.loads(self.ws.recv())
-
-        return Response.success(response)
+        domains = {}
+        for domain, services in response['result'].items():
+            domains[domain] = services
+            
+        return Response.success(domains)
     
     def call_service(self, payload):
         payload["id"] = self.getNextId()

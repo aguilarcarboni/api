@@ -7,11 +7,13 @@ sleep_time = 5
 
 # Get all domains and their services
 response = rq.post("http://192.168.0.13:5001/home/get_services", json={})
-print(response.json())
+for domain in response.json()['content']['result'].items():
+    print('domain:', domain)
 
 # Get all devices
 response = rq.post("http://192.168.0.13:5001/home/get_states", json={})
-print(response.json()['content'])
+for device in response.json()['content']:
+    print('device:', device)
 
 time.sleep(sleep_time)
 print('-'*10)
