@@ -7,3 +7,5 @@ creds/
 
 *__pycache__
 *.sqlite
+*.DS_Store
+*.cache.sqlite

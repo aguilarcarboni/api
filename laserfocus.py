@@ -360,7 +360,7 @@ class Database:
 
     def queryDocumentInCollection(self, database, table, query):
 
-        color_logger.info('Querying entries in table in database.', {'database':database, 'table':table, 'query':query})
+        color_logger.info(f'Querying entries in table in database. database: {database}, table: {table}, query: {query}')
         
         query = self.convertIds(query, False)
     
@@ -639,6 +639,25 @@ class Database:
         color_logger.info('No more dependencies, going up a level.')
         return dependencies
     
+    def getTablesInDatabase(self, database):
+
+        color_logger.info(f'Getting tables in database: {database}')
+
+        if database not in self.client.list_database_names():
+            color_logger.error('No database with that name found.')
+            return Response.error('No database with that name found.')
+        
+        db = self.client[database]
+
+        color_logger.success(f'Successfully got tables in database: {database}.')
+
+        return Response.success(db.list_collection_names())
+    
+    def getDatabases(self):
+
+        color_logger.info('Getting databases.')
+
+        return Response.success(self.client.list_database_names())
 
 
 """""" 

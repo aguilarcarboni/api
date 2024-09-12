@@ -30,3 +30,5 @@ For detailed API documentation, please refer to the [API Documentation](./docs/R
 ## Contact
 
 For any inquiries, please contact the Laserfocus team at [contact@laserfocus.space](mailto:contact@laserfocus.space).
+
+### created by [@aguilarcarboni](https://github.com/aguilarcarboni/)
