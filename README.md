@@ -6,7 +6,7 @@ The Laserfocus API is the closed-source central nervous system of the Laserfocus
 For administrative users, this API also provides access to The Laserfocus Company's Laserfocus Ecosystem.
 
 ### Documentation
-For detailed API documentation, please refer to the [API Documentation](./docs/README.md) in this repository.
+For detailed API documentation, please refer to the [documentation](./docs/README.md).
 
 ### Roadmap
 - [ ] Implement user management system
