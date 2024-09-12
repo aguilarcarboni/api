@@ -1,6 +1,9 @@
 .env
 env
 
+cache
+creds
+
 *.gguf
 
 creds/
