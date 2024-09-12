@@ -1,34 +1,23 @@
 # Laserfocus API
+## A new way of controlling your ecosystem
+### Description
+The Laserfocus API is the closed-source central nervous system of the Laserfocus Ecosystem, powering our technology solutions designed to make life more efficient. This API controls all aspects of your ecosystem. 
 
-The Laserfocus API is the central nervous system of the Laserfocus suite, powering our technology solutions designed to make life more efficient. This API controls all aspects of the Laserfocus ecosystem, including daily operations, Oasis, and more.
+For administrative users, this API also provides access to The Laserfocus Company's Laserfocus Ecosystem.
 
-## Overview
-
-Laserfocus is a technology company dedicated to creating tools that enhance productivity and streamline daily life. Our API serves as the backbone for all our services, providing a unified interface for managing and interacting with the Laserfocus suite of products.
-
-## Features
-
-- Centralized control of all Laserfocus products and services
-- MongoDB database and Google Drive integration
-- Seamless integration with daily operations management
-- Power the Oasis platform
-- Scalable architecture to support future growth and additional services
-- Authentication
-
-## API Documentation
-
+### Documentation
 For detailed API documentation, please refer to the [API Documentation](./docs/README.md) in this repository.
 
-## Roadmap
-
+### Roadmap
 - [ ] Implement user management system
-- [ ] Add database security features
+- [ ] Implement various database providers
+- [ ] Implement various storage providers
+- [ ] Add database dependency features
 - [ ] Enhance security measures
 - [ ] Expand API capabilities for future Laserfocus products
-- [ ] Integrate with Oasis platform
+- [x] Integrate with Oasis platform
 
-## Contact
-
+### Contact
 For any inquiries, please contact the Laserfocus team at [contact@laserfocus.space](mailto:contact@laserfocus.space).
 
 ### created by [@aguilarcarboni](https://github.com/aguilarcarboni/)
