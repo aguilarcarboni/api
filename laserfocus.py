@@ -765,6 +765,7 @@ class Drive:
         files = []
 
         for index, path in enumerate(paths):
+            print(path, file_name)
             try:
 
                     response = (
@@ -778,9 +779,9 @@ class Drive:
                     )
                     
                     filesResponse = response.get("files")
+                    print(filesResponse)
                     color_logger.info(f'Current path: {filesResponse[0]["name"]}')
                     files.append(filesResponse[0])
-
                     parentId = files[index]['id']
 
             except HttpError as error:
