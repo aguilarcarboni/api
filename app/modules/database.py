@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from sqlalchemy import create_engine, Column, Integer, ForeignKey, DateTime, Text, Boolean, inspect
+from sqlalchemy import create_engine, inspect, Column, Integer, ForeignKey, DateTime, Text, Boolean, JSON
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.exc import SQLAlchemyError
@@ -28,14 +28,16 @@ class user(Base):
     __tablename__ = "user"
     space = relationship("space", back_populates="user", uselist=False, cascade="all, delete-orphan")
 
+    # Base fields
     id = Column(Integer, primary_key=True, index=True, nullable=False)
-    name = Column(Text)
-    description = Column(Text)
-    role = Column(Text, nullable=False)
+    name = Column(Text, nullable=False)
     updated = Column(DateTime(timezone=True), nullable=False)
     created = Column(DateTime(timezone=True), nullable=False)
     status = Column(Text, nullable=False)
     visibility = Column(Text, nullable=False)
+
+    # User specific fields
+    role = Column(Text, nullable=False)
 
 class space(Base):
 
@@ -43,10 +45,12 @@ class space(Base):
     user = relationship("user", back_populates="space", uselist=False)
     events = relationship("event", back_populates="space", cascade="all, delete-orphan")
 
-    id = Column(Integer, primary_key=True, index=True, nullable=False)
+    # Relationship fields
     user_id = Column(Integer, ForeignKey("user.id"), unique=True, nullable=False)
-    name = Column(Text, index=True)
-    description = Column(Text)
+
+    # Base fields
+    id = Column(Integer, primary_key=True, index=True, nullable=False)
+    name = Column(Text, nullable=False)
     updated = Column(DateTime(timezone=True), nullable=False)
     created = Column(DateTime(timezone=True), nullable=False)
     status = Column(Text, nullable=False)
@@ -55,21 +59,53 @@ class space(Base):
 class event(Base):
 
     __tablename__ = "event"
-    space = relationship("space", back_populates="events", uselist=False)
 
-    id = Column(Integer, primary_key=True, index=True)
-    space_id = Column(Integer, ForeignKey("space.id"))
-    name = Column(Text, index=True, nullable=False)
-    description = Column(Text)
-    start = Column(DateTime(timezone=True), nullable=False)
-    end = Column(DateTime(timezone=True), nullable=False)
-    all_day = Column(Boolean)
+        # Relationship fields
+    space = relationship("space", back_populates="event", uselist=False)
+    space_id = Column(Integer, ForeignKey("space.id"), nullable=False)
+
+    #contacts = relationship("contact", back_populates="event")
+    #contact_id = Column(Integer, ForeignKey("contact.id"), nullable=True)
+
+    # Base fields
+    id = Column(Integer, primary_key=True, index=True, nullable=False)
+    name = Column(Text, nullable=False)
     updated = Column(DateTime(timezone=True), nullable=False)
     created = Column(DateTime(timezone=True), nullable=False)
     status = Column(Text, nullable=False)
     visibility = Column(Text, nullable=False)
-    transparency = Column(Text, nullable=False)
 
+    # Event specific fields
+    description = Column(Text)
+
+    start = Column(DateTime(timezone=True), nullable=False)
+    all_day = Column(Boolean, nullable=False)
+    ends = Column(DateTime(timezone=True))
+
+    is_recurring = Column(Boolean, nullable=False)
+    recurring_interval = Column(Integer)
+    recurring_end = Column(DateTime(timezone=True))
+    
+    transparency = Column(Text, nullable=False)
+    location = Column(JSON)
+
+class contact(Base):
+
+    __tablename__ = "contact"
+
+    event = relationship("event", back_populates="contacts")
+
+    # Base fields
+    id = Column(Integer, primary_key=True, index=True, nullable=False)
+    name = Column(Text, nullable=False)
+    updated = Column(DateTime(timezone=True), nullable=False)
+    created = Column(DateTime(timezone=True), nullable=False)
+    status = Column(Text, nullable=False)
+    visibility = Column(Text, nullable=False)
+
+    # Contact specific fields
+    email = Column(Text)
+    phone = Column(Text)
 
 
 class UserPayload:
@@ -77,81 +113,73 @@ class UserPayload:
     def __init__(
         self,
         name: str,
-        role: str,
         status: str,
         visibility: str,
-        description: Optional[str] = None,
+        role: str,
         updated: Optional[datetime] = None,
         created: Optional[datetime] = None,
     ):
         self.name = name
-        self.description = description
-        self.role = role
         self.updated = datetime.now() if updated is None else updated
         self.created = datetime.now() if created is None else created
         self.status = status
         self.visibility = visibility
+        self.role = role
 
     @classmethod
     def from_orm(cls, user_orm: user):
         return cls(
             name=user_orm.name,
-            description=user_orm.description,
-            role=user_orm.role,
             updated=user_orm.updated,
             created=user_orm.created,
             status=user_orm.status,
-            visibility=user_orm.visibility
+            visibility=user_orm.visibility,
+            role=user_orm.role
         )
 
     def to_dict(self):
         return {
             "name": self.name,
-            "description": self.description,
-            "role": self.role,
             "updated": self.updated.isoformat() if self.updated else None,
             "created": self.created.isoformat() if self.created else None,
             "status": self.status,
-            "visibility": self.visibility
+            "visibility": self.visibility,
+            "role": self.role
         }
 
     def to_orm(self) -> user:
         return user(
             name=self.name,
-            description=self.description,
-            role=self.role,
             updated=self.updated,
             created=self.created,
             status=self.status,
-            visibility=self.visibility
+            visibility=self.visibility,
+            role=self.role
         )
 
 class SpacePayload:
 
     def __init__(
         self,
+        user_id: int,
         name: str,
         status: str,
-        user_id: int,
-        description: Optional[str] = None,
+        visibility: str,
         updated: Optional[datetime] = None,
         created: Optional[datetime] = None,
-        visibility: Optional[str] = None,
     ):
+        self.user_id = user_id
         self.name = name
-        self.description = description
         self.updated = datetime.now() if updated is None else updated
         self.created = datetime.now() if created is None else created
         self.status = status
         self.visibility = visibility
-        self.user_id = user_id
 
     @classmethod
     def from_orm(cls, space_orm: space):
         return cls(
-            name=space_orm.name,
             user_id=space_orm.user_id,
-            description=space_orm.description,
+            name=space_orm.name,
             updated=space_orm.updated,
             created=space_orm.created,
             status=space_orm.status,
@@ -160,9 +188,8 @@ class SpacePayload:
 
     def to_dict(self):
         return {
-            "name": self.name,
             "user_id": self.user_id,
-            "description": self.description,
+            "name": self.name,
             "updated": self.updated.isoformat() if self.updated else None,
             "created": self.created.isoformat() if self.created else None,
             "status": self.status,
@@ -171,9 +198,8 @@ class SpacePayload:
 
     def to_orm(self) -> space:
         return space(
-            name=self.name,
             user_id=self.user_id,
-            description=self.description,
+            name=self.name,
             updated=self.updated,
             created=self.created,
             status=self.status,
@@ -184,75 +210,152 @@ class EventPayload:
 
     def __init__(
         self,
-        name: str,
         space_id: int,
-        description: str,
-        start: datetime,
-        end: datetime,
+        name: str,
         status: str,
         visibility: str,
+        start: datetime,
+        all_day: bool,
+        is_recurring: bool,
         transparency: str,
-        all_day: Optional[bool] = None,
         updated: Optional[datetime] = None,
         created: Optional[datetime] = None,
+        description: Optional[str] = None,
+        ends: Optional[datetime] = None,
+        recurring_interval: Optional[int] = None,
+        recurring_end: Optional[datetime] = None,
+        location: Optional[dict] = None,
     ):
-        self.name = name
         self.space_id = space_id
-        self.description = description
-        self.start = start
-        self.end = end
-        self.status = status
-        self.visibility = visibility
-        self.transparency = transparency
-        self.all_day = all_day
+
+        self.name = name
         self.updated = datetime.now() if updated is None else updated
         self.created = datetime.now() if created is None else created
+        self.status = status
+        self.visibility = visibility
+
+        self.description = description
+        self.start = start
+        self.all_day = all_day
+        self.ends = ends
+        self.is_recurring = is_recurring
+        self.recurring_interval = recurring_interval
+        self.recurring_end = recurring_end
+        self.transparency = transparency
+        self.location = location
 
     @classmethod
     def from_orm(cls, event_orm: event):
         return cls(
-            name=event_orm.name,
             space_id=event_orm.space_id,
-            description=event_orm.description,
-            start=event_orm.start,
-            end=event_orm.end,
+            name=event_orm.name,
+            updated=event_orm.updated,
+            created=event_orm.created,
             status=event_orm.status,
             visibility=event_orm.visibility,
-            transparency=event_orm.transparency,
+            description=event_orm.description,
+            start=event_orm.start,
             all_day=event_orm.all_day,
-            updated=event_orm.updated,
-            created=event_orm.created
+            end=event_orm.end,
+            is_recurring=event_orm.is_recurring,
+            recurring_interval=event_orm.recurring_interval,
+            recurring_end=event_orm.recurring_end,
+            transparency=event_orm.transparency,
+            location=event_orm.location
+        )
+
+    def to_dict(self):
+        return {
+            "space_id": self.space_id,
+            "name": self.name,
+            "updated": self.updated.isoformat() if self.updated else None,
+            "created": self.created.isoformat() if self.created else None,
+            "status": self.status,
+            "visibility": self.visibility,
+            "description": self.description,
+            "start": self.start.isoformat(),
+            "all_day": self.all_day,
+            "ends": self.ends.isoformat() if self.ends else None,
+            "is_recurring": self.is_recurring,
+            "recurring_interval": self.recurring_interval,
+            "recurring_end": self.recurring_end.isoformat() if self.recurring_end else None,
+            "transparency": self.transparency,
+            "location": self.location
+        }
+
+    def to_orm(self) -> event:
+        return event(
+            space_id=self.space_id,
+            name=self.name,
+            updated=self.updated,
+            created=self.created,
+            status=self.status,
+            visibility=self.visibility,
+            description=self.description,
+            start=self.start,
+            all_day=self.all_day,
+            end=self.end,
+            is_recurring=self.is_recurring,
+            recurring_interval=self.recurring_interval,
+            recurring_end=self.recurring_end,
+            transparency=self.transparency,
+            location=self.location
+        )
+
+class ContactPayload:
+
+    def __init__(
+        self,
+        name: str,
+        status: str,
+        visibility: str,
+        updated: Optional[datetime] = None,
+        created: Optional[datetime] = None,
+        email: Optional[str] = None,    
+        phone: Optional[str] = None,
+    ):
+        self.name = name
+        self.updated = datetime.now() if updated is None else updated
+        self.created = datetime.now() if created is None else created
+        self.status = status
+        self.visibility = visibility
+        self.email = email
+        self.phone = phone
+    
+    @classmethod
+    def from_orm(cls, contact_orm: contact):
+        return cls(
+            name=contact_orm.name,
+            updated=contact_orm.updated,
+            created=contact_orm.created,
+            status=contact_orm.status,
+            visibility=contact_orm.visibility,
+            email=contact_orm.email,
+            phone=contact_orm.phone
         )
 
     def to_dict(self):
         return {
             "name": self.name,
-            "space_id": self.space_id,
-            "description": self.description,
-            "start": self.start.isoformat() if self.start else None,
-            "end": self.end.isoformat() if self.end else None,
+            "updated": self.updated.isoformat() if self.updated else None,
+            "created": self.created.isoformat() if self.created else None,
             "status": self.status,
             "visibility": self.visibility,
-            "transparency": self.transparency,
-            "all_day": self.all_day,
-            "updated": self.updated.isoformat() if self.updated else None,
-            "created": self.created.isoformat() if self.created else None
+            "email": self.email,
+            "phone": self.phone
         }
 
-    def to_orm(self) -> event:
-        return event(
+    def to_orm(self) -> contact:
+        return contact(
             name=self.name,
-            space_id=self.space_id,
-            description=self.description,
-            start=self.start,
-            end=self.end,
+            updated=self.updated,
+            created=self.created,
             status=self.status,
             visibility=self.visibility,
-            transparency=self.transparency,
-            all_day=self.all_day,
-            updated=self.updated,
-            created=self.created
+            email=self.email,
+            phone=self.phone
         )
+
 
 # Create tables
 Base.metadata.create_all(bind=engine)
