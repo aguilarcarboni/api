@@ -1,17 +1,15 @@
 from flask import Flask, render_template
 from flask_cors import CORS
 
-import laserfocus
-
 def start_laserfocus():
     
     app = Flask(__name__)
     cors = CORS(app, resources={r"/*": {"origins": "*"}})
     app.config['CORS_HEADERS'] = 'Content-Type'
 
-    from routes import main, database, explorer, weather, news, sports, wallet, market, drive, home
+    from app.routes import main, database, explorer, weather, news, sports, wallet, market, drive
     app.register_blueprint(drive.bp)
-    app.register_blueprint(home.bp)
+    #app.register_blueprint(home.bp)
     app.register_blueprint(main.bp)
     app.register_blueprint(database.bp)
     app.register_blueprint(explorer.bp)
