@@ -12,6 +12,8 @@ from app.helpers.logger import logger
 from datetime import datetime
 from typing import Optional
 
+logger.info('Initializing Database')
+
 # SQLAlchemy setup
 load_dotenv()
 DATABASE_URL = os.getenv("SUPABASE_URL")
@@ -33,8 +35,9 @@ user = Base.classes.user
 space = Base.classes.space
 event = Base.classes.event
 contact = Base.classes.contact
+page = Base.classes.page
 
-logger.info('Successfully connected to database and reflected tables')
+logger.success('Successfully initialized Database')
 
 # Define Payload classes
 class UserPayload:
@@ -164,12 +167,38 @@ class EventPayload:
         self.visibility = visibility
 
         self.description = description
-        self.start = start
+
+        try:
+            if isinstance(start, str):
+                self.start = datetime.fromisoformat(start)
+            else:
+                self.start = start
+        except ValueError as e:
+            logger.error(f"Error parsing start date: {str(e)}")
+            raise ValueError(f"Invalid start date format: {start}")
+
+        try:
+            if isinstance(ends, str):
+                self.ends = datetime.fromisoformat(ends)
+            else:
+                self.ends = ends
+        except ValueError as e:
+            logger.error(f"Error parsing ends date: {str(e)}")
+            raise ValueError(f"Invalid ends date format: {ends}")
+
+        try:
+            if isinstance(recurring_end, str):
+                self.recurring_end = datetime.fromisoformat(recurring_end)
+            else:
+                self.recurring_end = recurring_end
+        except ValueError as e:
+            logger.error(f"Error parsing recurring_end date: {str(e)}")
+            raise ValueError(f"Invalid recurring_end date format: {recurring_end}")
+
         self.all_day = all_day
         self.ends = ends
         self.is_recurring = is_recurring
         self.recurring_interval = recurring_interval
-        self.recurring_end = recurring_end
         self.transparency = transparency
         self.location = location
 
@@ -285,28 +314,136 @@ class ContactPayload:
             phone=self.phone
         )
 
+class PagePayload:
+
+    def __init__(
+        self,
+        journal_id: int,
+        name: str,
+        status: str,
+        visibility: str,
+        updated: Optional[datetime] = None,
+        created: Optional[datetime] = None,
+    ):
+        self.journal_id = journal_id
+        self.name = name
+        self.updated = datetime.now() if updated is None else updated
+        self.created = datetime.now() if created is None else created
+        self.status = status
+        self.visibility = visibility
+
+    @classmethod
+    def from_orm(cls, page_orm: page):
+        return cls(
+            journal_id=page_orm.journal_id,
+            name=page_orm.name,
+            updated=page_orm.updated,
+            created=page_orm.created,
+            status=page_orm.status,
+            visibility=page_orm.visibility
+        )
+    
+    def to_dict(self):
+        return {
+            "journal_id": self.journal_id,
+            "name": self.name,
+            "updated": self.updated.isoformat() if self.updated else None,
+            "created": self.created.isoformat() if self.created else None,
+            "status": self.status,
+            "visibility": self.visibility
+        }
+    
+    def to_orm(self) -> page:
+        return page(
+            journal_id=self.journal_id,
+            name=self.name,
+            updated=self.updated,
+            created=self.created,
+            status=self.status,
+            visibility=self.visibility
+        )
+    
+
 """Database functions"""
 def get_db_session():
     """Create and yield a database session"""
+    logger.info('Creating database session')
     db = SessionLocal()
     try:
         yield db
     finally:
         db.close()
+        logger.success('Successfully closed database session')
 
-def create(data: user | space | event | contact):
+def create(table_name: str, data: dict):
+    """Create a new record in the database"""
+    logger.info(f'Attempting to create new entry in table: {table_name}')
+
     db = next(get_db_session())
     try:
-        db.add(data)
+        if table_name == 'user':
+            payload = UserPayload(**data)
+            new_record = user(**payload.to_dict())
+        elif table_name == 'space':
+            payload = SpacePayload(**data)
+            new_record = space(**payload.to_dict())
+        elif table_name == 'event':
+            payload = EventPayload(**data)
+            new_record = event(**payload.to_dict())
+        elif table_name == 'page':
+            payload = PagePayload(**data)
+            new_record = page(**payload.to_dict())
+        else:
+            raise ValueError(f"Invalid table {table_name}")
+
+        db.add(new_record)
         db.commit()
-        db.refresh(data)
-        return Response.success(f'Successfully created {data.id}')
+        db.refresh(new_record)
+        logger.success(f'Successfully created {new_record.id}')
+        return Response.success(f'Successfully created {new_record.id}')
     except SQLAlchemyError as e:
         db.rollback()
+        logger.error(f'Error creating {str(e)}')
         return Response.error(f"Error creating {str(e)}")
 
-def read(table_name: str, params: dict):
+def update(table_name: str, params: dict, data: dict):
+    """Update a record in the database"""
+    logger.info(f'Attempting to update entry in table: {table_name}')
+    logger.info(f'Params: {params}')
+    logger.info(f'Data: {data}')
+    
     db = next(get_db_session())
+    try:
+        table = Table(table_name, metadata, autoload_with=engine)
+        query = db.query(table)
+
+        for key, value in params.items():
+            if hasattr(table.c, key):
+                query = query.filter(getattr(table.c, key) == value)
+
+        item = query.first()
+
+        if not item:
+            return Response.error(f"{table_name.capitalize()} with given parameters not found")
+
+        query.update(data)
+        db.commit()
+
+        updated_item = query.first()
+        logger.success(f"Successfully updated {table_name} with new data {updated_item._asdict()}")
+        return Response.success(f"Successfully updated {table_name} with new data {updated_item._asdict()}")
+    except SQLAlchemyError as e:
+        db.rollback()
+        logger.error(f"Error updating {table_name}: {str(e)}")
+        return Response.error(f"Error updating {table_name}: {str(e)}")
+
+def read(table_name: str, params: dict):
+    """Read a record from the database"""
+    logger.info(f'Attempting to read entry from table: {table_name}')
+    logger.info(f'Params: {params}')
+    
+    db = next(get_db_session())
+
     try:
         table = Table(table_name, metadata, autoload_with=engine)
         query = db.query(table)
@@ -316,14 +453,23 @@ def read(table_name: str, params: dict):
                 query = query.filter(getattr(table.c, key) == value)
         
         results = query.all()
+
+        if results is not None:
+            serialized_results = [row._asdict() for row in results]
+        else:
+            serialized_results = []
         
-        serialized_results = [dict(row) for row in results]
-        
+        logger.success(f'Successfully read {len(serialized_results)} entries from {table_name}')
         return Response.success(serialized_results)
     except SQLAlchemyError as e:
+        logger.error(f'Error reading from database: {str(e)}')
         return Response.error(f"Error reading from database: {str(e)}")
 
 def delete(table_name: str, params: dict):
+    """Delete a record from the database"""
+    logger.info(f'Attempting to delete entry from table: {table_name}')
+    logger.info(f'Params: {params}')
+    
     db = next(get_db_session())
     try:
         table = Table(table_name, metadata, autoload_with=engine)

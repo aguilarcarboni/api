@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from app.modules.database import create, UserPayload, SpacePayload, EventPayload, read, delete
+from app.modules.database import create, read, update, delete, UserPayload, SpacePayload, EventPayload, PagePayload
 
 bp = Blueprint('database', __name__)
 
@@ -7,22 +7,20 @@ bp = Blueprint('database', __name__)
 def create_route():
 
     payload = request.get_json(force=True)
-    if (payload['table'] == 'user'):
-        data = UserPayload(**payload['data'])
-    elif (payload['table'] == 'space'):
-        data = SpacePayload(**payload['data'])
-    elif (payload['table'] == 'event'):
-        data = EventPayload(**payload['data'])
-    else:
-        raise ValueError(f"Invalid table {payload['table']}")
 
-    response = create(data.to_orm())
+    response = create(payload['table'], payload['data'])
     return response
 
 @bp.route('/database/read', methods=['POST'])
 def read_route():
     payload = request.get_json(force=True)
     response = read(payload['table'], payload['query'])
+    return response
+
+@bp.route('/database/update', methods=['POST'])
+def update_route():
+    payload = request.get_json(force=True)
+    response = update(payload['table'], payload['query'], payload['data'])
     return response
 
 @bp.route('/database/delete', methods=['POST'])
