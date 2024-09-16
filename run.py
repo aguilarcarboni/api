@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask
 from flask_cors import CORS
 
 def start_laserfocus():
@@ -19,10 +19,6 @@ def start_laserfocus():
     app.register_blueprint(wallet.bp)
     app.register_blueprint(market.bp)
     
-    @app.route('/dashboard')
-    def index():
-        return render_template('index.html')
-    
     @app.errorhandler(404)
     def not_found_error(error):
         return {"error": "Not found"}, 404
@@ -30,8 +26,7 @@ def start_laserfocus():
     @app.errorhandler(500)
     def internal_error(error):
         return {"error": "Internal server error"}, 500 
-    
-    url = 'https://laserfocus-api.onrender.com'
+
     return app
 
 if __name__ == '__main__':
