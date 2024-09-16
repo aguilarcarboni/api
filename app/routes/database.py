@@ -7,11 +7,11 @@ bp = Blueprint('database', __name__)
 def create_route():
 
     payload = request.get_json(force=True)
-    if (payload['table'] == 'User'):
+    if (payload['table'] == 'user'):
         data = UserPayload(**payload['data'])
-    elif (payload['table'] == 'Space'):
+    elif (payload['table'] == 'space'):
         data = SpacePayload(**payload['data'])
-    elif (payload['table'] == 'Event'):
+    elif (payload['table'] == 'event'):
         data = EventPayload(**payload['data'])
     else:
         raise ValueError(f"Invalid table {payload['table']}")

@@ -1,8 +1,8 @@
 import os
 from dotenv import load_dotenv
-from sqlalchemy import create_engine, inspect, Column, Integer, ForeignKey, DateTime, Text, Boolean, JSON
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy import create_engine, MetaData, inspect, Table
+from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.exc import SQLAlchemyError
 from datetime import datetime
 
@@ -19,95 +19,24 @@ if not DATABASE_URL:
     raise ValueError("DATABASE_URL must be set in the .env file")
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-Base = declarative_base()
-logger.info('Successfully connected to database')
 
-# Define models
-class user(Base):
+# Use reflection to load the existing tables
+metadata = MetaData()
+metadata.reflect(bind=engine)
 
-    __tablename__ = "user"
-    space = relationship("space", back_populates="user", uselist=False, cascade="all, delete-orphan")
+# Create a base class for reflected tables
+Base = automap_base(metadata=metadata)
+Base.prepare()
 
-    # Base fields
-    id = Column(Integer, primary_key=True, index=True, nullable=False)
-    name = Column(Text, nullable=False)
-    updated = Column(DateTime(timezone=True), nullable=False)
-    created = Column(DateTime(timezone=True), nullable=False)
-    status = Column(Text, nullable=False)
-    visibility = Column(Text, nullable=False)
+# Get the reflected table classes
+user = Base.classes.user
+space = Base.classes.space
+event = Base.classes.event
+contact = Base.classes.contact
 
-    # User specific fields
-    role = Column(Text, nullable=False)
+logger.info('Successfully connected to database and reflected tables')
 
-class space(Base):
-
-    __tablename__ = "space"
-    user = relationship("user", back_populates="space", uselist=False)
-    events = relationship("event", back_populates="space", cascade="all, delete-orphan")
-
-    # Relationship fields
-    user_id = Column(Integer, ForeignKey("user.id"), unique=True, nullable=False)
-
-    # Base fields
-    id = Column(Integer, primary_key=True, index=True, nullable=False)
-    name = Column(Text, nullable=False)
-    updated = Column(DateTime(timezone=True), nullable=False)
-    created = Column(DateTime(timezone=True), nullable=False)
-    status = Column(Text, nullable=False)
-    visibility = Column(Text, nullable=False)
-
-class event(Base):
-
-    __tablename__ = "event"
-
-        # Relationship fields
-    space = relationship("space", back_populates="event", uselist=False)
-    space_id = Column(Integer, ForeignKey("space.id"), nullable=False)
-
-    #contacts = relationship("contact", back_populates="event")
-    #contact_id = Column(Integer, ForeignKey("contact.id"), nullable=True)
-
-    # Base fields
-    id = Column(Integer, primary_key=True, index=True, nullable=False)
-    name = Column(Text, nullable=False)
-    updated = Column(DateTime(timezone=True), nullable=False)
-    created = Column(DateTime(timezone=True), nullable=False)
-    status = Column(Text, nullable=False)
-    visibility = Column(Text, nullable=False)
-
-    # Event specific fields
-    description = Column(Text)
-
-    start = Column(DateTime(timezone=True), nullable=False)
-    all_day = Column(Boolean, nullable=False)
-    ends = Column(DateTime(timezone=True))
-
-    is_recurring = Column(Boolean, nullable=False)
-    recurring_interval = Column(Integer)
-    recurring_end = Column(DateTime(timezone=True))
-    
-    transparency = Column(Text, nullable=False)
-    location = Column(JSON)
-
-class contact(Base):
-
-    __tablename__ = "contact"
-
-    event = relationship("event", back_populates="contacts")
-
-    # Base fields
-    id = Column(Integer, primary_key=True, index=True, nullable=False)
-    name = Column(Text, nullable=False)
-    updated = Column(DateTime(timezone=True), nullable=False)
-    created = Column(DateTime(timezone=True), nullable=False)
-    status = Column(Text, nullable=False)
-    visibility = Column(Text, nullable=False)
-
-    # Contact specific fields
-    email = Column(Text)
-    phone = Column(Text)
-
-
+# Define Payload classes
 class UserPayload:
     
     def __init__(
@@ -256,7 +185,7 @@ class EventPayload:
             description=event_orm.description,
             start=event_orm.start,
             all_day=event_orm.all_day,
-            end=event_orm.end,
+            ends=event_orm.ends,
             is_recurring=event_orm.is_recurring,
             recurring_interval=event_orm.recurring_interval,
             recurring_end=event_orm.recurring_end,
@@ -294,7 +223,7 @@ class EventPayload:
             description=self.description,
             start=self.start,
             all_day=self.all_day,
-            end=self.end,
+            ends=self.ends,
             is_recurring=self.is_recurring,
             recurring_interval=self.recurring_interval,
             recurring_end=self.recurring_end,
@@ -356,10 +285,6 @@ class ContactPayload:
             phone=self.phone
         )
 
-
-# Create tables
-Base.metadata.create_all(bind=engine)
-
 """Database functions"""
 def get_db_session():
     """Create and yield a database session"""
@@ -369,79 +294,53 @@ def get_db_session():
     finally:
         db.close()
 
-def create(data: user | space | event):
-
+def create(data: user | space | event | contact):
     db = next(get_db_session())
     try:
-        
         db.add(data)
         db.commit()
         db.refresh(data)
-
         return Response.success(f'Successfully created {data.id}')
-    
     except SQLAlchemyError as e:
         db.rollback()
         return Response.error(f"Error creating {str(e)}")
 
-def read(table: str, params: dict):
+def read(table_name: str, params: dict):
     db = next(get_db_session())
     try:
-        # Get the model class dynamically
-        model = globals()[table]
+        table = Table(table_name, metadata, autoload_with=engine)
+        query = db.query(table)
         
-        # Create a query
-        query = db.query(model)
-        
-        # Apply filters based on params
         for key, value in params.items():
-            if hasattr(model, key):
-                query = query.filter(getattr(model, key) == value)
+            if hasattr(table.c, key):
+                query = query.filter(getattr(table.c, key) == value)
         
-        # Execute the query
         results = query.all()
         
-        # Convert results to dict
-        serialized_results = []
-        for result in results:
-            item_dict = {}
-            for column in inspect(model).columns:
-                item_dict[column.name] = getattr(result, column.name)
-            serialized_results.append(item_dict)
+        serialized_results = [dict(row) for row in results]
         
         return Response.success(serialized_results)
-    
-    except (KeyError, AttributeError):
-        return Response.error(f"Invalid table name or parameter: {table}")
     except SQLAlchemyError as e:
         return Response.error(f"Error reading from database: {str(e)}")
 
-def delete(table: str, params: dict):
+def delete(table_name: str, params: dict):
     db = next(get_db_session())
     try:
-        # Get the model class dynamically
-        model = globals()[table]
+        table = Table(table_name, metadata, autoload_with=engine)
+        query = db.query(table)
         
-        # Create a query
-        query = db.query(model)
-        
-        # Apply filters based on params
         for key, value in params.items():
-            if hasattr(model, key):
-                query = query.filter(getattr(model, key) == value)
+            if hasattr(table.c, key):
+                query = query.filter(getattr(table.c, key) == value)
         
-        # Query the item
         item = query.first()
         if not item:
-            return Response.error(f"{table.capitalize()} with given parameters not found")
+            return Response.error(f"{table_name.capitalize()} with given parameters not found")
         
-        # Delete the item
         db.delete(item)
         db.commit()
         
-        return Response.success(f"{table.capitalize()} deleted successfully")
-    except KeyError:
-        return Response.error(f"Invalid table name: {table}")
+        return Response.success(f"{table_name.capitalize()} deleted successfully")
     except SQLAlchemyError as e:
         db.rollback()
-        return Response.error(f"Error deleting {table}: {str(e)}")
+        return Response.error(f"Error deleting {table_name}: {str(e)}")
