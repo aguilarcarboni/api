@@ -196,7 +196,6 @@ class EventPayload:
             raise ValueError(f"Invalid recurring_end date format: {recurring_end}")
 
         self.all_day = all_day
-        self.ends = ends
         self.is_recurring = is_recurring
         self.recurring_interval = recurring_interval
         self.transparency = transparency
@@ -399,8 +398,8 @@ def create(table_name: str, data: dict):
         db.add(new_record)
         db.commit()
         db.refresh(new_record)
-        logger.success(f'Successfully created {new_record.id}')
-        return Response.success(f'Successfully created {new_record.id}')
+        logger.success(f'Successfully created entry: {new_record.id}')
+        return Response.success(f'{new_record.id}')
     except SQLAlchemyError as e:
         db.rollback()
         logger.error(f'Error creating {str(e)}')
@@ -437,21 +436,22 @@ def update(table_name: str, params: dict, data: dict):
         logger.error(f"Error updating {table_name}: {str(e)}")
         return Response.error(f"Error updating {table_name}: {str(e)}")
 
-def read(table_name: str, params: dict):
+def read(table: str, params:dict = None):
     """Read a record from the database"""
-    logger.info(f'Attempting to read entry from table: {table_name}')
+    logger.info(f'Attempting to read entry from table: {table}')
     logger.info(f'Params: {params}')
     
     db = next(get_db_session())
 
     try:
-        table = Table(table_name, metadata, autoload_with=engine)
+        table = Table(table, metadata, autoload_with=engine)
         query = db.query(table)
-        
-        for key, value in params.items():
-            if hasattr(table.c, key):
-                query = query.filter(getattr(table.c, key) == value)
-        
+
+        if params:
+            for key, value in params.items():
+                if hasattr(table.c, key):
+                    query = query.filter(getattr(table.c, key) == value)
+            
         results = query.all()
 
         if results is not None:
@@ -459,34 +459,48 @@ def read(table_name: str, params: dict):
         else:
             serialized_results = []
         
-        logger.success(f'Successfully read {len(serialized_results)} entries from {table_name}')
+        logger.success(f'Successfully read {len(serialized_results)} entries from table: {table}')
         return Response.success(serialized_results)
     except SQLAlchemyError as e:
         logger.error(f'Error reading from database: {str(e)}')
         return Response.error(f"Error reading from database: {str(e)}")
 
-def delete(table_name: str, params: dict):
+def delete(table: str, params: dict):
     """Delete a record from the database"""
-    logger.info(f'Attempting to delete entry from table: {table_name}')
+    logger.info(f'Attempting to delete entry from table: {table}')
     logger.info(f'Params: {params}')
     
     db = next(get_db_session())
     try:
-        table = Table(table_name, metadata, autoload_with=engine)
-        query = db.query(table)
+        # Map table_name to the corresponding ORM class
+        table_map = {
+            'user': user,
+            'space': space,
+            'event': event,
+            'contact': contact,
+            'page': page
+        }
+        
+        if table not in table_map:
+            return Response.error(f"Invalid table name: {table}")
+        
+        Model = table_map[table]
+        query = db.query(Model)
         
         for key, value in params.items():
-            if hasattr(table.c, key):
-                query = query.filter(getattr(table.c, key) == value)
+            if hasattr(Model, key):
+                query = query.filter(getattr(Model, key) == value)
         
         item = query.first()
         if not item:
-            return Response.error(f"{table_name.capitalize()} with given parameters not found")
+            return Response.error(f"{table.capitalize()} with given parameters not found")
         
         db.delete(item)
         db.commit()
-        
-        return Response.success(f"{table_name.capitalize()} deleted successfully")
+
+        logger.success(f"Successfully deleted {table} with id: {item.id}")
+        return Response.success(f"{table.capitalize()} deleted successfully")
     except SQLAlchemyError as e:
         db.rollback()
-        return Response.error(f"Error deleting {table_name}: {str(e)}")
+        logger.error(f"Error deleting {table}: {str(e)}")
+        return Response.error(f"Error deleting {table}: {str(e)}")

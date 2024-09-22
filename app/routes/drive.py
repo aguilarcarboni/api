@@ -7,7 +7,7 @@ bp = Blueprint('drive', __name__)
 @bp.route('/drive/query_files', methods=['POST'])
 async def drive_query_files():
     input_json = request.get_json(force=True)
-    response = queryFilesInFolder(input_json['path'])
+    response = queryFilesInFolder(path=input_json['path'])
     return response
 
 @bp.route('/drive/query_file', methods=['POST'])

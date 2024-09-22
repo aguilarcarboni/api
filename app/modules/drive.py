@@ -13,7 +13,7 @@ SCOPES = ['https://www.googleapis.com/auth/drive']
 creds = Credentials.from_authorized_user_file("app/creds/token.json", SCOPES)
 service = build("drive", "v3", credentials=creds)
 
-def createFolder(self, folderName, parentFolderId):
+def createFolder(folderName, parentFolderId):
 
     logger.info(f"Creating folder: {folderName} in folder: {parentFolderId}")
 
@@ -27,7 +27,7 @@ def createFolder(self, folderName, parentFolderId):
         logger.error("No parent folder ID provided.")
         return Response.error('No parent folder ID provided.')
     
-    folder = self.service.files().create(body=fileMetadata, fields='id, name, parents, mimeType, size, modifiedTime, createdTime').execute()
+    folder = service.files().create(body=fileMetadata, fields='id, name, parents, mimeType, size, modifiedTime, createdTime').execute()
     logger.success(f"Successfully created folder: {folderName} in folder: {parentFolderId}")
     return Response.success(folder)
 
@@ -35,7 +35,7 @@ def createFolder(self, folderName, parentFolderId):
 
 # Upload files
 
-def uploadFileWithPath(self, filePath, parentFolderId):
+def uploadFileWithPath(filePath, parentFolderId):
     logger.info(f"Uploading file: {filePath} to folder: {parentFolderId}")
     fileMetadata = {'name': os.path.basename(filePath)}
 
@@ -46,12 +46,12 @@ def uploadFileWithPath(self, filePath, parentFolderId):
         return Response.error('No parent folder ID provided.')
     
     media = MediaFileUpload(filePath, resumable=True)
-    f = self.service.files().create(body=fileMetadata, media_body=media, fields='id, name, parents, mimeType, size, modifiedTime').execute()
+    f = service.files().create(body=fileMetadata, media_body=media, fields='id, name, parents, mimeType, size, modifiedTime').execute()
     print(f)
     logger.success(f"Successfully uploaded file: {filePath} to folder: {parentFolderId}")
     return Response.success(f)
 
-def uploadFile(self, fileName, rawFile, parentFolderId):
+def uploadFile(fileName, rawFile, parentFolderId):
     logger.info(f"Uploading file: {fileName} to folder: {parentFolderId}")
     fileMetadata = {'name': fileName}
 
@@ -63,7 +63,7 @@ def uploadFile(self, fileName, rawFile, parentFolderId):
     print(f)
     try:
         media = MediaIoBaseUpload(rawFile, resumable=True)
-        f = self.service.files().create(body=fileMetadata, media_body=media, fields='id, name, parents, mimeType, size, modifiedTime').execute()
+        f = service.files().create(body=fileMetadata, media_body=media, fields='id, name, parents, mimeType, size, modifiedTime').execute()
         logger.success(f"Successfully uploaded file: {fileName} to folder: {parentFolderId}")
         return Response.success(f)
     except Exception as e:
@@ -72,14 +72,14 @@ def uploadFile(self, fileName, rawFile, parentFolderId):
     
 # Modify files?
 
-def deleteFiles(self, file_ids):
+def deleteFiles(file_ids):
 
     logger.info(f"Deleting files with IDs: {file_ids}")
 
     results = []
     for file_id in file_ids:
         try:
-            response = self.service.files().delete(fileId=file_id).execute()
+            response = service.files().delete(fileId=file_id).execute()
             logger.success(f"Successfully deleted file with ID: {file_id}")
             results.append(Response.success({'content': response, 'file_id': file_id}))
         except Exception as e:
@@ -89,7 +89,7 @@ def deleteFiles(self, file_ids):
     logger.success(f"Deletion process completed for {len(file_ids)} files.")
     return results  
 
-def queryFile(self, path, file_name):
+def queryFile(path, file_name):
 
     logger.info(f"Querying for file: {path}/{file_name}")
 
@@ -104,7 +104,7 @@ def queryFile(self, path, file_name):
         try:
 
                 response = (
-                    self.service.files()
+                    service.files()
                     .list(
                         q=f"name='{path}' and trashed = false and '{parentId}' in parents",
                         spaces="drive",
@@ -130,7 +130,7 @@ def queryFile(self, path, file_name):
     logger.success(f"Successfully queried file: {files[len(files) - 1]}")
     return Response.success(files[len(files) - 1])
 
-def queryFilesInFolder(self, path):
+def queryFilesInFolder(path):
 
     logger.info(f"Querying for files in: {path}")
 
@@ -152,7 +152,7 @@ def queryFilesInFolder(self, path):
         try:
 
                 response = (
-                    self.service.files()
+                    service.files()
                     .list(
                         q=query,
                         spaces="drive",
@@ -174,12 +174,12 @@ def queryFilesInFolder(self, path):
     logger.success(f"Successfully queried files in: {paths[len(paths) - 1]}")
     return Response.success(response)
 
-def downloadFile(self, fileId):
+def downloadFile(fileId):
 
     logger.info(f"Downloading file with ID: {fileId}")
 
     try:
-        request = self.service.files().get_media(fileId=fileId)
+        request = service.files().get_media(fileId=fileId)
         downloaded_file = io.BytesIO()
         downloader = MediaIoBaseDownload(downloaded_file, request)
         done = False
