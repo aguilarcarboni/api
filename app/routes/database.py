@@ -12,6 +12,12 @@ def create_route():
 @bp.route('/database/read', methods=['POST'])
 def read_route():
     payload = request.get_json(force=True)
+    if isinstance(payload, str):
+        import json
+        try:
+            payload = json.loads(payload)
+        except json.JSONDecodeError:
+            return {"error": "Invalid JSON string"}, 400
     response = read(table=payload['table'], params=payload['params'])
     return response
 
