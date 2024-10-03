@@ -1,0 +1,7 @@
+:80 {
+    # Reverse proxy to Gunicorn server
+    reverse_proxy localhost:5002
+
+    # Enable Gzip compression
+    encode gzip
+}

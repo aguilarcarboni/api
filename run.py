@@ -1,9 +1,12 @@
 from flask import Flask
 from flask_cors import CORS
+from werkzeug.middleware.proxy_fix import ProxyFix
 
-def start_laserfocus():
-    
+def create_app():
     app = Flask(__name__)
+    app.wsgi_app = ProxyFix(
+        app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1
+    )
     cors = CORS(app, resources={r"/*": {"origins": "*"}})
     app.config['CORS_HEADERS'] = 'Content-Type'
 
@@ -29,7 +32,4 @@ def start_laserfocus():
 
     return app
 
-if __name__ == '__main__':
-    app = start_laserfocus()
-    debug = False
-    app.run(debug=debug, host='0.0.0.0', port=5002)
+application = create_app()
