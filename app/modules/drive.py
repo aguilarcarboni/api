@@ -10,8 +10,22 @@ from app.helpers.logger import logger
 
 SCOPES = ['https://www.googleapis.com/auth/drive']
 
-creds = Credentials.from_authorized_user_file("app/creds/token.json", SCOPES)
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+logger.info('Initializing Google Drive')
+creds = Credentials(
+    token=os.getenv('GOOGLE_TOKEN'),
+    refresh_token=os.getenv('GOOGLE_REFRESH_TOKEN'),
+    token_uri=os.getenv('GOOGLE_TOKEN_URI'),
+    client_id=os.getenv('GOOGLE_CLIENT_ID'),
+    client_secret=os.getenv('GOOGLE_CLIENT_SECRET'),
+    scopes=SCOPES
+)
 service = build("drive", "v3", credentials=creds)
+logger.success('Successfully initialized Google Drive')
 
 def createFolder(folderName, parentFolderId):
 
