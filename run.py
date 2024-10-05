@@ -5,17 +5,38 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 from flask_jwt_extended import JWTManager, verify_jwt_in_request, create_access_token, exceptions
 import os
 import logging
+from flask import jsonify
 from logging.handlers import RotatingFileHandler
+
+
+def jwt_required_except_login():
+    if request.endpoint != 'login':
+        try:
+            verify_jwt_in_request()
+        except exceptions.JWTExtendedException as e:
+            return jsonify({"msg": str(e)}), 401
+        
+def configure_logging(app):
+    if not os.path.exists('logs'):
+        os.mkdir('logs')
+    file_handler = RotatingFileHandler('logs/api.log', maxBytes=10240, backupCount=10)
+    file_handler.setFormatter(logging.Formatter(
+        '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'
+    ))
+    file_handler.setLevel(logging.INFO)
+    app.logger.addHandler(file_handler)
+    app.logger.setLevel(logging.INFO)
+    app.logger.info('API startup')
 
 def create_app():
     app = Flask(__name__)
-    app.wsgi_app = ProxyFix(
-        app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1
-    )
     cors = CORS(app, resources={r"/*": {"origins": "*"}})
     app.config['CORS_HEADERS'] = 'Content-Type'
+    print(os.getenv('JWT_SECRET_KEY'))
     app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
     jwt = JWTManager(app)
+
+    app.before_request(jwt_required_except_login)
 
     from app.routes import main, database, explorer, weather, news, sports, wallet, market, drive
     app.register_blueprint(drive.bp)
@@ -28,6 +49,15 @@ def create_app():
     app.register_blueprint(sports.bp)
     app.register_blueprint(wallet.bp)
     app.register_blueprint(market.bp)
+
+    @app.route('/login', methods=['POST'])
+    def login():
+        payload = request.get_json(force=True)
+        token = payload['token']
+        if token == 'laserfocused':
+            access_token = create_access_token(identity=token)
+            return {"access_token": access_token}, 200
+        return {"msg": "Invalid token"}, 401
     
     @app.errorhandler(404)
     def not_found_error(error):
@@ -36,23 +66,6 @@ def create_app():
     @app.errorhandler(500)
     def internal_error(error):
         return {"error": "Internal server error"}, 500 
-
-    @app.before_request
-    def jwt_required_except_login():
-        if request.endpoint != 'login':
-            try:
-                verify_jwt_in_request()
-            except exceptions.JWTExtendedException as e:
-                return {"msg": str(e)}, 401
-
-    @app.route('/login', methods=['POST'])
-    def login():
-        payload = request.get_json(force=True)
-        username = payload['token']
-        if username == 'laserfocused':
-            access_token = create_access_token(identity=username)
-            return {"access_token": access_token}, 200
-        return {"msg": "Invalid token"}, 401
 
     return app
 
