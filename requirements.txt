@@ -2,6 +2,7 @@ beautifulsoup4==4.12.3
 certifi==2024.7.4
 Flask==3.0.3
 Flask_Cors==4.0.0
+
 Flask_RESTful==0.3.10
 google_api_python_client==2.136.0
 google_auth_oauthlib==1.2.1
