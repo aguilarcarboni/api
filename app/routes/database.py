@@ -24,7 +24,7 @@ def read_route():
 @bp.route('/database/update', methods=['POST'])
 def update_route():
     payload = request.get_json(force=True)
-    response = update(table_name=payload['table'], params=payload['query'], data=payload['data'])
+    response = update(table_name=payload['table'], params=payload['params'], data=payload['data'])
     return response
 
 @bp.route('/database/delete', methods=['POST'])
