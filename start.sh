@@ -33,7 +33,7 @@ sleep 2
 gnome-terminal -- bash -c "gunicorn --config gunicorn.conf.py run:application; exec bash"
 
 # Open another terminal window and run caddy
-gnome-terminal -- bash -c "caddy run; exec bash"
+gnome-terminal -- bash -c "sudo caddy run; exec bash"
 
 # Keep the script running
 wait
