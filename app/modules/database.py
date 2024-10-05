@@ -1,26 +1,27 @@
 import os
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, MetaData, inspect, Table
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.exc import SQLAlchemyError
 from datetime import datetime
+from functools import wraps
+from typing import Optional
 
 from app.helpers.response import Response
 from app.helpers.logger import logger
 
-from datetime import datetime
-from typing import Optional
-
 logger.info('Initializing Database')
 
-# SQLAlchemy setup
+# SQLAlchemy setup with connection pooling
 load_dotenv()
 DATABASE_URL = os.getenv("DATABASE_URL")
 if not DATABASE_URL:
     raise ValueError("DATABASE_URL must be set in the .env file")
-engine = create_engine(DATABASE_URL)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+engine = create_engine(DATABASE_URL, pool_size=10, max_overflow=20, pool_recycle=3600)
+session_factory = sessionmaker(bind=engine)
+Session = scoped_session(session_factory)
 
 # Use reflection to load the existing tables
 metadata = MetaData()
@@ -363,22 +364,26 @@ class PagePayload:
         )
     
 
-"""Database functions"""
-def get_db_session():
-    """Create and yield a database session"""
-    logger.info('Creating database session')
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-        logger.success('Successfully closed database session')
+def with_session(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        session = Session()
+        try:
+            result = func(session, *args, **kwargs)
+            session.commit()
+            return result
+        except Exception as e:
+            session.rollback()
+            logger.error(f"Database error in {func.__name__}: {str(e)}")
+            return Response.error(f"Database error: {str(e)}")
+        finally:
+            session.close()
+    return wrapper
 
-def create(table_name: str, data: dict):
-    """Create a new record in the database"""
+@with_session
+def create(session, table_name: str, data: dict):
     logger.info(f'Attempting to create new entry in table: {table_name}')
 
-    db = next(get_db_session())
     try:
         if table_name == 'user':
             payload = UserPayload(**data)
@@ -395,26 +400,21 @@ def create(table_name: str, data: dict):
         else:
             raise ValueError(f"Invalid table {table_name}")
 
-        db.add(new_record)
-        db.commit()
-        db.refresh(new_record)
+        session.add(new_record)
+        session.flush()
         logger.success(f'Successfully created entry: {new_record.id}')
         return Response.success(f'{new_record.id}')
     except SQLAlchemyError as e:
-        db.rollback()
         logger.error(f'Error creating {str(e)}')
-        return Response.error(f"Error creating {str(e)}")
+        raise
 
-def update(table_name: str, params: dict, data: dict):
-    """Update a record in the database"""
+@with_session
+def update(session, table_name: str, params: dict, data: dict):
     logger.info(f'Attempting to update entry in table: {table_name}')
-    logger.info(f'Params: {params}')
-    logger.info(f'Data: {data}')
     
-    db = next(get_db_session())
     try:
         table = Table(table_name, metadata, autoload_with=engine)
-        query = db.query(table)
+        query = session.query(table)
 
         for key, value in params.items():
             if hasattr(table.c, key):
@@ -426,26 +426,22 @@ def update(table_name: str, params: dict, data: dict):
             return Response.error(f"{table_name.capitalize()} with given parameters not found")
 
         query.update(data)
-        db.commit()
+        session.flush()
 
         updated_item = query.first()
         logger.success(f"Successfully updated {table_name} with new data {updated_item._asdict()}")
         return Response.success(f"Successfully updated {table_name} with new data {updated_item._asdict()}")
     except SQLAlchemyError as e:
-        db.rollback()
         logger.error(f"Error updating {table_name}: {str(e)}")
-        return Response.error(f"Error updating {table_name}: {str(e)}")
+        raise
 
-def read(table: str, params:dict = None):
-    """Read a record from the database"""
+@with_session
+def read(session, table: str, params: dict = None):
     logger.info(f'Attempting to read entry from table: {table}')
-    logger.info(f'Params: {params}')
     
-    db = next(get_db_session())
-
     try:
         table = Table(table, metadata, autoload_with=engine)
-        query = db.query(table)
+        query = session.query(table)
 
         if params:
             for key, value in params.items():
@@ -454,25 +450,19 @@ def read(table: str, params:dict = None):
             
         results = query.all()
 
-        if results is not None:
-            serialized_results = [row._asdict() for row in results]
-        else:
-            serialized_results = []
+        serialized_results = [row._asdict() for row in results]
         
         logger.success(f'Successfully read {len(serialized_results)} entries from table: {table}')
         return Response.success(serialized_results)
     except SQLAlchemyError as e:
         logger.error(f'Error reading from database: {str(e)}')
-        return Response.error(f"Error reading from database: {str(e)}")
+        raise
 
-def delete(table: str, params: dict):
-    """Delete a record from the database"""
+@with_session
+def delete(session, table: str, params: dict):
     logger.info(f'Attempting to delete entry from table: {table}')
-    logger.info(f'Params: {params}')
     
-    db = next(get_db_session())
     try:
-        # Map table_name to the corresponding ORM class
         table_map = {
             'user': user,
             'space': space,
@@ -485,7 +475,7 @@ def delete(table: str, params: dict):
             return Response.error(f"Invalid table name: {table}")
         
         Model = table_map[table]
-        query = db.query(Model)
+        query = session.query(Model)
         
         for key, value in params.items():
             if hasattr(Model, key):
@@ -495,12 +485,11 @@ def delete(table: str, params: dict):
         if not item:
             return Response.error(f"{table.capitalize()} with given parameters not found")
         
-        db.delete(item)
-        db.commit()
+        session.delete(item)
+        session.flush()
 
         logger.success(f"Successfully deleted {table} with id: {item.id}")
         return Response.success(f"{table.capitalize()} deleted successfully")
     except SQLAlchemyError as e:
-        db.rollback()
         logger.error(f"Error deleting {table}: {str(e)}")
-        return Response.error(f"Error deleting {table}: {str(e)}")
+        raise
