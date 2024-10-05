@@ -30,7 +30,7 @@ stop_port 443   # Caddy HTTPS port
 sleep 2
 
 # Open a new terminal window and run gunicorn
-gnome-terminal -- bash -c "gunicorn --config gunicorn.conf.py run:application; exec bash"
+gnome-terminal -- bash -c "gunicorn --config gunicorn.conf.py run:laserfocus; exec bash"
 
 # Open another terminal window and run caddy
 gnome-terminal -- bash -c "sudo caddy run; exec bash"
