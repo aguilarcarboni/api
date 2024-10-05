@@ -1,6 +1,11 @@
-from flask import Flask
+# gunicorn -b :8080 run:laserfocus
+from flask import Flask, request
 from flask_cors import CORS
 from werkzeug.middleware.proxy_fix import ProxyFix
+from flask_jwt_extended import JWTManager, verify_jwt_in_request, create_access_token, exceptions
+import os
+import logging
+from logging.handlers import RotatingFileHandler
 
 def create_app():
     app = Flask(__name__)
@@ -9,6 +14,8 @@ def create_app():
     )
     cors = CORS(app, resources={r"/*": {"origins": "*"}})
     app.config['CORS_HEADERS'] = 'Content-Type'
+    app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
+    jwt = JWTManager(app)
 
     from app.routes import main, database, explorer, weather, news, sports, wallet, market, drive
     app.register_blueprint(drive.bp)
@@ -30,6 +37,23 @@ def create_app():
     def internal_error(error):
         return {"error": "Internal server error"}, 500 
 
+    @app.before_request
+    def jwt_required_except_login():
+        if request.endpoint != 'login':
+            try:
+                verify_jwt_in_request()
+            except exceptions.JWTExtendedException as e:
+                return {"msg": str(e)}, 401
+
+    @app.route('/login', methods=['POST'])
+    def login():
+        payload = request.get_json(force=True)
+        username = payload['token']
+        if username == 'laserfocused':
+            access_token = create_access_token(identity=username)
+            return {"access_token": access_token}, 200
+        return {"msg": "Invalid token"}, 401
+
     return app
 
-application = create_app()
+laserfocus = create_app()
