@@ -83,7 +83,7 @@ def uploadFile(fileName, rawFile, parentFolderId):
     except Exception as e:
         logger.error(f"Error uploading file: {fileName}. Error: {str(e)}")
         return Response.error(f'Error uploading file: {str(e)}')
-    
+
 # Modify files?
 
 def deleteFiles(file_ids):
@@ -102,6 +102,8 @@ def deleteFiles(file_ids):
 
     logger.success(f"Deletion process completed for {len(file_ids)} files.")
     return results  
+
+
 
 def queryFile(path, file_name):
 
@@ -188,6 +190,8 @@ def queryFilesInFolder(path):
     logger.success(f"Successfully queried files in: {paths[len(paths) - 1]}")
     return Response.success(response)
 
+
+
 def downloadFile(fileId):
 
     logger.info(f"Downloading file with ID: {fileId}")
@@ -211,5 +215,6 @@ def downloadFile(fileId):
     
     logger.success("Successfully downloaded file.")
     return Response.success(downloaded_file.getvalue())
+
 
 # Download zip?
