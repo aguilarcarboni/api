@@ -16,6 +16,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 logger.info('Initializing Google Drive')
+print(os.getenv('GOOGLE_TOKEN'))
 creds = Credentials(
     token=os.getenv('GOOGLE_TOKEN'),
     refresh_token=os.getenv('GOOGLE_REFRESH_TOKEN'),

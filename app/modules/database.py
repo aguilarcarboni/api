@@ -191,35 +191,39 @@ def get_foreign_keys(session, table: str, params: dict) -> Dict[str, str]:
     except SQLAlchemyError as e:
         logger.error(f"Error retrieving foreign keys for table {table}: {str(e)}")
         return Response.error(f"Failed to retrieve foreign keys: {str(e)}")
-
-def get_parent_lineage_recursive(session, table: str, params: dict, depth: int = 3, current_depth: int = 1) -> List[Dict[str, Any]]:
+    
+def get_parent_lineage_recursive(session, table: str, params: dict, depth: int = 3, current_depth: int = 1) -> Dict[str, Any]:
     """
     Recursive helper function to get the parent lineage of a table up to a specified depth.
+    Returns a dictionary structure suitable for graphing in a directed graph.
     """
     if depth <= 0:
-        return []
+        return {}
 
     try:
         foreign_keys_response = get_foreign_keys(table, params)
         if foreign_keys_response['status'] != 'success':
-            return []
+            return {}
 
         foreign_keys = foreign_keys_response['content']
-        lineage = []
+        node = {
+            'id': f"{table}_{params.get('id', '')}",
+            'label': table,
+            'depth': current_depth,
+            'children': []
+        }
+
         for column_name, foreign_key_value in foreign_keys.items():
             foreign_key = next(iter(Table(table, metadata, autoload_with=engine).columns[column_name].foreign_keys))
             referenced_table = foreign_key.column.table.name
-            lineage.append({
-                'name': referenced_table,
-                'id': foreign_key_value,
-                'depth': current_depth
-            })
-            lineage.extend(get_parent_lineage_recursive(session, referenced_table, {'id': foreign_key_value}, depth - 1, current_depth + 1))
+            child_node = get_parent_lineage_recursive(session, referenced_table, {'id': foreign_key_value}, depth - 1, current_depth + 1)
+            if child_node:
+                node['children'].append(child_node)
 
-        return lineage
+        return node
     except SQLAlchemyError as e:
         logger.error(f"Error retrieving parent lineage for table {table}: {str(e)}")
-        return []
+        return {}
 
 @with_session
 def get_parent_lineage(session, table: str, params: dict, depth: int = 3) -> Response:
