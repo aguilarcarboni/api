@@ -1,5 +1,6 @@
 from flask import Flask, render_template
 from flask_restful import Api
+from app.modules.drive import cache
 
 def create_app():
     app = Flask(__name__)
@@ -12,5 +13,7 @@ def create_app():
     @app.route('/')
     def index():
         return render_template('index.html')
+
+    cache.init_app(app)
 
     return app

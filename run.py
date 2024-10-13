@@ -7,7 +7,8 @@ import os
 import logging
 from flask import jsonify
 from logging.handlers import RotatingFileHandler
-
+from dotenv import load_dotenv
+load_dotenv()
 
 def jwt_required_except_login():
     if request.endpoint not in ['login', 'index']:
@@ -32,7 +33,6 @@ def create_app():
     app = Flask(__name__)
     cors = CORS(app, resources={r"/*": {"origins": "*"}})
     app.config['CORS_HEADERS'] = 'Content-Type'
-    print(os.getenv('JWT_SECRET_KEY'))
     app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
     jwt = JWTManager(app)
 

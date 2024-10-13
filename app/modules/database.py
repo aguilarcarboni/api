@@ -1,12 +1,12 @@
 import os
 from dotenv import load_dotenv
-from sqlalchemy import create_engine, MetaData, inspect, Table
+from sqlalchemy import create_engine, MetaData, Table
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.exc import SQLAlchemyError
 from datetime import datetime
 from functools import wraps
-from typing import Optional
+from typing import Dict, Any, List
 
 from app.helpers.response import Response
 from app.helpers.logger import logger
@@ -40,330 +40,6 @@ page = Base.classes.page
 
 logger.success('Successfully initialized Database')
 
-# Define Payload classes
-class UserPayload:
-    
-    def __init__(
-        self,
-        name: str,
-        status: str,
-        visibility: str,
-        role: str,
-        updated: Optional[datetime] = None,
-        created: Optional[datetime] = None,
-    ):
-        self.name = name
-        self.updated = datetime.now() if updated is None else updated
-        self.created = datetime.now() if created is None else created
-        self.status = status
-        self.visibility = visibility
-        self.role = role
-
-    @classmethod
-    def from_orm(cls, user_orm: user):
-        return cls(
-            name=user_orm.name,
-            updated=user_orm.updated,
-            created=user_orm.created,
-            status=user_orm.status,
-            visibility=user_orm.visibility,
-            role=user_orm.role
-        )
-
-    def to_dict(self):
-        return {
-            "name": self.name,
-            "updated": self.updated.isoformat() if self.updated else None,
-            "created": self.created.isoformat() if self.created else None,
-            "status": self.status,
-            "visibility": self.visibility,
-            "role": self.role
-        }
-
-    def to_orm(self) -> user:
-        return user(
-            name=self.name,
-            updated=self.updated,
-            created=self.created,
-            status=self.status,
-            visibility=self.visibility,
-            role=self.role
-        )
-
-class SpacePayload:
-
-    def __init__(
-        self,
-        user_id: int,
-        name: str,
-        status: str,
-        visibility: str,
-        updated: Optional[datetime] = None,
-        created: Optional[datetime] = None,
-    ):
-        self.user_id = user_id
-        self.name = name
-        self.updated = datetime.now() if updated is None else updated
-        self.created = datetime.now() if created is None else created
-        self.status = status
-        self.visibility = visibility
-
-    @classmethod
-    def from_orm(cls, space_orm: space):
-        return cls(
-            user_id=space_orm.user_id,
-            name=space_orm.name,
-            updated=space_orm.updated,
-            created=space_orm.created,
-            status=space_orm.status,
-            visibility=space_orm.visibility
-        )
-
-    def to_dict(self):
-        return {
-            "user_id": self.user_id,
-            "name": self.name,
-            "updated": self.updated.isoformat() if self.updated else None,
-            "created": self.created.isoformat() if self.created else None,
-            "status": self.status,
-            "visibility": self.visibility
-        }
-
-    def to_orm(self) -> space:
-        return space(
-            user_id=self.user_id,
-            name=self.name,
-            updated=self.updated,
-            created=self.created,
-            status=self.status,
-            visibility=self.visibility
-        )
-
-class EventPayload:
-
-    def __init__(
-        self,
-        space_id: int,
-        name: str,
-        status: str,
-        visibility: str,
-        start: datetime,
-        all_day: bool,
-        is_recurring: bool,
-        transparency: str,
-        updated: Optional[datetime] = None,
-        created: Optional[datetime] = None,
-        description: Optional[str] = None,
-        ends: Optional[datetime] = None,
-        recurring_interval: Optional[int] = None,
-        recurring_end: Optional[datetime] = None,
-        location: Optional[dict] = None,
-    ):
-        self.space_id = space_id
-
-        self.name = name
-        self.updated = datetime.now() if updated is None else updated
-        self.created = datetime.now() if created is None else created
-        self.status = status
-        self.visibility = visibility
-
-        self.description = description
-
-        try:
-            if isinstance(start, str):
-                self.start = datetime.fromisoformat(start)
-            else:
-                self.start = start
-        except ValueError as e:
-            logger.error(f"Error parsing start date: {str(e)}")
-            raise ValueError(f"Invalid start date format: {start}")
-
-        try:
-            if isinstance(ends, str):
-                self.ends = datetime.fromisoformat(ends)
-            else:
-                self.ends = ends
-        except ValueError as e:
-            logger.error(f"Error parsing ends date: {str(e)}")
-            raise ValueError(f"Invalid ends date format: {ends}")
-
-        try:
-            if isinstance(recurring_end, str):
-                self.recurring_end = datetime.fromisoformat(recurring_end)
-            else:
-                self.recurring_end = recurring_end
-        except ValueError as e:
-            logger.error(f"Error parsing recurring_end date: {str(e)}")
-            raise ValueError(f"Invalid recurring_end date format: {recurring_end}")
-
-        self.all_day = all_day
-        self.is_recurring = is_recurring
-        self.recurring_interval = recurring_interval
-        self.transparency = transparency
-        self.location = location
-
-    @classmethod
-    def from_orm(cls, event_orm: event):
-        return cls(
-            space_id=event_orm.space_id,
-            name=event_orm.name,
-            updated=event_orm.updated,
-            created=event_orm.created,
-            status=event_orm.status,
-            visibility=event_orm.visibility,
-            description=event_orm.description,
-            start=event_orm.start,
-            all_day=event_orm.all_day,
-            ends=event_orm.ends,
-            is_recurring=event_orm.is_recurring,
-            recurring_interval=event_orm.recurring_interval,
-            recurring_end=event_orm.recurring_end,
-            transparency=event_orm.transparency,
-            location=event_orm.location
-        )
-
-    def to_dict(self):
-        return {
-            "space_id": self.space_id,
-            "name": self.name,
-            "updated": self.updated.isoformat() if self.updated else None,
-            "created": self.created.isoformat() if self.created else None,
-            "status": self.status,
-            "visibility": self.visibility,
-            "description": self.description,
-            "start": self.start.isoformat(),
-            "all_day": self.all_day,
-            "ends": self.ends.isoformat() if self.ends else None,
-            "is_recurring": self.is_recurring,
-            "recurring_interval": self.recurring_interval,
-            "recurring_end": self.recurring_end.isoformat() if self.recurring_end else None,
-            "transparency": self.transparency,
-            "location": self.location
-        }
-
-    def to_orm(self) -> event:
-        return event(
-            space_id=self.space_id,
-            name=self.name,
-            updated=self.updated,
-            created=self.created,
-            status=self.status,
-            visibility=self.visibility,
-            description=self.description,
-            start=self.start,
-            all_day=self.all_day,
-            ends=self.ends,
-            is_recurring=self.is_recurring,
-            recurring_interval=self.recurring_interval,
-            recurring_end=self.recurring_end,
-            transparency=self.transparency,
-            location=self.location
-        )
-
-class ContactPayload:
-
-    def __init__(
-        self,
-        name: str,
-        status: str,
-        visibility: str,
-        updated: Optional[datetime] = None,
-        created: Optional[datetime] = None,
-        email: Optional[str] = None,    
-        phone: Optional[str] = None,
-    ):
-        self.name = name
-        self.updated = datetime.now() if updated is None else updated
-        self.created = datetime.now() if created is None else created
-        self.status = status
-        self.visibility = visibility
-        self.email = email
-        self.phone = phone
-    
-    @classmethod
-    def from_orm(cls, contact_orm: contact):
-        return cls(
-            name=contact_orm.name,
-            updated=contact_orm.updated,
-            created=contact_orm.created,
-            status=contact_orm.status,
-            visibility=contact_orm.visibility,
-            email=contact_orm.email,
-            phone=contact_orm.phone
-        )
-
-    def to_dict(self):
-        return {
-            "name": self.name,
-            "updated": self.updated.isoformat() if self.updated else None,
-            "created": self.created.isoformat() if self.created else None,
-            "status": self.status,
-            "visibility": self.visibility,
-            "email": self.email,
-            "phone": self.phone
-        }
-
-    def to_orm(self) -> contact:
-        return contact(
-            name=self.name,
-            updated=self.updated,
-            created=self.created,
-            status=self.status,
-            visibility=self.visibility,
-            email=self.email,
-            phone=self.phone
-        )
-
-class PagePayload:
-
-    def __init__(
-        self,
-        journal_id: int,
-        name: str,
-        status: str,
-        visibility: str,
-        updated: Optional[datetime] = None,
-        created: Optional[datetime] = None,
-    ):
-        self.journal_id = journal_id
-        self.name = name
-        self.updated = datetime.now() if updated is None else updated
-        self.created = datetime.now() if created is None else created
-        self.status = status
-        self.visibility = visibility
-
-    @classmethod
-    def from_orm(cls, page_orm: page):
-        return cls(
-            journal_id=page_orm.journal_id,
-            name=page_orm.name,
-            updated=page_orm.updated,
-            created=page_orm.created,
-            status=page_orm.status,
-            visibility=page_orm.visibility
-        )
-    
-    def to_dict(self):
-        return {
-            "journal_id": self.journal_id,
-            "name": self.name,
-            "updated": self.updated.isoformat() if self.updated else None,
-            "created": self.created.isoformat() if self.created else None,
-            "status": self.status,
-            "visibility": self.visibility
-        }
-    
-    def to_orm(self) -> page:
-        return page(
-            journal_id=self.journal_id,
-            name=self.name,
-            updated=self.updated,
-            created=self.created,
-            status=self.status,
-            visibility=self.visibility
-        )
-    
-
 def with_session(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
@@ -381,58 +57,52 @@ def with_session(func):
     return wrapper
 
 @with_session
-def create(session, table_name: str, data: dict):
-    logger.info(f'Attempting to create new entry in table: {table_name}')
+def create(session, table: str, data: dict):
+    logger.info(f'Attempting to create new entry in table: {table}')
 
     try:
-        if table_name == 'user':
-            payload = UserPayload(**data)
-            new_record = user(**payload.to_dict())
-        elif table_name == 'space':
-            payload = SpacePayload(**data)
-            new_record = space(**payload.to_dict())
-        elif table_name == 'event':
-            payload = EventPayload(**data)
-            new_record = event(**payload.to_dict())
-        elif table_name == 'page':
-            payload = PagePayload(**data)
-            new_record = page(**payload.to_dict())
-        else:
-            raise ValueError(f"Invalid table {table_name}")
-
-        session.add(new_record)
+        tbl = Table(table, metadata, autoload_with=engine)
+        current_time = datetime.now()
+        data = {
+            'created': current_time,
+            'updated': current_time,
+            **data
+        }
+        new_record = tbl.insert().values(**data)
+        result = session.execute(new_record)
         session.flush()
-        logger.success(f'Successfully created entry: {new_record.id}')
-        return Response.success(f'{new_record.id}')
+        new_id = result.inserted_primary_key[0]
+        logger.success(f'Successfully created entry with id: {new_id}')
+        return Response.success({'id': new_id, 'message': 'Entry created successfully'})
     except SQLAlchemyError as e:
-        logger.error(f'Error creating {str(e)}')
-        raise
+        logger.error(f'Error creating record: {str(e)}')
+        return Response.error(f'Database error: {str(e)}')
 
 @with_session
-def update(session, table_name: str, params: dict, data: dict):
-    logger.info(f'Attempting to update entry in table: {table_name}')
+def update(session, table: str, params: dict, data: dict):
+    logger.info(f'Attempting to update entry in table: {table}')
     
     try:
-        table = Table(table_name, metadata, autoload_with=engine)
-        query = session.query(table)
+        tbl = Table(table, metadata, autoload_with=engine)
+        query = session.query(tbl)
 
         for key, value in params.items():
-            if hasattr(table.c, key):
-                query = query.filter(getattr(table.c, key) == value)
+            if hasattr(tbl.c, key):
+                query = query.filter(getattr(tbl.c, key) == value)
 
         item = query.first()
 
         if not item:
-            return Response.error(f"{table_name.capitalize()} with given parameters not found")
+            return Response.error(f"{table.capitalize()} with given parameters not found")
 
         query.update(data)
         session.flush()
 
         updated_item = query.first()
-        logger.success(f"Successfully updated {table_name} with new data {updated_item._asdict()}")
-        return Response.success(f"Successfully updated {table_name} with new data {updated_item._asdict()}")
+        logger.success(f"Successfully updated {table} with new data {updated_item._asdict()}")
+        return Response.success(f"Successfully updated {table} with new data {updated_item._asdict()}")
     except SQLAlchemyError as e:
-        logger.error(f"Error updating {table_name}: {str(e)}")
+        logger.error(f"Error updating {table}: {str(e)}")
         raise
 
 @with_session
@@ -440,13 +110,13 @@ def read(session, table: str, params: dict = None):
     logger.info(f'Attempting to read entry from table: {table}')
     
     try:
-        table = Table(table, metadata, autoload_with=engine)
-        query = session.query(table)
+        tbl = Table(table, metadata, autoload_with=engine)
+        query = session.query(tbl)
 
         if params:
             for key, value in params.items():
-                if hasattr(table.c, key):
-                    query = query.filter(getattr(table.c, key) == value)
+                if hasattr(tbl.c, key):
+                    query = query.filter(getattr(tbl.c, key) == value)
             
         results = query.all()
 
@@ -457,35 +127,25 @@ def read(session, table: str, params: dict = None):
     except SQLAlchemyError as e:
         logger.error(f'Error reading from database: {str(e)}')
         raise
-
+    
 @with_session
 def delete(session, table: str, params: dict):
     logger.info(f'Attempting to delete entry from table: {table}')
     
     try:
-        table_map = {
-            'user': user,
-            'space': space,
-            'event': event,
-            'contact': contact,
-            'page': page
-        }
-        
-        if table not in table_map:
-            return Response.error(f"Invalid table name: {table}")
-        
-        Model = table_map[table]
-        query = session.query(Model)
-        
+        tbl = Table(table, metadata, autoload_with=engine)
+        query = session.query(tbl)
+
         for key, value in params.items():
-            if hasattr(Model, key):
-                query = query.filter(getattr(Model, key) == value)
-        
+            if hasattr(tbl.c, key):
+                query = query.filter(getattr(tbl.c, key) == value)
+
         item = query.first()
         if not item:
             return Response.error(f"{table.capitalize()} with given parameters not found")
-        
-        session.delete(item)
+
+        delete_stmt = tbl.delete().where(tbl.c.id == item.id)
+        session.execute(delete_stmt)
         session.flush()
 
         logger.success(f"Successfully deleted {table} with id: {item.id}")
@@ -493,3 +153,98 @@ def delete(session, table: str, params: dict):
     except SQLAlchemyError as e:
         logger.error(f"Error deleting {table}: {str(e)}")
         raise
+
+@with_session
+def get_foreign_keys(session, table: str, params: dict) -> Dict[str, str]:
+    """
+    Helper function to get foreign keys for a table.
+
+    Args:
+        table (str): The name of the table to get foreign keys for.
+
+    Returns:
+        Dict[str, str]: A dictionary where keys are column names and values are the referenced tables.
+    """
+    try:
+        tbl = Table(table, metadata, autoload_with=engine)
+        foreign_keys = {}
+        for column in tbl.columns:
+            if column.foreign_keys:
+                for fk in column.foreign_keys:
+                    foreign_keys[column.name] = fk.column.table.name
+        
+        # Query data using table and params to find the space_id
+        keys = {}
+        tbl = Table(table, metadata, autoload_with=engine)
+        query = session.query(tbl)
+        for key, value in params.items():
+            if hasattr(tbl.c, key):
+                query = query.filter(getattr(tbl.c, key) == value)
+        item = query.first()
+        if item:
+            for column_name, _ in foreign_keys.items():
+                if hasattr(item, column_name):
+                    keys[column_name] = getattr(item, column_name)
+
+        logger.success(f"Successfully retrieved foreign keys for table: {table}, result: {keys}")
+        return Response.success(keys)
+    except SQLAlchemyError as e:
+        logger.error(f"Error retrieving foreign keys for table {table}: {str(e)}")
+        return Response.error(f"Failed to retrieve foreign keys: {str(e)}")
+    
+def get_parent_lineage_recursive(session, table: str, params: dict, depth: int = 3, current_depth: int = 1) -> Dict[str, Any]:
+    """
+    Recursive helper function to get the parent lineage of a table up to a specified depth.
+    Returns a dictionary structure suitable for graphing in a directed graph.
+    """
+    if depth <= 0:
+        return {}
+
+    try:
+        foreign_keys_response = get_foreign_keys(table, params)
+        if foreign_keys_response['status'] != 'success':
+            return {}
+
+        foreign_keys = foreign_keys_response['content']
+        node = {
+            'id': f"{table}_{params.get('id', '')}",
+            'label': table,
+            'depth': current_depth,
+            'children': []
+        }
+
+        for column_name, foreign_key_value in foreign_keys.items():
+            foreign_key = next(iter(Table(table, metadata, autoload_with=engine).columns[column_name].foreign_keys))
+            referenced_table = foreign_key.column.table.name
+            child_node = get_parent_lineage_recursive(session, referenced_table, {'id': foreign_key_value}, depth - 1, current_depth + 1)
+            if child_node:
+                node['children'].append(child_node)
+
+        return node
+    except SQLAlchemyError as e:
+        logger.error(f"Error retrieving parent lineage for table {table}: {str(e)}")
+        return {}
+
+@with_session
+def get_parent_lineage(session, table: str, params: dict, depth: int = 3) -> Response:
+    """
+    Wrapper function to get the parent lineage of a table up to a specified depth.
+
+    Args:
+        session: The database session.
+        table (str): The name of the table to start the lineage from.
+        params (dict): Parameters to identify the specific record.
+        depth (int): The maximum depth of recursion (default is 3).
+
+    Returns:
+        Response: A Response object containing the parent lineage or an error message.
+    """
+    try:
+        logger.info(f"Attempting to retrieve parent lineage for table: {table} with depth: {depth}")
+        lineage = get_parent_lineage_recursive(session, table, params, depth)
+        if not lineage:
+            return Response.error("Failed to retrieve parent lineage")
+        return Response.success(lineage)
+    except Exception as e:
+        logger.error(f"Error in get_parent_lineage: {str(e)}")
+        return Response.error(f"Failed to retrieve parent lineage: {str(e)}")
