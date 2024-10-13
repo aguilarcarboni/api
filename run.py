@@ -11,7 +11,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 def jwt_required_except_login():
-    if request.endpoint not in ['login', 'index']:
+    print(request.endpoint)
+    if request.endpoint != 'login':
         try:
             verify_jwt_in_request()
         except exceptions.JWTExtendedException as e:
@@ -57,6 +58,8 @@ def create_app():
     @app.route('/login', methods=['POST'])
     def login():
         payload = request.get_json(force=True)
+        app.logger.info(f'Attempting login... {payload}')
+        print('login', payload)
         token = payload['token']
         if token == 'laserfocused':
             access_token = create_access_token(identity=token)

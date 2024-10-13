@@ -1,7 +1,6 @@
 :80 {
-	# Reverse proxy to Gunicorn server
-	reverse_proxy localhost:5002
+	reverse_proxy laserfocus:8080
 
-	# Enable Gzip compression
 	encode gzip
 }
+

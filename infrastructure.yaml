@@ -1,0 +1,22 @@
+services:
+  laserfocus-api:
+    image: laserfocus-api:latest
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /home/aguilarcarboni/Apps/Docker/laserfocus:/app/data
+    ports:
+      - '8080:8080'
+    environment:
+      FLASK_APP: ${FLASK_APP}
+      FLASK_RUN_HOST: ${FLASK_RUN_HOST}
+      DATABASE_URL: ${DATABASE_URL}
+      GOOGLE_TOKEN: ${GOOGLE_TOKEN}
+      GOOGLE_REFRESH_TOKEN: ${GOOGLE_REFRESH_TOKEN}
+      GOOGLE_TOKEN_URI: ${GOOGLE_TOKEN_URI}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      GOOGLE_SCOPES: ${GOOGLE_SCOPES}
+      GOOGLE_UNIVERSE_DOMAIN: ${GOOGLE_UNIVERSE_DOMAIN}
+      GOOGLE_ACCOUNT: ${GOOGLE_ACCOUNT}
+      GOOGLE_EXPIRY: ${GOOGLE_EXPIRY}
