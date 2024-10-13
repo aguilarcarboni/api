@@ -12,7 +12,7 @@ load_dotenv()
 
 def jwt_required_except_login():
     print(request.endpoint)
-    if request.endpoint != 'login':
+    if request.endpoint != 'login' and request.endpoint != 'main.root':
         try:
             verify_jwt_in_request()
         except exceptions.JWTExtendedException as e:
