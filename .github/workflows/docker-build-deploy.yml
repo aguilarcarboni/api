@@ -6,7 +6,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted  # Changed to use self-hosted runner
     steps:
     - uses: actions/checkout@v2
     
@@ -22,16 +22,13 @@ jobs:
         host: ${{ secrets.SERVER_HOST }}
         username: ${{ secrets.SERVER_USERNAME }}
         password: ${{ secrets.SERVER_PASSWORD }}
+        port: ${{ secrets.SERVER_PORT }}
+        timeout: 300s
         script: echo "SSH connection successful"
       
-    - name: Copy repository to home server and build Docker image
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.SERVER_HOST }}
-        username: ${{ secrets.SERVER_USERNAME }}
-        password: ${{ secrets.SERVER_PASSWORD }}
-        script: |
-          cd /home/aguilarcarboni/Documents/Coding/laserfocus-api
-          git pull origin main
-          docker build -t laserfocus-api:latest .
-          docker compose up -d
+    - name: Build Docker image and deploy
+      run: |
+        cd /home/aguilarcarboni/Documents/Coding/laserfocus-api
+        git pull origin main
+        docker build -t laserfocus-api:latest .
+        docker compose up -d
