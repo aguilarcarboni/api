@@ -1,5 +1,6 @@
 services:
   laserfocus-api:
+    container_name: laserfocus-api
     image: laserfocus-api:latest
     restart: unless-stopped
     volumes:
