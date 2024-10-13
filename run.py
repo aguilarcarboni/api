@@ -10,7 +10,7 @@ from logging.handlers import RotatingFileHandler
 
 
 def jwt_required_except_login():
-    if request.endpoint != 'login':
+    if request.endpoint not in ['login', 'index']:
         try:
             verify_jwt_in_request()
         except exceptions.JWTExtendedException as e:
@@ -49,6 +49,10 @@ def create_app():
     app.register_blueprint(sports.bp)
     app.register_blueprint(wallet.bp)
     app.register_blueprint(market.bp)
+
+    @app.route('/', methods=['GET'])
+    def index():
+        return jsonify({"message": "the path to success starts with laserfocus."}), 200
 
     @app.route('/login', methods=['POST'])
     def login():
