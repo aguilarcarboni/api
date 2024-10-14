@@ -58,7 +58,7 @@ def create_app():
     @app.route('/login', methods=['POST'])
     def login():
         payload = request.get_json(force=True)
-        app.logger.info(f'User attempting to login... {payload}')
+        app.logger.info(f'User attempting to log in... {payload}')
         print('login', payload)
         token = payload['token']
         if token == 'laserfocused':
