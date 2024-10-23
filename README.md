@@ -13,7 +13,7 @@ For detailed API documentation, please refer to the [documentation](./docs/READM
 - [ ] Implement various database providers
 - [ ] Implement various storage providers
 - [ ] Add database dependency features
-- [ ] Enhance security measures
+- [ ] Enhance security measure
 - [ ] Expand API capabilities for future Laserfocus products
 - [x] Integrate with Oasis platform
 
