@@ -31,4 +31,5 @@ jobs:
         cd /home/aguilarcarboni/Documents/Coding/Laserfocus/laserfocus-api
         git pull origin main
         docker build -t laserfocus-api:latest .
+        cd ../
         docker compose -p laserfocus up -d laserfocus-api
