@@ -1,6 +1,0 @@
-:80 {
-	reverse_proxy laserfocus:8080
-
-	encode gzip
-}
-

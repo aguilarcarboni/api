@@ -25,9 +25,8 @@ COPY .env .
 # Set environment variables from .env file
 ENV $(cat .env | xargs)
 
-
 # Expose the port the app runs on
-EXPOSE 8080
+EXPOSE 5000
 
 # Run the application with Gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:8080", "run:laserfocus"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "run:laserfocus"]
