@@ -5,7 +5,7 @@ FROM python:3.9-slim
 LABEL maintainer="aguilarcarboni"
 LABEL name="laserfocus-api"
 LABEL version="1.0"
-LABEL description="LaserFocus API container"
+LABEL description="the path to success starts with laserfocus."
 
 # Set the working directory in the container
 WORKDIR /app
