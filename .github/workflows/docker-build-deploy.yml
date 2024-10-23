@@ -28,7 +28,7 @@ jobs:
       
     - name: Build Docker image and deploy
       run: |
-        cd /home/aguilarcarboni/Documents/Coding/laserfocus-api
+        cd /home/aguilarcarboni/Documents/Coding/Laserfocus/laserfocus-api
         git pull origin main
         docker build -t laserfocus-api:latest .
         docker compose -p laserfocus up -d laserfocus-api
