@@ -39,10 +39,8 @@ def create_app():
 
     app.before_request(jwt_required_except_login)
 
-    from app.routes import main, database, explorer, weather, news, sports, wallet, market, drive
+    from app.routes import database, explorer, weather, news, sports, wallet, market, drive
     app.register_blueprint(drive.bp)
-    #app.register_blueprint(home.bp)
-    app.register_blueprint(main.bp)
     app.register_blueprint(database.bp)
     app.register_blueprint(explorer.bp)
     app.register_blueprint(weather.bp)
@@ -50,6 +48,7 @@ def create_app():
     app.register_blueprint(sports.bp)
     app.register_blueprint(wallet.bp)
     app.register_blueprint(market.bp)
+    #app.register_blueprint(home.bp)
 
     @app.route('/', methods=['GET'])
     def index():
