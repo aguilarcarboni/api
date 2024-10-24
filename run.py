@@ -53,7 +53,10 @@ def create_app():
 
     @app.route('/', methods=['GET'])
     def index():
-        return jsonify({"message": "the path to success starts with laserfocus. Works!"}), 200
+        data = {
+            'title': 'the path to success starts with laserfocus.',
+        }
+        return jsonify(data)
 
     @app.route('/login', methods=['POST'])
     def login():
