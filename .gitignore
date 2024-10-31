@@ -2,11 +2,6 @@
 env
 
 cache
-creds
-
-*.gguf
-
-creds/
 
 *__pycache__
 *.sqlite

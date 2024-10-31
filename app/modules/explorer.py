@@ -1,9 +1,12 @@
 import requests as rq
 import pandas as pd
+from app.helpers.logger import logger
 
 class Mars:
+    
     def __init__(self):
-        self.state = 0
+
+        logger.announcement('Initializing Mars Explorer', 'info')
 
         self.manifestUrl = 'https://api.nasa.gov/mars-photos/api/v1/manifests/perseverance/?api_key=kQwoyoXi4rQeY0lXWt1RZln6mLeatlYKLmYfGENB'
         self.manifest = self.getManifestData(self.manifestUrl)
@@ -20,6 +23,8 @@ class Mars:
             'images': self.images,
             'coords': self.coordinates
         }
+
+        logger.announcement('Successfully initialized Mars Explorer', 'success')
 
     def getManifestData(self,url): # gets manifest data
         self.data = rq.get(url).json()

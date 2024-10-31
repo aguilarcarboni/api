@@ -3,8 +3,8 @@ from app.modules.market import getMarketData
 
 bp = Blueprint('market', __name__)
 
-@bp.route("/market")
-def market():
+@bp.route("/")
+def market_route():
     marketData = {
         'stocks':{
             'historical': getMarketData()

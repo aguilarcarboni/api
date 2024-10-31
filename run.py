@@ -1,4 +1,3 @@
-# gunicorn -b :8080 run:laserfocus
 from flask import Flask, request
 from flask_cors import CORS
 from werkzeug.middleware.proxy_fix import ProxyFix
@@ -7,12 +6,12 @@ import os
 import logging
 from flask import jsonify
 from logging.handlers import RotatingFileHandler
+
 from dotenv import load_dotenv
 load_dotenv()
 
 def jwt_required_except_login():
-    print(request.endpoint)
-    if request.endpoint != 'login' and request.endpoint != 'main.root':
+    if request.endpoint != 'login' and request.endpoint != 'index':
         try:
             verify_jwt_in_request()
         except exceptions.JWTExtendedException as e:
@@ -39,19 +38,18 @@ def create_app():
 
     app.before_request(jwt_required_except_login)
 
-    from app.routes import database, explorer, weather, news, sports, wallet, market, drive
-    app.register_blueprint(drive.bp)
-    app.register_blueprint(database.bp)
-    app.register_blueprint(explorer.bp)
-    app.register_blueprint(weather.bp)
-    app.register_blueprint(news.bp)
-    app.register_blueprint(sports.bp)
-    app.register_blueprint(wallet.bp)
-    app.register_blueprint(market.bp)
+    from app.routes import database, explorer, news, wallet, market, drive
+    app.register_blueprint(drive.bp, url_prefix='/drive')
+    app.register_blueprint(database.bp, url_prefix='/database')
+    app.register_blueprint(explorer.bp, url_prefix='/explorer')
+    app.register_blueprint(news.bp, url_prefix='/news')
+    app.register_blueprint(wallet.bp, url_prefix='/wallet')
+    app.register_blueprint(market.bp, url_prefix='/market')
     #app.register_blueprint(home.bp)
 
     @app.route('/', methods=['GET'])
     def index():
+        app.logger.info('User accessed the root route.')
         data = {
             'title': 'the path to success starts with laserfocus.',
         }
@@ -65,7 +63,9 @@ def create_app():
         token = payload['token']
         if token == 'laserfocused':
             access_token = create_access_token(identity=token)
+            app.logger.success(f'User logged in successfully. Token: {token}')
             return {"access_token": access_token}, 200
+        app.logger.error(f'User failed to log in. Token: {token}')
         return {"msg": "Invalid token"}, 401
     
     @app.errorhandler(404)

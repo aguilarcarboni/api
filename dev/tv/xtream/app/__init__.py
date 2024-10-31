@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 from flask_restful import Api
-from app.modules.drive import cache
+from app.modules.google import cache
 
 def create_app():
     app = Flask(__name__)

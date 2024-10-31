@@ -26,7 +26,7 @@ COPY .env .
 ENV $(cat .env | xargs)
 
 # Expose the port the app runs on
-EXPOSE 5000
+EXPOSE ${LF_API_PORT}
 
 # Run the application with Gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "run:laserfocus"]
+CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:${LF_API_PORT} run:laserfocus"]

@@ -1,42 +1,40 @@
 from flask import Blueprint, request   
-from app.laserfocus import Home
-
-Home = Home()
+from app.modules.home import get_services, get_states, call_service, light_off, light_on
 
 bp = Blueprint('home', __name__)
 
 # Get states of all entities
-@bp.route('/home/get_states', methods=['POST'])
-async def get_states():
+@bp.route('/get_states', methods=['POST'])
+async def get_states_route():
     input_json = request.get_json(force=True)
-    response = Home.get_states(input_json)
+    response = get_states(input_json)
     return response
 
 # Get available services for all entities
-@bp.route('/home/get_services', methods=['POST'])
-async def get_services():
+@bp.route('/get_services', methods=['POST'])
+async def get_services_route():
     input_json = request.get_json(force=True)
-    response = Home.get_services(input_json)
+    response = get_services(input_json)
     return response
 
 # Call service actions on your entities
-@bp.route('/home/call_service', methods=['POST'])
-async def home_call_service():
+@bp.route('/call_service', methods=['POST'])
+async def call_service_route():
     input_json = request.get_json(force=True)
-    response = Home.call_service(input_json)
+    response = call_service(input_json)
     return response
 
 # Packets
-@bp.route('/home/light_off', methods=['POST'])
-async def home_light_off():
+@bp.route('/light_off', methods=['POST'])
+async def light_off_route():
 
     input_json = request.get_json(force=True)
-    response = Home.light_off(input_json['lightId'])
+    response = light_off(input_json['lightId'])
     return response
 
-@bp.route('/home/light_on', methods=['POST'])
-async def home_light_on():
+@bp.route('/light_on', methods=['POST'])
+async def light_on_route():
 
     input_json = request.get_json(force=True)
-    response = Home.light_on(input_json['lightId'])
+    response = light_on(input_json['lightId'])
     return response

@@ -2,8 +2,8 @@ from app.helpers.logger import logger
 from app.helpers.browser import Browser
 from app.helpers.response import Response
 
-logger.info("Initializing News.")
-logger.success("Successfully initialized News.")
+logger.announcement('Initializing News', 'info')
+logger.announcement('Successfully initialized News', 'success')
 
 def scrapeCNNHeadlines():
 

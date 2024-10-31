@@ -1,95 +1,91 @@
-from flask import Blueprint, request, send_file, current_app
+from flask import Blueprint, request, send_file
+from app.modules.google import GoogleDrive
 from io import BytesIO
-from werkzeug.utils import secure_filename
-from app.modules.drive import queryFilesInFolder, queryFile, downloadFile, uploadFile, deleteFiles, createFolder
-from app.helpers.response import Response
-import os
-from app.helpers.file_validation import is_allowed_file, get_file_mimetype
-from app.helpers.logger import logger
 
 bp = Blueprint('drive', __name__)
 
-@bp.route('/drive/query_files', methods=['POST'])
-def drive_query_files():
-    input_json = request.get_json(force=True)
-    return queryFilesInFolder(path=input_json['path'])
+Drive = GoogleDrive()
 
-@bp.route('/drive/query_file', methods=['POST'])
-def drive_query_file():
-    input_json = request.get_json(force=True)
-    return queryFile(input_json['path'], input_json['file_name'])
+@bp.route('/get_shared_drive_info', methods=['POST'])
+def get_shared_drive_info():
+    payload = request.get_json(force=True)
+    drive_name = payload['drive_name']
+    response = Drive.getSharedDriveInfo(drive_name)
+    return response
 
-@bp.route('/drive/download_file', methods=['POST'])
-def drive_download_file():
-    input_json = request.get_json(force=True)
-    file_name = secure_filename(input_json['file_name'])
-    
-    if not is_allowed_file(file_name):
-        return Response.error('File type not supported.')
-    
-    mimetype = get_file_mimetype(file_name)
-    
-    # Check if file exists in cache
-    logger.info(f"Checking if file exists in cache: {file_name}")
-    cache_path = os.path.join('cache', 'drive', file_name)
-    if os.path.exists(cache_path):
-        logger.success(f"File found in cache: {file_name}")
-        with open(cache_path, 'rb') as cached_file:
-            return send_file(
-                BytesIO(cached_file.read()),
-                mimetype=mimetype,
-                max_age=0
-            )
-    
-    # If not in cache, query and download from Drive
-    query_response = queryFile(input_json['path'], file_name)
-    if query_response['status'] != 'success':
-        return query_response
+@bp.route('/get_folder_info', methods=['POST'])
+def get_folder_info_route():
+    payload = request.get_json(force=True)
+    parent_id = payload['parent_id']
+    folder_name = payload['folder_name']
+    response = Drive.getFolderInfo(parent_id, folder_name)
+    return response
 
-    download_response = downloadFile(query_response['content']['id'])
-    if download_response['status'] != 'success':
-        return download_response
-    
-    # Save to cache
-    logger.info(f"Saving file to cache: {file_name}")
-    os.makedirs(os.path.dirname(cache_path), exist_ok=True)
-    with open(cache_path, 'wb') as cache_file:
-        cache_file.write(download_response['content'])
-    
-    logger.success(f"Successfully downloaded and cached file: {file_name}")
-    return send_file(
-        BytesIO(download_response['content']),
-        mimetype=mimetype,
-        max_age=0
-    )
+@bp.route('/get_files_in_folder', methods=['POST'])
+def get_files_in_folder_route():
+    payload = request.get_json(force=True)
+    parent_id = payload['parent_id']
+    response = Drive.getFilesInFolder(parent_id)
+    return response
 
-@bp.route('/drive/upload_file', methods=['POST'])
-def drive_upload_file():
-    if 'file' not in request.files:
-        return Response.error('No file part in the request.')
-    
-    file = request.files['file']
-    if file.filename == '':
-        return Response.error('No file selected for uploading.')
-    
-    filename = secure_filename(file.filename)
-    if not is_allowed_file(filename):
-        return Response.error('File type not allowed.')
-    
-    if file.content_length > current_app.config['MAX_CONTENT_LENGTH']:
-        return Response.error('File size exceeds the limit.')
-    
-    parent_folder_id = request.form.get('parent_folder_id')
-    
-    return uploadFile(filename, file, parent_folder_id)
+@bp.route('/get_file_info', methods=['POST'])
+def get_file_info_route():
+    payload = request.get_json(force=True)
+    parent_id = payload['parent_id']
+    file_name = payload['file_name']
+    response = Drive.getFileInfo(parent_id, file_name)
+    return response
 
-@bp.route('/drive/delete_file', methods=['POST'])
-def drive_delete_file():
-    input_json = request.get_json(force=True)
-    return deleteFiles(input_json['file_ids'])
+@bp.route('/get_file_info_by_id', methods=['POST'])
+def get_file_info_by_id_route():
+    payload = request.get_json(force=True)
+    file_id = payload['file_id']
+    response = Drive.getFileInfoById(file_id)
+    return response
 
-@bp.route('/drive/create_folder', methods=['POST'])
-def drive_create_folder():
-    input_json = request.get_json(force=True)
-    folder_name = secure_filename(input_json['folder_name'])
-    return createFolder(folder_name, input_json['parent_folder_id'])
+@bp.route('/reset_folder', methods=['POST'])
+def reset_folder_route():
+    payload = request.get_json(force=True)
+    folder_id = payload['folder_id']
+    response = Drive.resetFolder(folder_id)
+    return response
+
+@bp.route('/delete_file', methods=['POST'])
+def delete_file_route():
+    payload = request.get_json(force=True)
+    fileId = payload['fileId']
+    response = Drive.deleteFile(fileId)
+    return response
+
+@bp.route('/move_file', methods=['POST'])
+def move_file_route():
+    payload = request.get_json(force=True)
+    f = payload['file']
+    new_parent_id = payload['new_parent_id']
+    response = Drive.moveFile(f, new_parent_id)
+    return response
+
+@bp.route('/download_file', methods=['POST'])
+def download_file_route():
+    payload = request.get_json(force=True)
+    response = Drive.downloadFile(payload['file_id'])
+    f = BytesIO(response['content'])
+    return send_file(f, mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+
+@bp.route('/rename_file', methods=['POST'])
+def rename_file_route():
+    payload = request.get_json(force=True)
+    fileId = payload['fileId']
+    newName = payload['newName']
+    response = Drive.renameFile(fileId, newName)
+    return response
+
+@bp.route('/upload_file', methods=['POST'])
+def upload_file_route():
+    payload = request.get_json(force=True)
+    f = payload['file']
+    fileName = payload['fileName']
+    mimeType = payload['mimeType']
+    parentFolderId = payload['parentFolderId']
+    response = Drive.uploadFile(fileName, mimeType, f, parentFolderId)
+    return response

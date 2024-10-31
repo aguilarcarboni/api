@@ -6,31 +6,43 @@ from datetime import datetime
 
 from app.helpers.response import Response
 
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+logger.announcement('Initializing Wallet', 'info')
+logger.announcement('Successfully initialized Wallet', 'success')
+
+# TODO FIX DRIVE MIGRATION
+
 class BAC:
 
     def __init__(self):
+        logger.info("Initializing BAC")
         self.accounts = [
             {
                 'name':'Cash',
                 'account_id':'CR83010200009295665295'
             }
         ]
+        logger.success("Successfully initialized BAC")
 
-    def generateStatements(self, account, file_name):
+    def generateStatements(self, account, month):
 
-        logger.info(f"Generating statements for account: {account}, file: {file_name}")
+        logger.info(f"Generating statements for account: {account}, month: {month}")
 
         # Change path to account
 
         # TODO SHOULD I USE API OR DRIVE 
         path = 'Personal/Wallet/Statements/BAC/' +  account + '/Sources'
-        dictToSend = {'path':path, 'file_name':file_name}
-        response = rq.post('http://127.0.0.1:5001' + '/drive/download_file', json=dictToSend)
-        if response.status_code != 200:
-            raise Exception('Error downloading file.')
+        dictToSend = {'path':path, 'file_name':month + '.csv'}
 
-        # Get month that the statement is for
-        period = file_name.split('.')[0]
+        logger.warning(f"Fix this. Line 41, Wallet.py.")
+        response = rq.post(os.getenv('API_URL') + '/drive/download_file', json=dictToSend)
+
+        if (response['status'] != 'success'):
+            return Response.error('Error downloading file.')
 
         # Download file in plain text
         binaryFile = response.content
@@ -60,9 +72,10 @@ class BAC:
 
         # Save to drive as Bytes IO or save cache?
         drivePath = f'Personal/Wallet/Statements/BAC/{account}'
-        cachePath = f'cache/statements/processed/{period}.csv'
+        cachePath = f'cache/statements/processed/{month}.csv'
 
         # Find processed folder
+        logger.warning(f"Fix this. Line 78, Wallet.py.")
         response = rq.post('http://127.0.0.1:5001' + '/drive/query_file', json={'path':drivePath, 'file_name':'Processed'})
         if response.status_code != 200:
             raise Exception('Error querying Processed folder.')
@@ -72,22 +85,23 @@ class BAC:
         # Save file to cache
         try:
             df_all.to_csv(cachePath, index=False)
-            logger.success(f"Successfully saved file {drivePath}/Processed/{period}.csv")
+            logger.success(f"Successfully saved file {drivePath}/Processed/{month}.csv")
         except Exception as e:
             logger.error(f"Error saving file: {str(e)}")
             return Response.error('Error saving file.')
         
         # Upload file to drive
         try:
+            logger.warning(f"Fix this. Line 95, Wallet.py.")
             response = rq.post('http://127.0.0.1:5001' + '/drive/upload_file_with_path', json={'file_path':cachePath, 'parent_folder_id':processed_folder_id})
             if response.status_code != 200:
                 raise Exception('Error uploading file.')
-            logger.success(f"Successfully saved file {drivePath}/Processed/{period}.csv")
+            logger.success(f"Successfully saved file {drivePath}/Processed/{month}.csv")
         except Exception as e:
             logger.error(f"Error uploading file: {str(e)}")
             return Response.error('Error uploading file.')
         
-        return Response.success(f'Successfully processed {period} financial statements for account: {account}. Saved to {drivePath}/Processed/{period}.csv')
+        return Response.success(f'Successfully processed {month} financial statements for account: {account}. Saved to {drivePath}/Processed/{month}.csv')
 
     def parseStatements(self, file_text):
 

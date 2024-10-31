@@ -11,7 +11,7 @@ from typing import Dict, Any, List
 from app.helpers.response import Response
 from app.helpers.logger import logger
 
-logger.info('Initializing Database')
+logger.announcement('Initializing Database', 'info')
 
 # SQLAlchemy setup with connection pooling
 load_dotenv()
@@ -38,7 +38,7 @@ event = Base.classes.event
 contact = Base.classes.contact
 page = Base.classes.page
 
-logger.success('Successfully initialized Database')
+logger.announcement('Successfully initialized Database', 'success')
 
 def with_session(func):
     @wraps(func)
@@ -191,7 +191,8 @@ def get_foreign_keys(session, table: str, params: dict) -> Dict[str, str]:
     except SQLAlchemyError as e:
         logger.error(f"Error retrieving foreign keys for table {table}: {str(e)}")
         return Response.error(f"Failed to retrieve foreign keys: {str(e)}")
-    
+
+@with_session
 def get_parent_lineage_recursive(session, table: str, params: dict, depth: int = 3, current_depth: int = 1) -> Dict[str, Any]:
     """
     Recursive helper function to get the parent lineage of a table up to a specified depth.

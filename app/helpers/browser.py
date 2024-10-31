@@ -5,8 +5,8 @@ import requests as rq
 
 class Browser:
     def __init__(self):
-
-        self.state = 0
+        logger.announcement('Initializing Browser', 'info')
+        logger.announcement('Successfully initialized Browser', 'success')
 
     def scraper(self, url):
         logger.info(f"Scraping URL: {url}")

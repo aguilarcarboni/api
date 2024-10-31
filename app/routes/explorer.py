@@ -3,9 +3,7 @@ from app.modules.explorer import Mars
 
 bp = Blueprint('explorer', __name__)
 
-
-
-@bp.route("/explorer/mars")
-def mars():
+@bp.route("/mars")
+def mars_route():
     marsData = Mars.data
     return marsData

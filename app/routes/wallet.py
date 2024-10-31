@@ -5,8 +5,8 @@ bp = Blueprint('wallet', __name__)
 
 BAC = BAC()
 
-@bp.route("/wallet/bac/generateStatements", methods=['POST'])
-def bac_generate_statements():
+@bp.route("/generate_statements", methods=['POST'])
+def bac_generate_statements_route():
 
     input_json = request.get_json(force=True)
 

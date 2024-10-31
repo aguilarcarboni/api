@@ -1,21 +1,23 @@
 from app.helpers.logger import logger
 from app.helpers.response import Response
+
 import json
 from websocket import create_connection
 
+logger.announcement('Initializing Smart Home', 'info')
 
-logger.info("Initializing Oasis.")
 token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiI0NDhhOWQ2MDFkYzk0YzgxYWI3YThhNDQ1NzY3OGYwOCIsImlhdCI6MTcyNTczNjk4OSwiZXhwIjoyMDQxMDk2OTg5fQ.bepKyJyKb4mS5lbDzfXFRC25pk53oiChreza4rvL3q8"
 try:
     ws = create_connection("ws://oasis.local:8123/api/websocket")
 except:
-    logger.error("Failed to initialize Oasis.")
+    logger.error("Failed to initialize Smart Home.")
     exit()
 nextId = 0
 print(ws.recv())
 ws.send(json.dumps({'type': 'auth', 'access_token': token}))
 print(ws.recv())
-logger.success("Successfully initialized Oasis.")
+
+logger.announcement("Successfully initialized Smart Home.", 'success')
 
 def getNextId(self):
     self.nextId += 1

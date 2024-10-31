@@ -3,7 +3,7 @@ from app.modules.news import scrapeCNNHeadlines
 
 bp = Blueprint('news', __name__)
 
-@bp.route("/news")
-def news():
+@bp.route("/")
+def news_route():
     newsData = scrapeCNNHeadlines()
     return newsData

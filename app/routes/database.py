@@ -3,13 +3,13 @@ from app.modules.database import create, read, update, delete, get_foreign_keys,
 
 bp = Blueprint('database', __name__)
 
-@bp.route('/database/create', methods=['POST'])
+@bp.route('/create', methods=['POST'])
 def create_route():
     payload = request.get_json(force=True)
     response = create(table=payload['table'], data=payload['data'])
     return response
 
-@bp.route('/database/read', methods=['POST'])
+@bp.route('/read', methods=['POST'])
 def read_route():
     payload = request.get_json(force=True)
     if isinstance(payload, str):
@@ -21,25 +21,25 @@ def read_route():
     response = read(table=payload['table'], params=payload['params'])
     return response
 
-@bp.route('/database/update', methods=['POST'])
+@bp.route('/update', methods=['POST'])
 def update_route():
     payload = request.get_json(force=True)
     response = update(table=payload['table'], params=payload['params'], data=payload['data'])
     return response
 
-@bp.route('/database/delete', methods=['POST'])
+@bp.route('/delete', methods=['POST'])
 def delete_user_route():
     payload = request.get_json(force=True)
     response = delete(table=payload['table'], params=payload['params'])
     return response
 
-@bp.route('/database/get_foreign_keys', methods=['POST'])
+@bp.route('/get_foreign_keys', methods=['POST'])
 def get_foreign_keys_route():
     payload = request.get_json(force=True)
     response = get_foreign_keys(table=payload['table'], params=payload['params'])
     return response
 
-@bp.route('/database/get_parent_lineage', methods=['POST'])
+@bp.route('/get_parent_lineage', methods=['POST'])
 def get_parent_lineage_route():
     payload = request.get_json(force=True)
     if 'depth' not in payload:

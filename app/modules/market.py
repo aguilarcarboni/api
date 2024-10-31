@@ -2,9 +2,9 @@ from app.helpers.logger import logger
 import yfinance as yf
 from datetime import datetime
 
-logger.info("Initializing Markets.")
+logger.announcement('Initializing Markets', 'info')
 tickers = ['SPY', 'QQQ', 'TSLA', 'NVDA', 'AAPL', 'AMZN', 'NVDA', 'AMD', 'GOOGL', 'MSFT', 'V']
-logger.success("Successfully initialized Markets.")
+logger.announcement('Successfully initialized Markets', 'success')
 
 def getMarketData():
     marketData = {}
