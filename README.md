@@ -1,4 +1,4 @@
-# The Laserfocus API
+# The Laserfocus API.
 ## A new way of controlling your ecosystem
 ### Description
 The Laserfocus API is the closed-source central nervous system of the Laserfocus Ecosystem, powering our technology solutions designed to make life more efficient. This API controls all aspects of your ecosystem. 
