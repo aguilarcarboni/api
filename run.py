@@ -7,6 +7,8 @@ import logging
 from flask import jsonify
 from logging.handlers import RotatingFileHandler
 
+from app.helpers.logger import logger
+
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -24,10 +26,7 @@ def configure_logging(app):
     file_handler.setFormatter(logging.Formatter(
         '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'
     ))
-    file_handler.setLevel(logging.INFO)
-    app.logger.addHandler(file_handler)
-    app.logger.setLevel(logging.INFO)
-    app.logger.info('API startup')
+    logger.info('API startup')
 
 def create_app():
     app = Flask(__name__)
@@ -49,7 +48,7 @@ def create_app():
 
     @app.route('/', methods=['GET'])
     def index():
-        app.logger.info('User accessed the root route.')
+        logger.info('User accessed the root route.')
         data = {
             'title': 'the path to success starts with laserfocus.',
         }
@@ -58,14 +57,13 @@ def create_app():
     @app.route('/login', methods=['POST'])
     def login():
         payload = request.get_json(force=True)
-        app.logger.info(f'User attempting to log in... {payload}')
-        print('login', payload)
+        logger.info(f'User attempting to log in... {payload}')
         token = payload['token']
         if token == 'laserfocused':
             access_token = create_access_token(identity=token)
-            app.logger.success(f'User logged in successfully. Token: {token}')
+            logger.success(f'User logged in successfully. Token: {token}')
             return {"access_token": access_token}, 200
-        app.logger.error(f'User failed to log in. Token: {token}')
+        logger.error(f'User failed to log in. Token: {token}')
         return {"msg": "Invalid token"}, 401
     
     @app.errorhandler(404)
