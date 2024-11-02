@@ -7,6 +7,8 @@ logger.announcement('Successfully initialized News', 'success')
 
 def scrapeCNNHeadlines():
 
+    logger.announcement('Scraping CNN Headlines', 'info')
+
     url = 'https://www.cnn.com'
     soup = Browser().scraper(url)
 
@@ -19,4 +21,5 @@ def scrapeCNNHeadlines():
             if ('•' not in link.get_text().strip()):
                 news.append({'title':link.get_text().strip(), 'url':url + link.get('href')})
 
+    logger.announcement('Successfully scraped CNN Headlines', 'success')
     return Response.success(news)

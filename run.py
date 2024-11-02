@@ -57,13 +57,14 @@ def create_app():
     @app.route('/login', methods=['POST'])
     def login():
         payload = request.get_json(force=True)
-        logger.info(f'User attempting to log in... {payload}')
+        logger.info(f'User attempting authenticate... {payload}')
         token = payload['token']
         if token == 'laserfocused':
             access_token = create_access_token(identity=token)
-            logger.success(f'User logged in successfully. Token: {token}')
+            logger.success(f'User authenticated. {token}.')
             return {"access_token": access_token}, 200
-        logger.error(f'User failed to log in. Token: {token}')
+        
+        logger.error(f'User failed to authenticate.')
         return {"msg": "Invalid token"}, 401
     
     @app.errorhandler(404)

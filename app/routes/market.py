@@ -1,14 +1,9 @@
-from flask import Blueprint
-from app.modules.market import getMarketData
+from flask import Blueprint, request
+from app.modules.market import getHistoricalData
 
 bp = Blueprint('market', __name__)
 
-@bp.route("/")
+@bp.route("/historical", methods=['POST'])
 def market_route():
-    marketData = {
-        'stocks':{
-            'historical': getMarketData()
-        },
-    }
-
-    return marketData
+    input_json = request.get_json(force=True)
+    return getHistoricalData(input_json['tickers'])

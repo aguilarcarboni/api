@@ -26,11 +26,11 @@ class GoogleDrive:
     try:
       SCOPES = ["https://www.googleapis.com/auth/drive"]
       creds = Credentials(
-        token=os.getenv('TOKEN'),
-        refresh_token=os.getenv('REFRESH_TOKEN'),
-        token_uri=os.getenv('TOKEN_URI'),
-        client_id=os.getenv('CLIENT_ID'),
-        client_secret=os.getenv('CLIENT_SECRET'),
+        token=os.getenv('GOOGLE_TOKEN'),
+        refresh_token=os.getenv('GOOGLE_REFRESH_TOKEN'),
+        token_uri=os.getenv('GOOGLE_TOKEN_URI'),
+        client_id=os.getenv('GOOGLE_CLIENT_ID'),
+        client_secret=os.getenv('GOOGLE_CLIENT_SECRET'),
         scopes=SCOPES
       )
       self.service = build('drive', 'v3', credentials=creds)
@@ -323,11 +323,11 @@ class Gmail:
     SCOPES = ["https://mail.google.com/"]
     try:
       creds = Credentials(
-        token=os.getenv('INFO_EMAIL_TOKEN'),
-        refresh_token=os.getenv('INFO_EMAIL_REFRESH_TOKEN'),
-        token_uri=os.getenv('INFO_EMAIL_TOKEN_URI'),
-        client_id=os.getenv('INFO_EMAIL_CLIENT_ID'),
-        client_secret=os.getenv('INFO_EMAIL_CLIENT_SECRET'),
+        token=os.getenv('GOOGLE_TOKEN'),
+        refresh_token=os.getenv('GOOGLE_REFRESH_TOKEN'),
+        token_uri=os.getenv('GOOGLE_TOKEN_URI'),
+        client_id=os.getenv('GOOGLE_CLIENT_ID'),
+        client_secret=os.getenv('GOOGLE_CLIENT_SECRET'),
         scopes=SCOPES
       )
       self.service = build("gmail", "v1", credentials=creds)

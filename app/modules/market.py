@@ -1,12 +1,15 @@
 from app.helpers.logger import logger
 import yfinance as yf
 from datetime import datetime
+from app.helpers.response import Response
 
 logger.announcement('Initializing Markets', 'info')
 tickers = ['SPY', 'QQQ', 'TSLA', 'NVDA', 'AAPL', 'AMZN', 'NVDA', 'AMD', 'GOOGL', 'MSFT', 'V']
 logger.announcement('Successfully initialized Markets', 'success')
 
-def getMarketData():
+def getHistoricalData(tickers):
+
+    logger.info(f'Getting historical market data for tickers: {tickers}')
     marketData = {}
 
     for ticker in tickers:
@@ -33,5 +36,5 @@ def getMarketData():
 
         marketData[ticker] = tickerHistory
 
-    logger.info(f"Retrieved market data for {len(marketData)} tickers")
-    return marketData
+    logger.success(f"Successfully retrieved market data for {len(tickers)} tickers")
+    return Response.success(marketData)
