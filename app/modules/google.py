@@ -309,9 +309,9 @@ class GoogleDrive:
         logger.error(f"An error occurred: {error}")
         return Response.error(error)
     
-    except:
-        logger.error("Error downloading file.")
-        return Response.error('Error downloading file.')
+    except Exception as e:
+        logger.error(f"Error downloading file: {str(e)}")
+        return Response.error(f"Error downloading file: {str(e)}")
     
     logger.success("Successfully downloaded file.")
     return Response.success(downloaded_file.getvalue())

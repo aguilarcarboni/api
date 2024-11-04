@@ -2,6 +2,8 @@ from flask import Blueprint, request, send_file
 from app.modules.google import GoogleDrive
 from io import BytesIO
 
+from app.helpers.response import Response
+
 bp = Blueprint('drive', __name__)
 
 Drive = GoogleDrive()
@@ -69,8 +71,11 @@ def move_file_route():
 def download_file_route():
     payload = request.get_json(force=True)
     response = Drive.downloadFile(payload['file_id'])
-    f = BytesIO(response['content'])
-    return send_file(f, mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    try:
+        f = BytesIO(response['content'])
+        return send_file(f, mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    except Exception as e:
+        return Response.error(f"Error downloading file: {str(e)}")
 
 @bp.route('/rename_file', methods=['POST'])
 def rename_file_route():
