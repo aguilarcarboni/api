@@ -324,7 +324,7 @@ http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pILpQcVmuFh6eQHnlM8Uhb3OhX5opuL
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwmlMsw3Q6HwbPcfUDY1HMH
 #EXTINF:-1 xui-id="174315" tvg-id="24 Horas | Mi Bella Genio *" tvg-name="24 HORAS | HUGO CHAVES" tvg-logo="http://xdplayer.tv:8080/images/RHScVlc0CgjTOuIs_y9yZt2oLRl3L1BosrJg7vwxmUa5cWVX6wTqcz7zwqHe2GYhJM8m4uvcJzz3SiFsYMCkZeaG7BsQN72EATt9D8bXUJrBFpcDa-9cQ_i48Jp07bvw.jpg" group-title="CANALES 24/7 TELENOVELAS",24 HORAS | HUGO CHAVES
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pILpQcVmuFh6eQHnlM8Uhb30ZNoe7L9wyKZK0UjTmOe0
-#EXTINF:-1 xui-id="211124" tvg-id="24 Horas | Bleach" tvg-name="24 HORAS | INSPECTOR GADGET" tvg-logo="http://xdplayer.tv:8080/images/lqSpOlW63iA3428JAWMHIFq1tj-K8vMfknz-Hao9o4lXNV5k7xjO_2W0vodGkcn4NZGFvt6w0UFKHmnepaP6rA.png" group-title="CANALES 24/7",24 HORAS | INSPECTOR GADGET
+#EXTINF:-1 xui-id="211124" tvg-id="PTVDEIG" tvg-name="24 HORAS | INSPECTOR GADGET" tvg-logo="http://xdplayer.tv:8080/images/lqSpOlW63iA3428JAWMHIFq1tj-K8vMfknz-Hao9o4lXNV5k7xjO_2W0vodGkcn4NZGFvt6w0UFKHmnepaP6rA.png" group-title="CANALES 24/7",24 HORAS | INSPECTOR GADGET
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwIgU6bBzPnQW5Ys51uNIkN
 #EXTINF:-1 xui-id="174279" tvg-id="24 Horas | Casado con Hijos" tvg-name="24 HORAS | ISA TKM" tvg-logo="http://xdplayer.tv:8080/images/d17b7c34ed723b5300c342e463f76126.jpg" group-title="CANALES 24/7 TELENOVELAS",24 HORAS | ISA TKM
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pILpQcVmuFh6eQHnlM8Uhb2WOAUq0TJ_GZPafJ_Tiz_Y
@@ -1386,33 +1386,33 @@ http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pILpQcVmuFh6eQHnlM8Uhb1qygsaGxL
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pILpQcVmuFh6eQHnlM8Uhb2sVhNit4uxsrewsWXXSvFH
 #EXTINF:-1 xui-id="29521" tvg-id="A&E *HD" tvg-name="A&E *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/7887eeac012ecf9e1668e4b92047bd1f.png" group-title="CANALES DUAL-AUDIO",A&E *HD | DUAL-AUDIO
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzkiEelwYT6FPeogFba8wrp
-#EXTINF:-1 xui-id="29522" tvg-id="AMCMEHD" tvg-name="AMC *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/838bbda54f145e4dc114bb4d2275854a.png" group-title="CANALES DUAL-AUDIO",AMC *HD | DUAL-AUDIO
+#EXTINF:-1 xui-id="29522" tvg-id="AMCARAM" tvg-name="AMC *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/838bbda54f145e4dc114bb4d2275854a.png" group-title="CANALES DUAL-AUDIO",AMC *HD | DUAL-AUDIO
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwetFHzTWQuuCax0XU8jg5m
-#EXTINF:-1 xui-id="29547" tvg-id="ANIPBHD" tvg-name="ANIMAL PLANET *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/4ec374beecaa379e7422f06e578ab8ab.png" group-title="CANALES DUAL-AUDIO",ANIMAL PLANET *HD | DUAL-AUDIO
+#EXTINF:-1 xui-id="29547" tvg-id="ANIMAL PLANET *HD | DUAL-AUDIO" tvg-name="ANIMAL PLANET *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/4ec374beecaa379e7422f06e578ab8ab.png" group-title="CANALES DUAL-AUDIO",ANIMAL PLANET *HD | DUAL-AUDIO
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyqPCMqQ_TZG1fVHMuvzcfo
-#EXTINF:-1 xui-id="29523" tvg-id="AXNHDK" tvg-name="AXN *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/355e47e0ea6d752353ee7604c39edbb1.png" group-title="CANALES DUAL-AUDIO",AXN *HD | DUAL-AUDIO
+#EXTINF:-1 xui-id="29523" tvg-id="AXNAHA" tvg-name="AXN *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/355e47e0ea6d752353ee7604c39edbb1.png" group-title="CANALES DUAL-AUDIO",AXN *HD | DUAL-AUDIO
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyVneT1wgri10BQ-8HBs74f
 #EXTINF:-1 xui-id="29524" tvg-id="CARTOONITO *HD" tvg-name="CARTOONITO *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/a72b7c8672b555d84b9c20e04ff5e410.png" group-title="CANALES DUAL-AUDIO",CARTOONITO *HD | DUAL-AUDIO
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxN45nttJ5ko2EBUXX1exhf
-#EXTINF:-1 xui-id="29516" tvg-id="CNHDIT" tvg-name="CARTOON NETWORK *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/a8c4d83290a13476b6eff35ebfc1f408.jpg" group-title="CANALES DUAL-AUDIO",CARTOON NETWORK *HD | DUAL-AUDIO
+#EXTINF:-1 xui-id="29516" tvg-id="CANNLHD" tvg-name="CARTOON NETWORK *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/a8c4d83290a13476b6eff35ebfc1f408.jpg" group-title="CANALES DUAL-AUDIO",CARTOON NETWORK *HD | DUAL-AUDIO
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmycVKz7tKa996XoRqaAVWJa
 #EXTINF:-1 xui-id="29525" tvg-id="CINECANAL *HQ" tvg-name="CINECANAL *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/ad18cf13ec8a5fd3a25e6733b3bc27aa.png" group-title="CANALES DUAL-AUDIO",CINECANAL *HD | DUAL-AUDIO
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxZkhEH0a1LWMy4yn511rxF
-#EXTINF:-1 xui-id="29526" tvg-id="CCHDCH" tvg-name="COMEDY CENTRAL *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/2d1ed8d497cee1fba0b92ed6841617a0.jpg" group-title="CANALES DUAL-AUDIO",COMEDY CENTRAL *HD | DUAL-AUDIO
+#EXTINF:-1 xui-id="29526" tvg-id="COMEDY CENTRAL *HD | DUAL-AUDIO" tvg-name="COMEDY CENTRAL *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/2d1ed8d497cee1fba0b92ed6841617a0.jpg" group-title="CANALES DUAL-AUDIO",COMEDY CENTRAL *HD | DUAL-AUDIO
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwPvxC6j5RDDknwd85Gx2d9
-#EXTINF:-1 xui-id="29527" tvg-id="DISHDSA" tvg-name="DISCOVERY CHANNEL *HD | DUAL-AUDIO" tvg-logo="https://botw-pd.s3.amazonaws.com/styles/logo-thumbnail/s3/092015/dsc_lockup-04.png?itok=8LRE6_Zf" group-title="CANALES DUAL-AUDIO",DISCOVERY CHANNEL *HD | DUAL-AUDIO
+#EXTINF:-1 xui-id="29527" tvg-id="DISCOVERY CHANNEL *HD | DUAL-AUDIO" tvg-name="DISCOVERY CHANNEL *HD | DUAL-AUDIO" tvg-logo="https://botw-pd.s3.amazonaws.com/styles/logo-thumbnail/s3/092015/dsc_lockup-04.png?itok=8LRE6_Zf" group-title="CANALES DUAL-AUDIO",DISCOVERY CHANNEL *HD | DUAL-AUDIO
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxP7Z5trsgc6oCvxfh1eTWN
-#EXTINF:-1 xui-id="29528" tvg-id="DISCOVERY H&H *HD" tvg-name="DISCOVERY H&H *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/00853c475eb7e0aab2cde4abf7ad0b5a.jpg" group-title="CANALES DUAL-AUDIO",DISCOVERY H&H *HD | DUAL-AUDIO
+#EXTINF:-1 xui-id="29528" tvg-id="DISCOVERY H&H *HD | DUAL-AUDIO" tvg-name="DISCOVERY H&H *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/00853c475eb7e0aab2cde4abf7ad0b5a.jpg" group-title="CANALES DUAL-AUDIO",DISCOVERY H&H *HD | DUAL-AUDIO
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzCvVa3O1WQRi74jBsGTyTl
 #EXTINF:-1 xui-id="29546" tvg-id="DISCOVERY ID *FHD" tvg-name="DISCOVERY ID *HD | DUAL-AUDIO" tvg-logo="https://d1yjjnpx0p53s8.cloudfront.net/styles/logo-thumbnail/s3/032018/untitled-1_423.png?mlgvnOAdNFDNh2Tpmx_TyDDuwJ8gZ12q&itok=LtXFZiqH" group-title="CANALES DUAL-AUDIO",DISCOVERY ID *HD | DUAL-AUDIO
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxgKn4j1SuTqE5d3VuOl4Mo
-#EXTINF:-1 xui-id="29549" tvg-id="DKNBHD" tvg-name="DISCOVERY KIDS *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/42e0e0fe1d8916521a6ac9b646974964.jpg" group-title="CANALES DUAL-AUDIO",DISCOVERY KIDS *HD | DUAL-AUDIO
+#EXTINF:-1 xui-id="29549" tvg-id="DISCOVERY KIDS *HD | DUAL-AUDIO" tvg-name="DISCOVERY KIDS *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/42e0e0fe1d8916521a6ac9b646974964.jpg" group-title="CANALES DUAL-AUDIO",DISCOVERY KIDS *HD | DUAL-AUDIO
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwxYczRQ3aamN6JxxRtnanD
 #EXTINF:-1 xui-id="29545" tvg-id="DISCOVERY TURBO *HD" tvg-name="DISCOVERY TURBO *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/0130167e86e2993fcba61e29f3c0701f.jpg" group-title="CANALES DUAL-AUDIO",DISCOVERY TURBO *HD | DUAL-AUDIO
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzh4T4sPUlFV9qiYR_t39hp
-#EXTINF:-1 xui-id="29550" tvg-id="DWRLDA" tvg-name="DISCOVERY WORLD *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/73d9fdd99a4d13be5cdd8ca83fc06572.png" group-title="CANALES DUAL-AUDIO",DISCOVERY WORLD *HD | DUAL-AUDIO
+#EXTINF:-1 xui-id="29550" tvg-id="DISCOVERY WORLD *HD | DUAL-AUDIO" tvg-name="DISCOVERY WORLD *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/73d9fdd99a4d13be5cdd8ca83fc06572.png" group-title="CANALES DUAL-AUDIO",DISCOVERY WORLD *HD | DUAL-AUDIO
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyc-H--7ru7Amcvc5bH7lDm
-#EXTINF:-1 xui-id="29529" tvg-id="DCHHDME" tvg-name="DISNEY CHANNEL *HD | DUAL-AUDIO" tvg-logo="https://d1yjjnpx0p53s8.cloudfront.net/styles/logo-thumbnail/s3/112015/disney_channel_0.png?itok=2y1CSwfM" group-title="CANALES DUAL-AUDIO",DISNEY CHANNEL *HD | DUAL-AUDIO
+#EXTINF:-1 xui-id="29529" tvg-id="DISNEY CHANNEL *HD | DUAL-AUDIO" tvg-name="DISNEY CHANNEL *HD | DUAL-AUDIO" tvg-logo="https://d1yjjnpx0p53s8.cloudfront.net/styles/logo-thumbnail/s3/112015/disney_channel_0.png?itok=2y1CSwfM" group-title="CANALES DUAL-AUDIO",DISNEY CHANNEL *HD | DUAL-AUDIO
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmytsCqzE86bJP_B9Oxb2jcQ
 #EXTINF:-1 xui-id="29530" tvg-id="DISNEY JR *HD" tvg-name="DISNEY JR *HD | DUAL-AUDIO" tvg-logo="https://d1yjjnpx0p53s8.cloudfront.net/styles/logo-thumbnail/s3/012014/logo_disney_junior.png?itok=4qSQzM4I" group-title="CANALES DUAL-AUDIO",DISNEY JR *HD | DUAL-AUDIO
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwN8pWQyEqNAzg1md5V-qHj
@@ -1420,45 +1420,45 @@ http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwN8pWQyEq
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyhrsFOeQ1Zy-_m0wWLViUN
 #EXTINF:-1 xui-id="29519" tvg-id="STAR CHANNEL *HD" tvg-name="STAR CHANNEL *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/e7ab538744da7c04bd2af6a8f257f0ba.png" group-title="CANALES DUAL-AUDIO",STAR CHANNEL *HD | DUAL-AUDIO
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwN7pFgMapP2ifRvQq4JmtC
-#EXTINF:-1 xui-id="29534" tvg-id="UNIVERSAL CRIME *HD | op2" tvg-name="UNIVERSAL CRIME *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/8274c6f4d40364d4627b6858de163ba1.png" group-title="CANALES DUAL-AUDIO",UNIVERSAL CRIME *HD | DUAL-AUDIO
+#EXTINF:-1 xui-id="29534" tvg-id="UNIVERSAL CRIME *HD | DUAL-AUDIO" tvg-name="UNIVERSAL CRIME *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/8274c6f4d40364d4627b6858de163ba1.png" group-title="CANALES DUAL-AUDIO",UNIVERSAL CRIME *HD | DUAL-AUDIO
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzb9KKwOazqqpacuxEJn4DZ
 #EXTINF:-1 xui-id="29535" tvg-id="UNIVERSAL CINEMA *HQ" tvg-name="UNIVERSAL CINEMA *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/c1d397ac80b264ca1e7dd1182a125282.png" group-title="CANALES DUAL-AUDIO",UNIVERSAL CINEMA *HD | DUAL-AUDIO
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmx2pfizqXAsMdMK72LJDjOK
-#EXTINF:-1 xui-id="29533" tvg-id="UNIVERSAL PREMIERE *HQ" tvg-name="UNIVERSAL PREMIERE *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/0387789fda401c7f28a7217f34f6ad7f.png" group-title="CANALES DUAL-AUDIO",UNIVERSAL PREMIERE *HD | DUAL-AUDIO
+#EXTINF:-1 xui-id="29533" tvg-id="UNIVERSAL PREMIERE *HD | DUAL-AUDIO" tvg-name="UNIVERSAL PREMIERE *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/0387789fda401c7f28a7217f34f6ad7f.png" group-title="CANALES DUAL-AUDIO",UNIVERSAL PREMIERE *HD | DUAL-AUDIO
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyBhWIYPRHIHH3iEck3U6zc
-#EXTINF:-1 xui-id="29539" tvg-id="FXLAHDA" tvg-name="FX *HD | DUAL-AUDIO" tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjlmmXnsW5hqqhPFniYa3xcR8HeQtNjjkSjL5ji_TG5i8jSrXq&s" group-title="CANALES DUAL-AUDIO",FX *HD | DUAL-AUDIO
+#EXTINF:-1 xui-id="29539" tvg-id="FXHD" tvg-name="FX *HD | DUAL-AUDIO" tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjlmmXnsW5hqqhPFniYa3xcR8HeQtNjjkSjL5ji_TG5i8jSrXq&s" group-title="CANALES DUAL-AUDIO",FX *HD | DUAL-AUDIO
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxuIS7yUDmCPXexCf8jpve1
-#EXTINF:-1 xui-id="29515" tvg-id="HBO *HD | DUAL-AUDIO" tvg-name="HBO *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/8d2e452d05564910a008b7fd7edff240.png" group-title="CANALES DUAL-AUDIO",HBO *HD | DUAL-AUDIO
+#EXTINF:-1 xui-id="29515" tvg-id="HBOHD" tvg-name="HBO *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/8d2e452d05564910a008b7fd7edff240.png" group-title="CANALES DUAL-AUDIO",HBO *HD | DUAL-AUDIO
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwOebrVaMYGMnPxvMngS33N
 #EXTINF:-1 xui-id="29566" tvg-id="HBO + *FHD" tvg-name="HBO + *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/7bcda577a7e696b923437195afb56d77.png" group-title="CANALES DUAL-AUDIO",HBO + *HD | DUAL-AUDIO
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyUhBCOvmK1QP14WrTnp20W
 #EXTINF:-1 xui-id="29564" tvg-id="HBO 2 *FHD" tvg-name="HBO 2 *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/faa7e961d242f50455ada329016e53b1.png" group-title="CANALES DUAL-AUDIO",HBO 2 *HD | DUAL-AUDIO
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxEI8XAqku3NoKzTpnUSA3X
-#EXTINF:-1 xui-id="29565" tvg-id="HBOFHD" tvg-name="HBO FAMILY *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/41af9d0a2c972e8199dda68ab49a9626.png" group-title="CANALES DUAL-AUDIO",HBO FAMILY *HD | DUAL-AUDIO
+#EXTINF:-1 xui-id="29565" tvg-id="HBO FAMILY *HD | DUAL-AUDIO" tvg-name="HBO FAMILY *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/41af9d0a2c972e8199dda68ab49a9626.png" group-title="CANALES DUAL-AUDIO",HBO FAMILY *HD | DUAL-AUDIO
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyQs3hZpu8OafbrJM6jtNNC
 #EXTINF:-1 xui-id="29557" tvg-id="HBO XTREME *LQ" tvg-name="HBO XTREME *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/3f18946e2bb0342fdcbbeea5767668e6.png" group-title="CANALES DUAL-AUDIO",HBO XTREME *HD | DUAL-AUDIO
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxAvH06BvKg9w8SrLnPZ44s
-#EXTINF:-1 xui-id="29543" tvg-id="HSTYHDK" tvg-name="HISTORY *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/4d5eb99d9c61f40f6a80bda4a0208dfb.jpg" group-title="CANALES DUAL-AUDIO",HISTORY *HD | DUAL-AUDIO
+#EXTINF:-1 xui-id="29543" tvg-id="HISTORY *HD | DUAL-AUDIO" tvg-name="HISTORY *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/4d5eb99d9c61f40f6a80bda4a0208dfb.jpg" group-title="CANALES DUAL-AUDIO",HISTORY *HD | DUAL-AUDIO
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmy9AVk9VgUM5ZzMa7D4lLaK
 #EXTINF:-1 xui-id="29542" tvg-id="NAT GEO *HD" tvg-name="NAT GEO *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/b771dcd26b89439ab57f94995ecc3e25.jpg" group-title="CANALES DUAL-AUDIO",NAT GEO *HD | DUAL-AUDIO
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzYmmT1caZGLblSscR4eFSV
 #EXTINF:-1 xui-id="29570" tvg-id="NICKELODEON *HQ" tvg-name="NICK *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/30c423752a2a1150ce24e5f68432936b.jpg" group-title="CANALES DUAL-AUDIO",NICK *HD | DUAL-AUDIO
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmw6GYPkBTMj6Hqm_dT08Mn-
-#EXTINF:-1 xui-id="29559" tvg-id="PARMDA" tvg-name="PARAMOUNT CHANNEL *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/29736bef194749f3011e0bee23d08751.png" group-title="CANALES DUAL-AUDIO",PARAMOUNT CHANNEL *HD | DUAL-AUDIO
+#EXTINF:-1 xui-id="29559" tvg-id="PARAMOUNT CHANNEL *HD | DUAL-AUDIO" tvg-name="PARAMOUNT CHANNEL *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/29736bef194749f3011e0bee23d08751.png" group-title="CANALES DUAL-AUDIO",PARAMOUNT CHANNEL *HD | DUAL-AUDIO
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyMzIp_-BorE5P6S7jPRCqx
-#EXTINF:-1 xui-id="29520" tvg-id="SNYEHDK" tvg-name="SONY CHANNEL *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/ac8fd7ea0deebaf2b5437dd858c1f4d7.png" group-title="CANALES DUAL-AUDIO",SONY CHANNEL *HD | DUAL-AUDIO
+#EXTINF:-1 xui-id="29520" tvg-id="SONY CHANNEL *HD | DUAL-AUDIO" tvg-name="SONY CHANNEL *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/ac8fd7ea0deebaf2b5437dd858c1f4d7.png" group-title="CANALES DUAL-AUDIO",SONY CHANNEL *HD | DUAL-AUDIO
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxLJ9RxYEc12X29-YmYJFOJ
-#EXTINF:-1 xui-id="29560" tvg-id="STUBRHD" tvg-name="STUDIO UNIVERSAL *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/1c9dbf2b2b17a1badbac7be4a425033d.jpg" group-title="CANALES DUAL-AUDIO",STUDIO UNIVERSAL *HD | DUAL-AUDIO
+#EXTINF:-1 xui-id="29560" tvg-id="STUDIO UNIVERSAL *HD | DUAL-AUDIO" tvg-name="STUDIO UNIVERSAL *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/1c9dbf2b2b17a1badbac7be4a425033d.jpg" group-title="CANALES DUAL-AUDIO",STUDIO UNIVERSAL *HD | DUAL-AUDIO
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzlN5npK6oNNUKskBCd9DtM
-#EXTINF:-1 xui-id="29571" tvg-id="TNTHDOI" tvg-name="TNT *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/f0c24b631d3dc2a2c67037afa479dfa7.png" group-title="CANALES DUAL-AUDIO",TNT *HD | DUAL-AUDIO
+#EXTINF:-1 xui-id="29571" tvg-id="TNTARA" tvg-name="TNT *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/f0c24b631d3dc2a2c67037afa479dfa7.png" group-title="CANALES DUAL-AUDIO",TNT *HD | DUAL-AUDIO
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmw2TfKlMF-CTsqmzwVApRqQ
-#EXTINF:-1 xui-id="29544" tvg-id="TNTSEAM" tvg-name="TNT SERIES *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/d53fbdc8e277e5f522b62a12dc3b48f5.png" group-title="CANALES DUAL-AUDIO",TNT SERIES *HD | DUAL-AUDIO
+#EXTINF:-1 xui-id="29544" tvg-id="TNT SERIES *HD | DUAL-AUDIO" tvg-name="TNT SERIES *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/d53fbdc8e277e5f522b62a12dc3b48f5.png" group-title="CANALES DUAL-AUDIO",TNT SERIES *HD | DUAL-AUDIO
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzYz-g_fIMDRUra-BpAhcl2
-#EXTINF:-1 xui-id="29518" tvg-id="ADSMH" tvg-name="ADULT SWIM *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/783badb9d3aed54788b5fceb90daea6a.png" group-title="CANALES DUAL-AUDIO",ADULT SWIM *HD | DUAL-AUDIO
+#EXTINF:-1 xui-id="29518" tvg-id="ADULT SWIM *HD | DUAL-AUDIO" tvg-name="ADULT SWIM *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/783badb9d3aed54788b5fceb90daea6a.png" group-title="CANALES DUAL-AUDIO",ADULT SWIM *HD | DUAL-AUDIO
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyca93BLnR2UYNsPRrotVOd
-#EXTINF:-1 xui-id="29563" tvg-id="UCHDKDG" tvg-name="UNIVERSAL CHANNEL *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/615d4938c46e7b96e0cadfa8d5ad8868.png" group-title="CANALES DUAL-AUDIO",UNIVERSAL CHANNEL *HD | DUAL-AUDIO
+#EXTINF:-1 xui-id="29563" tvg-id="UNIVERSAL CHANNEL *HD | DUAL-AUDIO" tvg-name="UNIVERSAL CHANNEL *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/615d4938c46e7b96e0cadfa8d5ad8868.png" group-title="CANALES DUAL-AUDIO",UNIVERSAL CHANNEL *HD | DUAL-AUDIO
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxYSAdLqr5uuz31EqmgORAY
-#EXTINF:-1 xui-id="29540" tvg-id="WARHAM" tvg-name="WARNER CHANNEL *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/a51dd99a4bce9b47015e4c4bc80a93cb.png" group-title="CANALES DUAL-AUDIO",WARNER CHANNEL *HD | DUAL-AUDIO
+#EXTINF:-1 xui-id="29540" tvg-id="WARNER CHANNEL *HD | DUAL-AUDIO" tvg-name="WARNER CHANNEL *HD | DUAL-AUDIO" tvg-logo="http://xdplayer.tv:8080/images/a51dd99a4bce9b47015e4c4bc80a93cb.png" group-title="CANALES DUAL-AUDIO",WARNER CHANNEL *HD | DUAL-AUDIO
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzU4cLzHVmGZWSgKHkHanpp
 #EXTINF:-1 xui-id="29582" tvg-id="A&E *FHD" tvg-name="A&E *LQ" tvg-logo="http://xdplayer.tv:8080/images/7887eeac012ecf9e1668e4b92047bd1f.png" group-title="CANALES LITE",A&E *LQ
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzPSYkD8FlpY3Z3U1EKOSU1
@@ -1498,3 +1498,503 @@ http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyDER0m_yV
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxPqQ_etpOiIaLxPyCkYJug
 #EXTINF:-1 xui-id="29645" tvg-id="DISCOVERY THEATER *FHD" tvg-name="DISCOVERY THEATER *LQ" tvg-logo="http://xdplayer.tv:8080/images/7db7a771e188a9f2c05dc91f288d2446.png" group-title="CANALES LITE",DISCOVERY THEATER *LQ
 http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxB95TV3HE5sy9D1ihsz_SU
+#EXTINF:-1 xui-id="29614" tvg-id="DISCOVERY TURBO *HD" tvg-name="DISCOVERY TURBO *LQ" tvg-logo="http://xdplayer.tv:8080/images/d1090190651d19b191d6138625f260be.jpg" group-title="CANALES LITE",DISCOVERY TURBO *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmycful4a4C2FlJGRcv3eySd
+#EXTINF:-1 xui-id="29624" tvg-id="DISCOVERY WORLD *FHD" tvg-name="DISCOVERY WORLD *LQ" tvg-logo="http://xdplayer.tv:8080/images/c63e9d143c223108eee290ebe335a9a3.png" group-title="CANALES LITE",DISCOVERY WORLD *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyqEc1EaTvnQxeatfPORIwy
+#EXTINF:-1 xui-id="29591" tvg-id="DISNEY CHANNEL *HQ" tvg-name="DISNEY CHANNEL *LQ" tvg-logo="https://d1yjjnpx0p53s8.cloudfront.net/styles/logo-thumbnail/s3/112015/disney_channel_0.png?itok=2y1CSwfM" group-title="CANALES LITE",DISNEY CHANNEL *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxDaakXFYtdFKbZoqThZZai
+#EXTINF:-1 xui-id="29592" tvg-id="DISNEY JR *HD" tvg-name="DISNEY JR *LQ" tvg-logo="https://d1yjjnpx0p53s8.cloudfront.net/styles/logo-thumbnail/s3/012014/logo_disney_junior.png?itok=4qSQzM4I" group-title="CANALES LITE",DISNEY JR *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmw909wp-9ElWna5sZwdvFhV
+#EXTINF:-1 xui-id="29625" tvg-id="DW *LQ" tvg-name="DW *LQ" tvg-logo="http://xdplayer.tv:8080/images/HR8r-2Rjw0JaG0hy918elVMclVAJhaEXvV4hzJUWwRWeoeyq1a8Oox8eYUYa-61SRtPncKw9DppbdOmCP27RaZb2KCyvp8qH1oqUKjemsgDIT_oAQuesVPgUMtL_3EdL.png" group-title="CANALES LITE",DW *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyTa8AlE0lBTjoemoCohCU5
+#EXTINF:-1 xui-id="29626" tvg-id="E! ENTERTAIMENT *HD" tvg-name="E! ENTERTAINMENT *LQ" tvg-logo="http://xdplayer.tv:8080/images/d76f6ae7ced0b9fd7e6804c076181e61.png" group-title="CANALES LITE",E! ENTERTAINMENT *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyT4HKuF2hHQ_-jgaxAVZK2
+#EXTINF:-1 xui-id="29679" tvg-id="ESPN + MX *HQ" tvg-name="ESPN + *LQ" tvg-logo="http://xdplayer.tv:8080/images/1888c2779686964add19abb957efd321.png" group-title="CANALES LITE",ESPN + *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwwBtoOtcvmlDyQ1_nFgvXa
+#EXTINF:-1 xui-id="29683" tvg-id="ESPN MX *HQ" tvg-name="ESPN MX *LQ" tvg-logo="http://xdplayer.tv:8080/images/872b313f249158777177f4312a986987.png" group-title="CANALES LITE",ESPN MX *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxITOv9kKWiXiJ2_b6Q_-Lm
+#EXTINF:-1 xui-id="29684" tvg-id="ESPN 2 MX *FHD" tvg-name="ESPN 2 MX *LQ" tvg-logo="http://xdplayer.tv:8080/images/9c81dab2a11b8890fccb55ef39dfc0d9.png" group-title="CANALES LITE",ESPN 2 MX *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzFQZ0OqhdTaQ_c-_b9YsMI
+#EXTINF:-1 xui-id="29596" tvg-id="ESPN 2 SUR *HD" tvg-name="ESPN 2 SUR *LQ | op2" tvg-logo="http://xdplayer.tv:8080/images/9c81dab2a11b8890fccb55ef39dfc0d9.png" group-title="CANALES LITE",ESPN 2 SUR *LQ | op2
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzbP-mr71yCYHZIcqgspsF_
+#EXTINF:-1 xui-id="29680" tvg-id="ESPN 3 MX *FHD" tvg-name="ESPN 3 MX *LQ" tvg-logo="http://xdplayer.tv:8080/images/7c96c28e882fe7b9b9bcae37261d4af0.png" group-title="CANALES LITE",ESPN 3 MX *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmz-bmnZ8rynbbOT8DaEirKR
+#EXTINF:-1 xui-id="29627" tvg-id="EUROPA EUROPA *HD" tvg-name="EUROPA EUROPA *LQ" tvg-logo="http://xdplayer.tv:8080/images/9d8ddd888776270aa170abaac9ccceec.png" group-title="CANALES LITE",EUROPA EUROPA *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmye0l2CSJLiBp1chU7cRt_z
+#EXTINF:-1 xui-id="29628" tvg-id="FILM ART *HD" tvg-name="FILM ARTS *LQ" tvg-logo="http://xdplayer.tv:8080/images/3f55e57d335abc21f1424d9f251b1104.png" group-title="CANALES LITE",FILM ARTS *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwtKfRMX7R9GE1MrduLzwPp
+#EXTINF:-1 xui-id="29652" tvg-id="FOOD NETWORK *HD" tvg-name="FOOD NETWORK *LQ" tvg-logo="http://xdplayer.tv:8080/images/84cace47944e78bd36be9e971ed440cc.png" group-title="CANALES LITE",FOOD NETWORK *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzYtSePZkHEki8EMyFYJuPw
+#EXTINF:-1 xui-id="29580" tvg-id="STAR CHANNEL *HQ" tvg-name="STAR CHANNEL *LQ" tvg-logo="http://xdplayer.tv:8080/images/e7ab538744da7c04bd2af6a8f257f0ba.png" group-title="CANALES LITE",STAR CHANNEL *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmx3TjTrzqK7Asx0Pe_CVb11
+#EXTINF:-1 xui-id="29630" tvg-id="NT | FOX NEWS *HD" tvg-name="FOX NEWS *LQ" tvg-logo="http://xdplayer.tv:8080/images/a1c7be470e57bf9851a3ca4177cb0c5c.png" group-title="CANALES LITE",FOX NEWS *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyYhdKoPkIULfSfJx0Sox5Q
+#EXTINF:-1 xui-id="29599" tvg-id="UNIVERSAL CRIME *LQ" tvg-name="UNIVERSAL CRIME *LQ" tvg-logo="http://xdplayer.tv:8080/images/8274c6f4d40364d4627b6858de163ba1.png" group-title="CANALES LITE",UNIVERSAL CRIME *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxWfRv6rbbVG_34JZlizIde
+#EXTINF:-1 xui-id="29600" tvg-id="UNIVERSAL CINEMA *HQ" tvg-name="UNIVERSAL CINEMA *LQ" tvg-logo="http://xdplayer.tv:8080/images/c1d397ac80b264ca1e7dd1182a125282.png" group-title="CANALES LITE",UNIVERSAL CINEMA *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyibUA2YNVrQLmkOwgB5QdU
+#EXTINF:-1 xui-id="29598" tvg-id="UNIVERSAL PREMIERE *FHD" tvg-name="UNIVERSAL PREMIERE *LQ" tvg-logo="http://xdplayer.tv:8080/images/0387789fda401c7f28a7217f34f6ad7f.png" group-title="CANALES LITE",UNIVERSAL PREMIERE *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzs7DUYNlsxBZE82H5mNr7O
+#EXTINF:-1 xui-id="29681" tvg-id="FOX SPORTS 1 MX *FHD" tvg-name="FOX SPORTS 1 MX *LQ" tvg-logo="http://xdplayer.tv:8080/images/e171d72380b8c432416153fda91d4893.jpg" group-title="CANALES LITE",FOX SPORTS 1 MX *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyvXSMTIAj2s4arGE7ODzyE
+#EXTINF:-1 xui-id="29605" tvg-id="FOX SPORTS 2 AR *FHD" tvg-name="FOX SPORTS 2 AR *LQ" tvg-logo="http://xdplayer.tv:8080/images/c424571af2cf420f4331c6ac81394bb4.png" group-title="CANALES LITE",FOX SPORTS 2 AR *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyOSHoy7K60Vmn3VXllaIV4
+#EXTINF:-1 xui-id="29682" tvg-id="FOX SPORTS 2 MX *HD" tvg-name="FOX SPORTS 2 MX *LQ" tvg-logo="http://xdplayer.tv:8080/images/c424571af2cf420f4331c6ac81394bb4.png" group-title="CANALES LITE",FOX SPORTS 2 MX *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmz1dJK9wYC_j3JAaH9RPgv4
+#EXTINF:-1 xui-id="29606" tvg-id="FOX SPORTS 3 AR *FHD" tvg-name="FOX SPORTS 3 AR *LQ" tvg-logo="http://xdplayer.tv:8080/images/e171d72380b8c432416153fda91d4893.jpg" group-title="CANALES LITE",FOX SPORTS 3 AR *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzdcu2CNklbxlHVcKrbGZ-X
+#EXTINF:-1 xui-id="29607" tvg-id="FX *HD" tvg-name="FX *LQ" tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjlmmXnsW5hqqhPFniYa3xcR8HeQtNjjkSjL5ji_TG5i8jSrXq&s" group-title="CANALES LITE",FX *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwTYWgsn6ioPxz2xaf9wfFL
+#EXTINF:-1 xui-id="29608" tvg-id="EL GOURMET *FHD" tvg-name="EL GOURMET *LQ" tvg-logo="http://xdplayer.tv:8080/images/6b2e66cfda53181b82d0008f60882d1e.png" group-title="CANALES LITE",EL GOURMET *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmx4hbb-VGqpM64dsk6vT4Vm
+#EXTINF:-1 xui-id="29631" tvg-id="H2 *HD" tvg-name="H2 *LQ" tvg-logo="http://xdplayer.tv:8080/images/07ed1efcf78160f62ba3bee8605c127c.png" group-title="CANALES LITE",H2 *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzRv8mxOukp9HWtfHH-EZro
+#EXTINF:-1 xui-id="29574" tvg-id="HBO *HQ" tvg-name="HBO *LQ" tvg-logo="http://xdplayer.tv:8080/images/8d2e452d05564910a008b7fd7edff240.png" group-title="CANALES LITE",HBO *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyZMgvZxLYU5BQVeemt34Eu
+#EXTINF:-1 xui-id="29650" tvg-id="HBO + *HD" tvg-name="HBO + *LQ" tvg-logo="http://xdplayer.tv:8080/images/7bcda577a7e696b923437195afb56d77.png" group-title="CANALES LITE",HBO + *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzawnlxpCyjQ9GfsFMb3538
+#EXTINF:-1 xui-id="29648" tvg-id="HBO 2 *HD" tvg-name="HBO 2 *LQ" tvg-logo="http://xdplayer.tv:8080/images/faa7e961d242f50455ada329016e53b1.png" group-title="CANALES LITE",HBO 2 *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmw8ZsB55-NqYUxLTVEtSgWn
+#EXTINF:-1 xui-id="29649" tvg-id="HBO FAMILY *HQ" tvg-name="HBO FAMILY *LQ" tvg-logo="http://xdplayer.tv:8080/images/41af9d0a2c972e8199dda68ab49a9626.png" group-title="CANALES LITE",HBO FAMILY *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmz0Fh9Ity-acDSOMg06afkT
+#EXTINF:-1 xui-id="29635" tvg-id="HBO MUNDI *HD" tvg-name="HBO MUNDI *LQ" tvg-logo="http://xdplayer.tv:8080/images/629ddeb0d7cd5fce4e788eaaa8de56a9.png" group-title="CANALES LITE",HBO MUNDI *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmw0j1cy4W6dcwgEm6SSejOf
+#EXTINF:-1 xui-id="29661" tvg-id="HBO POP *HD" tvg-name="HBO POP *LQ" tvg-logo="http://xdplayer.tv:8080/images/181337454454399575b3af099ec02801.png" group-title="CANALES LITE",HBO POP *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwmjOWrUjUROprhSIihovaC
+#EXTINF:-1 xui-id="29651" tvg-id="HBO SIGNATURE *HD" tvg-name="HBO SIGNATURE *LQ" tvg-logo="http://xdplayer.tv:8080/images/cafc7d0f8a734ae8897b427d7f399992.png" group-title="CANALES LITE",HBO SIGNATURE *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyarQBsdKaduY4-bJYkMkbD
+#EXTINF:-1 xui-id="29636" tvg-id="HBO XTREME *LQ" tvg-name="HBO XTREME *LQ" tvg-logo="http://xdplayer.tv:8080/images/3f18946e2bb0342fdcbbeea5767668e6.png" group-title="CANALES LITE",HBO XTREME *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyvbnzEJ01bsoqeNXeg_ty4
+#EXTINF:-1 xui-id="29612" tvg-id="HISTORY *HQ" tvg-name="HISTORY *LQ" tvg-logo="http://xdplayer.tv:8080/images/0348d8fdb3b2bc9015dda6659bd9e354.jpg" group-title="CANALES LITE",HISTORY *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxZfYZODagdLQ4Y7lO7vj25
+#EXTINF:-1 xui-id="29660" tvg-id="HOLA TV *HQ" tvg-name="HOLA TV *LQ" tvg-logo="https://yt3.ggpht.com/a/AATXAJze-5NY0fYd6Kbh1_HPeYEy5_RwPiHoH538_w=s900-c-k-c0xffffffff-no-rj-mo" group-title="CANALES LITE",HOLA TV *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyXGFPzTrRsPxSVEJpfQzq8
+#EXTINF:-1 xui-id="29629" tvg-id="LIFETIME *HQ" tvg-name="LIFETIME *LQ" tvg-logo="http://xdplayer.tv:8080/images/b93a41f9f1dd5ee503c60f32ce0ccc58.png" group-title="CANALES LITE",LIFETIME *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyjYRKBs8LYEzmp94ePL3yi
+#EXTINF:-1 xui-id="29634" tvg-id="MAS CHIC *HD" tvg-name="MAS CHIC *LQ" tvg-logo="http://xdplayer.tv:8080/images/5118bcfb6836c79c5e238dfacd45c2e6.jpg" group-title="CANALES LITE",MAS CHIC *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmx9a4TA3csEihWcDx7Cxgac
+#EXTINF:-1 xui-id="29637" tvg-id="MU | MTV *HD" tvg-name="MTV *LQ" tvg-logo="http://xdplayer.tv:8080/images/90176b6b09a3da152eaa9e141b6e28c2.jpg" group-title="CANALES LITE",MTV *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmy1mP6ohvJlzW1hYIZpSHDK
+#EXTINF:-1 xui-id="29656" tvg-id="MU | MTV HITS *HD" tvg-name="MTV HITS *LQ" tvg-logo="http://xdplayer.tv:8080/images/e9eda3235bd73552d435181b654ab4c7.jpg" group-title="CANALES LITE",MTV HITS *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzFBpC7rLaSJaBM35GhF98r
+#EXTINF:-1 xui-id="29611" tvg-id="NAT GEO *HQ" tvg-name="NAT GEO *LQ" tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcS6sKoM7tnvf5f_c1C5gh3BUf9AgjPyEBAYY7SxznSK12qRq1K4&usqp=CAU" group-title="CANALES LITE",NAT GEO *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyUOsodaEQCbq-3l-YiscMG
+#EXTINF:-1 xui-id="29667" tvg-id="NICKELODEON *HD" tvg-name="NICK *LQ" tvg-logo="http://xdplayer.tv:8080/images/30c423752a2a1150ce24e5f68432936b.jpg" group-title="CANALES LITE",NICK *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxVfIGtzyqHlEHHzv9KPuZA
+#EXTINF:-1 xui-id="29639" tvg-id="NICK JR *HQ" tvg-name="NICK JR *LQ" tvg-logo="http://xdplayer.tv:8080/images/8dbda79cae2a7db2225f4a44ef0d6fb3.jpg" group-title="CANALES LITE",NICK JR *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmw66nALfjlz3XmMt8fQ78e4
+#EXTINF:-1 xui-id="29640" tvg-id="PARAMOUNT CHANNEL *HD" tvg-name="PARAMOUNT CHANNEL *LQ" tvg-logo="https://images.istreamplanet.net/w_222.22222222222223,c_limit/dtv-latam-prod/f30511e4-0495-4bf3-aaf4-d1188c9b615b.png" group-title="CANALES LITE",PARAMOUNT CHANNEL *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxOzDhUrDrjXh6W_Yliqu-1
+#EXTINF:-1 xui-id="29581" tvg-id="SONY CHANNEL *HD" tvg-name="SONY CHANNEL *LQ" tvg-logo="http://xdplayer.tv:8080/images/ac8fd7ea0deebaf2b5437dd858c1f4d7.png" group-title="CANALES LITE",SONY CHANNEL *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzWybiYPg_xVN7_sRSi_AcG
+#EXTINF:-1 xui-id="29573" tvg-id="SPACE *HD" tvg-name="SPACE *LQ" tvg-logo="http://xdplayer.tv:8080/images/911bb9e65ee933b9a1f0d5df349bee17.png" group-title="CANALES LITE",SPACE *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzib9ZiQ3nF4-TDga9neY6C
+#EXTINF:-1 xui-id="29641" tvg-id="STUDIO UNIVERSAL *HD" tvg-name="STUDIO UNIVERSAL *LQ" tvg-logo="http://xdplayer.tv:8080/images/1c9dbf2b2b17a1badbac7be4a425033d.jpg" group-title="CANALES LITE",STUDIO UNIVERSAL *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyRE7ngODklTuiZEyzOWKmW
+#EXTINF:-1 xui-id="29642" tvg-id="USA *LQ" tvg-name="USA *LQ" tvg-logo="http://xdplayer.tv:8080/images/ed77092124153fd402d2dd8b000ea6f7.png" group-title="CANALES LITE",USA *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzKSq5J-3O1OmLzrRlzQWTq
+#EXTINF:-1 xui-id="29643" tvg-id="TBS *HD" tvg-name="TNT NOVELAS *LQ" tvg-logo="http://xdplayer.tv:8080/images/13c42a7b1a92a8757d8df59da8ba88a7.png" group-title="CANALES LITE",TNT NOVELAS *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyw5SBU9P-kyESgytuW0ODZ
+#EXTINF:-1 xui-id="29644" tvg-id="TCM *HD" tvg-name="TCM *LQ" tvg-logo="http://xdplayer.tv:8080/images/7ce0bcf52242e7a1a23522dbd6b97de8.png" group-title="CANALES LITE",TCM *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxOR7jNP7WL652e8yzq8RMq
+#EXTINF:-1 xui-id="29669" tvg-id="TELEMUNDO *LQ" tvg-name="TELEMUNDO *LQ" tvg-logo="http://xdplayer.tv:8080/images/0577a5173f276bd84f70635cfb330d14.png" group-title="CANALES LITE",TELEMUNDO *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmy4AcfG3Wzc4KEDjF8dpB6t
+#EXTINF:-1 xui-id="29657" tvg-id="TLC *HD" tvg-name="TLC *LQ" tvg-logo="http://xdplayer.tv:8080/images/618158e46cf9a2b67ec2ca37b99e600f.png" group-title="CANALES LITE",TLC *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmydDWVX9IsBKGTnehHKy1Eo
+#EXTINF:-1 xui-id="29668" tvg-id="TNT *HD" tvg-name="TNT *LQ" tvg-logo="http://xdplayer.tv:8080/images/f0c24b631d3dc2a2c67037afa479dfa7.png" group-title="CANALES LITE",TNT *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwSqUrY2xq5qEhturYSTezt
+#EXTINF:-1 xui-id="29613" tvg-id="TNT SERIES *HD" tvg-name="TNT SERIES *LQ" tvg-logo="http://xdplayer.tv:8080/images/d53fbdc8e277e5f522b62a12dc3b48f5.png" group-title="CANALES LITE",TNT SERIES *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyWh28mFEwHEc90rcnnDr0E
+#EXTINF:-1 xui-id="29646" tvg-id="TOONCAST *HQ" tvg-name="TOONCAST *LQ" tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQ5hGtT9wHnbokr81Euv4xeyJG44Npg8Ewr9t6B5UCnfSn2zGQx&usqp=CAU" group-title="CANALES LITE",TOONCAST *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzjKt0IdULRi667oAB7mMmr
+#EXTINF:-1 xui-id="29579" tvg-id="ADULT SWIM *FHD" tvg-name="ADULT SWIM *LQ" tvg-logo="http://xdplayer.tv:8080/images/783badb9d3aed54788b5fceb90daea6a.png" group-title="CANALES LITE",ADULT SWIM *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmztBU3GQJ5xD0t6NZVGYlnt
+#EXTINF:-1 xui-id="29647" tvg-id="UNIVERSAL CHANNEL *HD" tvg-name="UNIVERSAL CHANNEL *LQ" tvg-logo="http://xdplayer.tv:8080/images/615d4938c46e7b96e0cadfa8d5ad8868.png" group-title="CANALES LITE",UNIVERSAL CHANNEL *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmy0uFQ_AzuOWMOKD_ZtxpmR
+#EXTINF:-1 xui-id="29658" tvg-id="MU | VH1 *HD" tvg-name="VH1 *LQ" tvg-logo="http://xdplayer.tv:8080/images/bf9653e3f7462d8893bdc82b455db56d.png" group-title="CANALES LITE",VH1 *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwG1N2Id6g8LewKX_C4f1m0
+#EXTINF:-1 xui-id="29655" tvg-id="MU | VH1 MEGAHITS *HD" tvg-name="VH1 MEGAHITS *LQ" tvg-logo="http://xdplayer.tv:8080/images/15142038613b92983f5e0a5545ebcfcd.png" group-title="CANALES LITE",VH1 MEGAHITS *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzrDjC21a7qQcb5bsm2UtXB
+#EXTINF:-1 xui-id="29609" tvg-id="WARNER CHANNEL *HD" tvg-name="WARNER CHANNEL *LQ" tvg-logo="http://xdplayer.tv:8080/images/a51dd99a4bce9b47015e4c4bc80a93cb.png" group-title="CANALES LITE",WARNER CHANNEL *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwrl1vL7m1FP2pCQpS8klff
+#EXTINF:-1 xui-id="53772" tvg-id="ANTENA 3 *FHD" tvg-name="ANTENA 3 *LQ" tvg-logo="http://xdplayer.tv:8080/images/69789821fb7ef3b27d4a633ae7900463.png" group-title="CANALES LITE",ANTENA 3 *LQ
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pLtj4W6vQKMT6IFJL5LZfhLf6NNYkw48wDM7WmwCqOyD
+#EXTINF:-1 xui-id="221712" tvg-id="" tvg-name="The Icon League" tvg-logo="http://xdplayer.tv:8080/images/168cc2888f831f0919dd3e17227a9115.png" group-title="PLUTO TV | ALEMANIA",The Icon League
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzQFp_Nk-9aStW5hRf4U4uf
+#EXTINF:-1 xui-id="221713" tvg-id="" tvg-name="Fifa+" tvg-logo="http://xdplayer.tv:8080/images/f7b286a764475715b5dcc39812566896.png" group-title="PLUTO TV | ALEMANIA",Fifa+
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmye1qjBd8keBj3dsZAYMr7s
+#EXTINF:-1 xui-id="221714" tvg-id="" tvg-name="Ladykracher" tvg-logo="http://xdplayer.tv:8080/images/42398665306528ac4722eade513f1dd3.png" group-title="PLUTO TV | ALEMANIA",Ladykracher
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyyyEW6gCNxGwzHFOIrkRHW
+#EXTINF:-1 xui-id="221715" tvg-id="" tvg-name="Big Brother Classic" tvg-logo="http://xdplayer.tv:8080/images/1e385574ee05dfea8828f66ec224e78d.png" group-title="PLUTO TV | ALEMANIA",Big Brother Classic
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmw8FoYifxTdf0fy0IKLYIyG
+#EXTINF:-1 xui-id="221716" tvg-id="" tvg-name="Pluto Tv Sharks" tvg-logo="http://xdplayer.tv:8080/images/30a4cd82a2f9e5f4029196ff5b3a4df1.png" group-title="PLUTO TV | ALEMANIA",Pluto Tv Sharks
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzCLQqHBJtVGGGE2lesUL25
+#EXTINF:-1 xui-id="221717" tvg-id="" tvg-name="Catfish: Neue Episoden" tvg-logo="http://xdplayer.tv:8080/images/3b54690f438ff0acf722570fd13257c4.png" group-title="PLUTO TV | ALEMANIA",Catfish: Neue Episoden
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmy7QflmNhOQbgAI-DYKFKOg
+#EXTINF:-1 xui-id="221718" tvg-id="" tvg-name="Eat Green Tv" tvg-logo="http://xdplayer.tv:8080/images/648742d4b57aa69b47d664f4781615c3.png" group-title="PLUTO TV | ALEMANIA",Eat Green Tv
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxQ6g_rZV0k7SxytwCgdIa3
+#EXTINF:-1 xui-id="221719" tvg-id="" tvg-name="Ned's Declassified School Survival Guide" tvg-logo="http://xdplayer.tv:8080/images/3936a88c103542c6a21c7234b3d4e22e.png" group-title="PLUTO TV | ALEMANIA",Ned's Declassified School Survival Guide
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxRgktHbvKP6k0D45gNqLmi
+#EXTINF:-1 xui-id="221720" tvg-id="" tvg-name="Stars In Gefahr" tvg-logo="http://xdplayer.tv:8080/images/ad43102616119524140578c8c8ffebca.png" group-title="PLUTO TV | ALEMANIA",Stars In Gefahr
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyKC8SABEKt72RCpbbY9OGk
+#EXTINF:-1 xui-id="221721" tvg-id="" tvg-name="Squash Tv" tvg-logo="http://xdplayer.tv:8080/images/1aaacd503bc464adfe2f60eb4c0c5b10.png" group-title="PLUTO TV | ALEMANIA",Squash Tv
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwMBZWuyzOKZLfBGSJT9eEE
+#EXTINF:-1 xui-id="221722" tvg-id="" tvg-name="Pluto Tv Crime On The Beach" tvg-logo="http://xdplayer.tv:8080/images/757d6c0ac3d94674eba49bc3d5bcb767.png" group-title="PLUTO TV | ALEMANIA",Pluto Tv Crime On The Beach
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwBWfglsTjSYfoxf-llj0nP
+#EXTINF:-1 xui-id="221723" tvg-id="" tvg-name="Star Trek: Voyager" tvg-logo="http://xdplayer.tv:8080/images/bcff3bef5747e91fd274f385ffb81f1b.png" group-title="PLUTO TV | ALEMANIA",Star Trek: Voyager
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmy7FlSGBZek2FxpIgLpspxZ
+#EXTINF:-1 xui-id="221724" tvg-id="" tvg-name="Star Trek: Deep Space Nine" tvg-logo="http://xdplayer.tv:8080/images/6e8cccac919498cc8f694aa854b6ad16.png" group-title="PLUTO TV | ALEMANIA",Star Trek: Deep Space Nine
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmypJr0XFssLzDaViBrtbP5W
+#EXTINF:-1 xui-id="221725" tvg-id="" tvg-name="Pluto Tv Star Trek" tvg-logo="http://xdplayer.tv:8080/images/6c9341eb07710725ac89db118991fbc9.png" group-title="PLUTO TV | ALEMANIA",Pluto Tv Star Trek
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxGdS3fTxCgKO9sdqiQqEtH
+#EXTINF:-1 xui-id="221726" tvg-id="" tvg-name="Pluto Tv: Mehr Star Trek" tvg-logo="http://xdplayer.tv:8080/images/232451a49932eb2b26c266feea634da1.png" group-title="PLUTO TV | ALEMANIA",Pluto Tv: Mehr Star Trek
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyAoj6HH9ld7aWnxdB1W9fk
+#EXTINF:-1 xui-id="221727" tvg-id="" tvg-name="Pridetv" tvg-logo="http://xdplayer.tv:8080/images/2df98343301b556d9c562d8d67a97cd9.png" group-title="PLUTO TV | ALEMANIA",Pridetv
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwDKpQPvHs20eE96klcL9OI
+#EXTINF:-1 xui-id="221728" tvg-id="" tvg-name="Pluto Tv Camp" tvg-logo="http://xdplayer.tv:8080/images/d20a740f207a52b196c426816ee95990.png" group-title="PLUTO TV | ALEMANIA",Pluto Tv Camp
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxmJFSM1dBNtJPLVPjnvBID
+#EXTINF:-1 xui-id="221729" tvg-id="" tvg-name="Schitt's Creek: David & Patrick!" tvg-logo="http://xdplayer.tv:8080/images/29e697cdd510619316847c40aed9b1ef.png" group-title="PLUTO TV | ALEMANIA",Schitt's Creek: David & Patrick!
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzQaj1Od3Nmp-V3YpmdjF8w
+#EXTINF:-1 xui-id="221730" tvg-id="" tvg-name="Mtv Pride" tvg-logo="http://xdplayer.tv:8080/images/87cb04b41c945f52c7ce23b9e6ed53e5.png" group-title="PLUTO TV | ALEMANIA",Mtv Pride
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxUowRjcmUbf6R5StiDG_ce
+#EXTINF:-1 xui-id="221731" tvg-id="" tvg-name="Pluto Tv Heiße Nächte" tvg-logo="http://xdplayer.tv:8080/images/7fa90191b7dbdd45083abe82f3f43351.png" group-title="PLUTO TV | ALEMANIA",Pluto Tv Heiße Nächte
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzpUlugSp8yHsSsHYQFSv6_
+#EXTINF:-1 xui-id="221732" tvg-id="" tvg-name="Red Shoe Diaries" tvg-logo="http://xdplayer.tv:8080/images/c1ebeddc5ba60ed922cc98d21c510e90.png" group-title="PLUTO TV | ALEMANIA",Red Shoe Diaries
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmx8zRntThuDym74yL6ceHsj
+#EXTINF:-1 xui-id="221733" tvg-id="" tvg-name="Euronews" tvg-logo="http://xdplayer.tv:8080/images/0ff550f88b31476f6946bb1553b40163.png" group-title="PLUTO TV | ALEMANIA",Euronews
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmz75Z_CBMM6ddJwNNZwpRir
+#EXTINF:-1 xui-id="221734" tvg-id="" tvg-name="Cbs News 24/7" tvg-logo="http://xdplayer.tv:8080/images/39823d70ff4f2d06f5345ee638e0a979.png" group-title="PLUTO TV | ALEMANIA",Cbs News 24/7
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzyc3muDjC7fVsvjdVb2_vM
+#EXTINF:-1 xui-id="221735" tvg-id="" tvg-name="Dazn Handball X Pluto Tv" tvg-logo="http://xdplayer.tv:8080/images/b249cdf40d52e37093d90f09113a590e.png" group-title="PLUTO TV | ALEMANIA",Dazn Handball X Pluto Tv
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwXqnDSk98XMNv-_aNK9Aur
+#EXTINF:-1 xui-id="221736" tvg-id="" tvg-name="Dazn Darts X Pluto Tv" tvg-logo="http://xdplayer.tv:8080/images/4b3e5cd190f93469719eec0225df9da2.png" group-title="PLUTO TV | ALEMANIA",Dazn Darts X Pluto Tv
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzSpsclejFbwGBPC0qNkOxP
+#EXTINF:-1 xui-id="221737" tvg-id="" tvg-name="Dazn Heldinnen X Pluto Tv" tvg-logo="http://xdplayer.tv:8080/images/906ffbe254afdc58ec3869213dadd09a.png" group-title="PLUTO TV | ALEMANIA",Dazn Heldinnen X Pluto Tv
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzXKMMJad9yzUWyqiuJhOyG
+#EXTINF:-1 xui-id="221738" tvg-id="" tvg-name="Scooore" tvg-logo="http://xdplayer.tv:8080/images/d7971108e7723f47c4386f11d6167e04.png" group-title="PLUTO TV | ALEMANIA",Scooore
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzxTS6YvcSnHwwMAz3R6Gyh
+#EXTINF:-1 xui-id="221739" tvg-id="" tvg-name="Realmadrid Tv" tvg-logo="http://xdplayer.tv:8080/images/a315d1cef926a5cb8dd5793ab0b2e022.png" group-title="PLUTO TV | ALEMANIA",Realmadrid Tv
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmz1_1AQ7i9ohmOKHsn9pm5z
+#EXTINF:-1 xui-id="221740" tvg-id="" tvg-name="Monster Jam" tvg-logo="http://xdplayer.tv:8080/images/0bfdc3d0335bce9abf5632b52abd9e29.png" group-title="PLUTO TV | ALEMANIA",Monster Jam
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmySRZgAJVxcBtPh5YwBAedk
+#EXTINF:-1 xui-id="221741" tvg-id="" tvg-name="Bellator Mma" tvg-logo="http://xdplayer.tv:8080/images/152d9ce1ce554066b7e7ec1de8819286.png" group-title="PLUTO TV | ALEMANIA",Bellator Mma
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxsbLG32F5sbEJTgPAjyZKz
+#EXTINF:-1 xui-id="221742" tvg-id="" tvg-name="World Poker Tour" tvg-logo="http://xdplayer.tv:8080/images/c21be8d6a15e964c8f591b85223e3fac.png" group-title="PLUTO TV | ALEMANIA",World Poker Tour
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwdYwbp28z-vhl9X_y1OYgV
+#EXTINF:-1 xui-id="221743" tvg-id="" tvg-name="Strongman" tvg-logo="http://xdplayer.tv:8080/images/2264d80035e6303ce0bd82a55fcf463a.png" group-title="PLUTO TV | ALEMANIA",Strongman
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyZf7wxuDESImEPumIh_T03
+#EXTINF:-1 xui-id="221744" tvg-id="" tvg-name="Billiard Tv" tvg-logo="http://xdplayer.tv:8080/images/4395f7c82cf0eaf392fef1018f761df2.png" group-title="PLUTO TV | ALEMANIA",Billiard Tv
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzrt_ngTsbtr8kaFcQULP6t
+#EXTINF:-1 xui-id="221745" tvg-id="" tvg-name="Action Sports" tvg-logo="http://xdplayer.tv:8080/images/6975a08b18d89a159db6a7c3c5b40dd1.png" group-title="PLUTO TV | ALEMANIA",Action Sports
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwiNyPgQkw9-ioVkbP3vj_G
+#EXTINF:-1 xui-id="221746" tvg-id="" tvg-name="Top Gear" tvg-logo="http://xdplayer.tv:8080/images/83a08ce7bf7bdb2b985520daf69011d0.png" group-title="PLUTO TV | ALEMANIA",Top Gear
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmz7seZU6eiAGMf2GaOZRDPF
+#EXTINF:-1 xui-id="221747" tvg-id="" tvg-name="Bloch Erklärt" tvg-logo="http://xdplayer.tv:8080/images/15104a57d8c10ed19955a47a0dacc474.png" group-title="PLUTO TV | ALEMANIA",Bloch Erklärt
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzIPN_wLsweDDXq62xwvtnE
+#EXTINF:-1 xui-id="221748" tvg-id="" tvg-name="Garagengold" tvg-logo="http://xdplayer.tv:8080/images/86d19b42ce8f435786a766beb81be7a9.png" group-title="PLUTO TV | ALEMANIA",Garagengold
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwV2Calriakm7VzRVJZLqqB
+#EXTINF:-1 xui-id="221749" tvg-id="" tvg-name="Auto Motor Sport" tvg-logo="http://xdplayer.tv:8080/images/ccba3101ed9106738f0a275fb955c1ef.png" group-title="PLUTO TV | ALEMANIA",Auto Motor Sport
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzfDxBiJDm2vXiTCDSxCl3Z
+#EXTINF:-1 xui-id="221750" tvg-id="" tvg-name="Motorvision" tvg-logo="http://xdplayer.tv:8080/images/1d9706d5858ed06f49a67f20e7a4085c.png" group-title="PLUTO TV | ALEMANIA",Motorvision
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzcjuEB13uwfViVIn_179I6
+#EXTINF:-1 xui-id="221751" tvg-id="" tvg-name="Moviepilot Tv Mit Pluto Tv" tvg-logo="http://xdplayer.tv:8080/images/3b98c2dade3f6061cdf67000f603fa8f.png" group-title="PLUTO TV | ALEMANIA",Moviepilot Tv Mit Pluto Tv
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzjNAMwa563QUCczrXGDAfF
+#EXTINF:-1 xui-id="221752" tvg-id="" tvg-name="Pluto Tv Deutsches Kino" tvg-logo="http://xdplayer.tv:8080/images/8a727f08912da118bc8d43e3b11028f0.png" group-title="PLUTO TV | ALEMANIA",Pluto Tv Deutsches Kino
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzgZ-S4RVj05MBpVvkC1gsM
+#EXTINF:-1 xui-id="221753" tvg-id="" tvg-name="Pluto Tv Romance" tvg-logo="http://xdplayer.tv:8080/images/c82d614caaf34bf4fc0a9f12ec8c77eb.png" group-title="PLUTO TV | ALEMANIA",Pluto Tv Romance
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzfxeDydQZ6DAPZ0JrvgXx7
+#EXTINF:-1 xui-id="221754" tvg-id="" tvg-name="Pluto Tv Knallhart" tvg-logo="http://xdplayer.tv:8080/images/6b88878df1467aa96ea1ddfd8c98cbfe.png" group-title="PLUTO TV | ALEMANIA",Pluto Tv Knallhart
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzEbBQg-GXlTZzf6I82GPrF
+#EXTINF:-1 xui-id="221755" tvg-id="" tvg-name="Pluto Tv Kultfilme" tvg-logo="http://xdplayer.tv:8080/images/6fa49f7dce5342830ac29a00eee3c92d.png" group-title="PLUTO TV | ALEMANIA",Pluto Tv Kultfilme
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwUPtMpzz1Qi0oGfz5PUewH
+#EXTINF:-1 xui-id="221756" tvg-id="" tvg-name="Pluto Tv Indies" tvg-logo="http://xdplayer.tv:8080/images/2a34876d60357753d7615f10ac7b67f8.png" group-title="PLUTO TV | ALEMANIA",Pluto Tv Indies
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxqUrSXmDwq9B5eAb5w9q5V
+#EXTINF:-1 xui-id="221757" tvg-id="" tvg-name="Pluto Tv Kino Filme" tvg-logo="http://xdplayer.tv:8080/images/c9f9e737d39db0bbc60f7c9b3314e5bc.png" group-title="PLUTO TV | ALEMANIA",Pluto Tv Kino Filme
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmx6nNo11t5NGYiphxlSq_3w
+#EXTINF:-1 xui-id="221758" tvg-id="" tvg-name="Pluto Tv Movies" tvg-logo="http://xdplayer.tv:8080/images/005f4b5eade5230688ea7b5797d038f8.png" group-title="PLUTO TV | ALEMANIA",Pluto Tv Movies
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxlparWZUvuUp1QFxuPDib4
+#EXTINF:-1 xui-id="221759" tvg-id="" tvg-name="Moviedome" tvg-logo="http://xdplayer.tv:8080/images/a921b9010e9a92d142c1e1deda580987.png" group-title="PLUTO TV | ALEMANIA",Moviedome
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxo5fFko7DRuwlkX_Qoor0r
+#EXTINF:-1 xui-id="221760" tvg-id="" tvg-name="Pluto Tv Horror" tvg-logo="http://xdplayer.tv:8080/images/fcbcd6d1f4a4f07da6aea888b1d24097.png" group-title="PLUTO TV | ALEMANIA",Pluto Tv Horror
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwlN5Mm6q0j4OUWYptrgXZU
+#EXTINF:-1 xui-id="221761" tvg-id="" tvg-name="Filmgold" tvg-logo="http://xdplayer.tv:8080/images/311b51059271088d62ddabb1e856f589.png" group-title="PLUTO TV | ALEMANIA",Filmgold
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzHRnbHpSKTTMf69-K6Yhz2
+#EXTINF:-1 xui-id="221762" tvg-id="" tvg-name="Pluto Tv Liebt John Wayne" tvg-logo="http://xdplayer.tv:8080/images/f55756ec6d98237896bd726f05ea789f.png" group-title="PLUTO TV | ALEMANIA",Pluto Tv Liebt John Wayne
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyqZSpNzz1l_WemfNqn1Geb
+#EXTINF:-1 xui-id="221763" tvg-id="" tvg-name="Rauchende Colts" tvg-logo="http://xdplayer.tv:8080/images/066ceb589280473dadc37e3b351a68fe.png" group-title="PLUTO TV | ALEMANIA",Rauchende Colts
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzZ8Si5zZTjdATDeiTjlcSn
+#EXTINF:-1 xui-id="221764" tvg-id="" tvg-name="Pluto Tv Western" tvg-logo="http://xdplayer.tv:8080/images/e5caa63b8e5fb26f710c75d4756bd5a8.png" group-title="PLUTO TV | ALEMANIA",Pluto Tv Western
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzDR9RFfj9LPmMPFNqGfdmi
+#EXTINF:-1 xui-id="221765" tvg-id="" tvg-name="Rawhide - Tausend Meilen Staub" tvg-logo="http://xdplayer.tv:8080/images/d6b10a88fd39d86684b1038011bfd647.png" group-title="PLUTO TV | ALEMANIA",Rawhide - Tausend Meilen Staub
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzF3YExhJWxdYWwPJTvK4Yz
+#EXTINF:-1 xui-id="221766" tvg-id="" tvg-name="Fury" tvg-logo="http://xdplayer.tv:8080/images/00bce52c8eec9334dcf4de6055137834.png" group-title="PLUTO TV | ALEMANIA",Fury
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzzglbKE0P6P_RprcjZflP4
+#EXTINF:-1 xui-id="221767" tvg-id="" tvg-name="Comedy Central South Park" tvg-logo="http://xdplayer.tv:8080/images/b5496cc5eccb6262e7ac6b1e17071dba.png" group-title="PLUTO TV | ALEMANIA",Comedy Central South Park
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmw6UOcuYWhJw-sNEz6VJNr-
+#EXTINF:-1 xui-id="221768" tvg-id="" tvg-name="South Park: Kenny Collection" tvg-logo="http://xdplayer.tv:8080/images/7dc6b38f8b118b3038abf7273a087ce3.png" group-title="PLUTO TV | ALEMANIA",South Park: Kenny Collection
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmw-f80cWNLclPiTwEzgnk6M
+#EXTINF:-1 xui-id="221769" tvg-id="" tvg-name="South Park: Stan Collection" tvg-logo="http://xdplayer.tv:8080/images/383a42c5760a4b9bce845f174aff571d.png" group-title="PLUTO TV | ALEMANIA",South Park: Stan Collection
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyfO6vln1VU45mWR75RjqXo
+#EXTINF:-1 xui-id="221770" tvg-id="" tvg-name="South Park: Cartman Collection" tvg-logo="http://xdplayer.tv:8080/images/ee112efd7866f0b412a2c3d3019ee04b.png" group-title="PLUTO TV | ALEMANIA",South Park: Cartman Collection
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzydWco5Y9knDg-qllYpOlQ
+#EXTINF:-1 xui-id="221771" tvg-id="" tvg-name="South Park: Butters Collection" tvg-logo="http://xdplayer.tv:8080/images/48e2a890f7868ae55cfdea61ea5fff43.png" group-title="PLUTO TV | ALEMANIA",South Park: Butters Collection
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxHtbDbWUnn2s15dBFvVazc
+#EXTINF:-1 xui-id="221772" tvg-id="" tvg-name="South Park: Kyle Collection" tvg-logo="http://xdplayer.tv:8080/images/f00b8b8d71dca5314b9dbc3e28664b0d.png" group-title="PLUTO TV | ALEMANIA",South Park: Kyle Collection
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzNgZO7fi-yKarl5-Yk0Nmd
+#EXTINF:-1 xui-id="221773" tvg-id="" tvg-name="South Park: Original Version" tvg-logo="http://xdplayer.tv:8080/images/6ca0f3686fe5f4a9a96a53e560a0c58f.png" group-title="PLUTO TV | ALEMANIA",South Park: Original Version
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzhjeb-9tIBgOOirnvULQ9_
+#EXTINF:-1 xui-id="221774" tvg-id="" tvg-name="South Park: Stars & Sternchen" tvg-logo="http://xdplayer.tv:8080/images/e703f6559bc489684180846b8db05ac8.png" group-title="PLUTO TV | ALEMANIA",South Park: Stars & Sternchen
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyXiKYxhZw_w5V7vBsuSSnQ
+#EXTINF:-1 xui-id="221775" tvg-id="" tvg-name="Schitt's Creek" tvg-logo="http://xdplayer.tv:8080/images/960862b825ca388184c99421443c6224.png" group-title="PLUTO TV | ALEMANIA",Schitt's Creek
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxBE3vpIvcTp-7tOnebQeR3
+#EXTINF:-1 xui-id="221776" tvg-id="" tvg-name="Community" tvg-logo="http://xdplayer.tv:8080/images/c7515091dbc35c216421fb864e9cacbc.png" group-title="PLUTO TV | ALEMANIA",Community
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyjKR8_B9QuKYujbOrU62G3
+#EXTINF:-1 xui-id="221777" tvg-id="" tvg-name="Parker Lewis – Der Coole Von Der Schule" tvg-logo="http://xdplayer.tv:8080/images/0a25b01d65acb5a478b126f9ee78ee0e.png" group-title="PLUTO TV | ALEMANIA",Parker Lewis – Der Coole Von Der Schule
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwH_TC3ocYXnM3XNoxTfUH3
+#EXTINF:-1 xui-id="221778" tvg-id="" tvg-name="Anger Management" tvg-logo="http://xdplayer.tv:8080/images/1af7fb967e04123238f3de906d2127f1.png" group-title="PLUTO TV | ALEMANIA",Anger Management
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwcxYArFa9-NQfk9tmkEuxV
+#EXTINF:-1 xui-id="221779" tvg-id="" tvg-name="Frasier" tvg-logo="http://xdplayer.tv:8080/images/ed01001005709ce25d994d7cd6037623.png" group-title="PLUTO TV | ALEMANIA",Frasier
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwBRe2c1T32j65rETgEL1DV
+#EXTINF:-1 xui-id="221780" tvg-id="" tvg-name="Familienbande" tvg-logo="http://xdplayer.tv:8080/images/b8939a7ad8885f4f769b7cd7e4be8e4b.png" group-title="PLUTO TV | ALEMANIA",Familienbande
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyTD3wTU_30Na4hkdmUD5GB
+#EXTINF:-1 xui-id="221781" tvg-id="" tvg-name="Mork Vom Ork" tvg-logo="http://xdplayer.tv:8080/images/542c0026e72fa443f9f64cdf90d0fb26.png" group-title="PLUTO TV | ALEMANIA",Mork Vom Ork
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyhn-Mo4SnxJImkktH_qCkD
+#EXTINF:-1 xui-id="221782" tvg-id="" tvg-name="Hausmeister Krause" tvg-logo="http://xdplayer.tv:8080/images/cf9069f3e5c5b1e468cc0bcade6f2649.png" group-title="PLUTO TV | ALEMANIA",Hausmeister Krause
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyAhxDi2ek82rBxt2h9AxHL
+#EXTINF:-1 xui-id="221783" tvg-id="" tvg-name="Axel!" tvg-logo="http://xdplayer.tv:8080/images/e4a58960f51e979ad254f13509a6a209.png" group-title="PLUTO TV | ALEMANIA",Axel!
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyp_u0-k7n3tcJGgaHkoZuq
+#EXTINF:-1 xui-id="221784" tvg-id="" tvg-name="Pluto Tv Deutsche Sitcoms" tvg-logo="http://xdplayer.tv:8080/images/7f7e38affc3304c70bbebaf52129dff7.png" group-title="PLUTO TV | ALEMANIA",Pluto Tv Deutsche Sitcoms
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyASPLy55ZXi0O2fSHEEm3-
+#EXTINF:-1 xui-id="221785" tvg-id="" tvg-name="Dittsche" tvg-logo="http://xdplayer.tv:8080/images/81b561a09199f235431886cddbe4429b.png" group-title="PLUTO TV | ALEMANIA",Dittsche
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyzKkPCFXKyPU-l-QXZ6Ezf
+#EXTINF:-1 xui-id="221786" tvg-id="" tvg-name="Wings – Die Überflieger" tvg-logo="http://xdplayer.tv:8080/images/ed81cfb920b7cfb5e0f01c18e9950f8f.png" group-title="PLUTO TV | ALEMANIA",Wings – Die Überflieger
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwf-GGvwmk96Ohg7XaUHTIU
+#EXTINF:-1 xui-id="221787" tvg-id="" tvg-name="Cheers" tvg-logo="http://xdplayer.tv:8080/images/e767bfb2a9093b703980855e8177913f.png" group-title="PLUTO TV | ALEMANIA",Cheers
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwK0sNlgB2GQ3mMjpJfWHNO
+#EXTINF:-1 xui-id="221788" tvg-id="" tvg-name="Becker" tvg-logo="http://xdplayer.tv:8080/images/421fadab0c66b417a7e0912ba87433d9.png" group-title="PLUTO TV | ALEMANIA",Becker
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzRXIq7_lVhsOPMm4WTAG8D
+#EXTINF:-1 xui-id="221789" tvg-id="" tvg-name="Chaos City" tvg-logo="http://xdplayer.tv:8080/images/3c83e8f296edace84de38ce8e007c9ba.png" group-title="PLUTO TV | ALEMANIA",Chaos City
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyLWmI4VNwv0i8CQYpqe6Zt
+#EXTINF:-1 xui-id="221790" tvg-id="" tvg-name="Alle Hassen Chris" tvg-logo="http://xdplayer.tv:8080/images/1c206dd86f1a65e40567d7d856321c68.png" group-title="PLUTO TV | ALEMANIA",Alle Hassen Chris
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyQOLZNMCVhwoXKivyPaA3S
+#EXTINF:-1 xui-id="221791" tvg-id="" tvg-name="Sabrina - Total Verhext!" tvg-logo="http://xdplayer.tv:8080/images/b0a9d27886b6c75bb6b7744ff257d0c0.png" group-title="PLUTO TV | ALEMANIA",Sabrina - Total Verhext!
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyRtYkT5E3URAqp490NRXGg
+#EXTINF:-1 xui-id="221792" tvg-id="" tvg-name="Rules Of Engagement" tvg-logo="http://xdplayer.tv:8080/images/09dd315feeb66e1e91d1c1c5902ef808.png" group-title="PLUTO TV | ALEMANIA",Rules Of Engagement
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmy6y91lrcTBk7sZvEhOmhhW
+#EXTINF:-1 xui-id="221793" tvg-id="" tvg-name="Pluto Tv Sitcoms" tvg-logo="http://xdplayer.tv:8080/images/44e05facf8ae1f5083143cc6229e702e.png" group-title="PLUTO TV | ALEMANIA",Pluto Tv Sitcoms
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxG2X9GJh8xBBjqv2Ao7HK-
+#EXTINF:-1 xui-id="221794" tvg-id="" tvg-name="Robocop" tvg-logo="http://xdplayer.tv:8080/images/3508bb618aa49255f9739fd7ba455aef.png" group-title="PLUTO TV | ALEMANIA",Robocop
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyRSFZs4HuDEXtTkNwvnFnw
+#EXTINF:-1 xui-id="221795" tvg-id="" tvg-name="Viper" tvg-logo="http://xdplayer.tv:8080/images/b822d8339f1095cb75c8b3f3725597eb.png" group-title="PLUTO TV | ALEMANIA",Viper
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmy6TKWEIPi7eH_habB9ebO8
+#EXTINF:-1 xui-id="221796" tvg-id="" tvg-name="Pluto Tv Sci-fi" tvg-logo="http://xdplayer.tv:8080/images/d8d20c41bcd3efef20d2394b710da3bc.png" group-title="PLUTO TV | ALEMANIA",Pluto Tv Sci-fi
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmw0XcdFjpbg-01sZiyyMBPv
+#EXTINF:-1 xui-id="221797" tvg-id="" tvg-name="The Outpost" tvg-logo="http://xdplayer.tv:8080/images/ab00cee39453ffbcea8d58f81cc33aae.png" group-title="PLUTO TV | ALEMANIA",The Outpost
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzjtqWrAJsLryz3KOy8U3Rv
+#EXTINF:-1 xui-id="221798" tvg-id="" tvg-name="Dark Matter" tvg-logo="http://xdplayer.tv:8080/images/3eec92c8567ae5c50c6d6f266ebdda80.png" group-title="PLUTO TV | ALEMANIA",Dark Matter
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyw7K59ndKInF5-713XBnlT
+#EXTINF:-1 xui-id="221799" tvg-id="" tvg-name="Ein Engel Auf Erden" tvg-logo="http://xdplayer.tv:8080/images/acd3c828304151b79736487c6d861a5d.png" group-title="PLUTO TV | ALEMANIA",Ein Engel Auf Erden
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmycGn6PvduDamSBR4aYjRYE
+#EXTINF:-1 xui-id="221800" tvg-id="" tvg-name="Csi: Cyber" tvg-logo="http://xdplayer.tv:8080/images/b33dbe1746f7471a33d321400e0bc7fd.png" group-title="PLUTO TV | ALEMANIA",Csi: Cyber
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxSwxYCQNLEQZqC_Unr-YAL
+#EXTINF:-1 xui-id="221801" tvg-id="" tvg-name="Trio Mit Vier Fäusten" tvg-logo="http://xdplayer.tv:8080/images/38eaabd53c0c7e487f4174b44ffb6713.png" group-title="PLUTO TV | ALEMANIA",Trio Mit Vier Fäusten
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxVpivmCCnII0uzqITUd6cE
+#EXTINF:-1 xui-id="221802" tvg-id="" tvg-name="Der Sentinel – Im Auge Des Jägers" tvg-logo="http://xdplayer.tv:8080/images/4f785b6357b1f372c59278c554942235.png" group-title="PLUTO TV | ALEMANIA",Der Sentinel – Im Auge Des Jägers
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzJpwUu5VeZ2xRUcv3m5yDe
+#EXTINF:-1 xui-id="221803" tvg-id="" tvg-name="Pensacola – Flügel Aus Stahl" tvg-logo="http://xdplayer.tv:8080/images/5473bfddaabe4e5832745315c658ad95.png" group-title="PLUTO TV | ALEMANIA",Pensacola – Flügel Aus Stahl
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxIpBb3X1EBZeUk7NWiCLwH
+#EXTINF:-1 xui-id="221804" tvg-id="" tvg-name="Republic Of Doyle" tvg-logo="http://xdplayer.tv:8080/images/45a2198cbdd790b44d8c9704ec3379c8.png" group-title="PLUTO TV | ALEMANIA",Republic Of Doyle
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyfeUFiaOGrM31bHWOIVocQ
+#EXTINF:-1 xui-id="221805" tvg-id="" tvg-name="Kultkrimi" tvg-logo="http://xdplayer.tv:8080/images/1bb789c488eb7211359e86d2b1cfa769.png" group-title="PLUTO TV | ALEMANIA",Kultkrimi
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwzJKGamoFXHsW7ho0W02vM
+#EXTINF:-1 xui-id="221806" tvg-id="" tvg-name="Kultkrimi: Derrick" tvg-logo="http://xdplayer.tv:8080/images/89d25dc9803c2f4017090944f6e7a7a0.png" group-title="PLUTO TV | ALEMANIA",Kultkrimi: Derrick
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxGyzZnjeolqJCVMRIv2sua
+#EXTINF:-1 xui-id="221807" tvg-id="" tvg-name="Kultkrimi: Der Alte" tvg-logo="http://xdplayer.tv:8080/images/652d96f181203f7bff474ba47416d29b.png" group-title="PLUTO TV | ALEMANIA",Kultkrimi: Der Alte
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwGbFyrFsjHx6WNuEPn8msz
+#EXTINF:-1 xui-id="221808" tvg-id="" tvg-name="Kultkrimi: Der Kommissar" tvg-logo="http://xdplayer.tv:8080/images/72929cd4d5f0a56ea26100eb6063cb51.png" group-title="PLUTO TV | ALEMANIA",Kultkrimi: Der Kommissar
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxt22QYa9PPi7RdffI33dbP
+#EXTINF:-1 xui-id="221809" tvg-id="" tvg-name="Perry Mason" tvg-logo="http://xdplayer.tv:8080/images/b22f1b8557e094c9e882ccaf00d67a61.png" group-title="PLUTO TV | ALEMANIA",Perry Mason
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzosqs7-JWJ-F8Fwy5X4huY
+#EXTINF:-1 xui-id="221810" tvg-id="" tvg-name="Pluto Tv Polizeiserien" tvg-logo="http://xdplayer.tv:8080/images/cc62f18c102af53765b8177cbc368947.png" group-title="PLUTO TV | ALEMANIA",Pluto Tv Polizeiserien
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwaLnPtXYEpeXDSYQ9-Pqpz
+#EXTINF:-1 xui-id="221811" tvg-id="" tvg-name="Pluto Tv Crime" tvg-logo="http://xdplayer.tv:8080/images/b77158ae2bb93fcc78a1a25a747b2d2a.png" group-title="PLUTO TV | ALEMANIA",Pluto Tv Crime
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyLN6iN7yqITpjhSs7Llfdy
+#EXTINF:-1 xui-id="221812" tvg-id="" tvg-name="Auf Achse" tvg-logo="http://xdplayer.tv:8080/images/a674ea7375bd88dbe5455a0f993303f4.png" group-title="PLUTO TV | ALEMANIA",Auf Achse
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzq4V3vzZm1ndykdP4jtp4R
+#EXTINF:-1 xui-id="221813" tvg-id="" tvg-name="Mission Impossible" tvg-logo="http://xdplayer.tv:8080/images/08e3477778a5b8b47d6d48cc782fe4a5.png" group-title="PLUTO TV | ALEMANIA",Mission Impossible
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmw0IQjlEaGs8XJ4Ia-pi--d
+#EXTINF:-1 xui-id="221814" tvg-id="" tvg-name="V.i.p. – Die Bodyguards" tvg-logo="http://xdplayer.tv:8080/images/4849b70e2a4220e7bb9012cd7b6633d4.png" group-title="PLUTO TV | ALEMANIA",V.i.p. – Die Bodyguards
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmw-5ZFoYBePm-v-MovnhI-0
+#EXTINF:-1 xui-id="221815" tvg-id="" tvg-name="Baywatch" tvg-logo="http://xdplayer.tv:8080/images/2686f87815724ab31aeda1aea420703c.png" group-title="PLUTO TV | ALEMANIA",Baywatch
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxHTV03maOSJzCOtQ0vQQos
+#EXTINF:-1 xui-id="221816" tvg-id="" tvg-name="Hawaii Fünf-null" tvg-logo="http://xdplayer.tv:8080/images/d0753bd808f3742c9e395958528e5e74.png" group-title="PLUTO TV | ALEMANIA",Hawaii Fünf-null
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyT4bl6SXdcox0K196Jh8Sm
+#EXTINF:-1 xui-id="221817" tvg-id="" tvg-name="Pacific Blue" tvg-logo="http://xdplayer.tv:8080/images/ced13b085000994571698981f050d33e.png" group-title="PLUTO TV | ALEMANIA",Pacific Blue
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmy6_f9U-Pe-8FuCTtaGomsa
+#EXTINF:-1 xui-id="221818" tvg-id="" tvg-name="Love Boat" tvg-logo="http://xdplayer.tv:8080/images/82ea2b24dee9aa7db523dc953b8980c1.png" group-title="PLUTO TV | ALEMANIA",Love Boat
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwnnyUFrJZsvt26xJjt6Gcc
+#EXTINF:-1 xui-id="221819" tvg-id="" tvg-name="Reich Und Schön" tvg-logo="http://xdplayer.tv:8080/images/7606a706cd7249898ee7b90e75c80e75.png" group-title="PLUTO TV | ALEMANIA",Reich Und Schön
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzJl7Xx5mrDy4aQULNp_Pg2
+#EXTINF:-1 xui-id="221820" tvg-id="" tvg-name="Familie Dr. Kleist" tvg-logo="http://xdplayer.tv:8080/images/df6d45e0a8139b766ce0b8e4d631bbe3.png" group-title="PLUTO TV | ALEMANIA",Familie Dr. Kleist
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzEi1jKNemUB1PknsWGUfD_
+#EXTINF:-1 xui-id="221821" tvg-id="" tvg-name="Der Denver-clan" tvg-logo="http://xdplayer.tv:8080/images/b079bb4803f5e054c4191ae7190ddea1.png" group-title="PLUTO TV | ALEMANIA",Der Denver-clan
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxr_MulkUydcq9pyf-TCwpz
+#EXTINF:-1 xui-id="221822" tvg-id="" tvg-name="Die Schöne Und Das Biest" tvg-logo="http://xdplayer.tv:8080/images/2b479564612ffdd9a47f67d2a4e706ae.png" group-title="PLUTO TV | ALEMANIA",Die Schöne Und Das Biest
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmziYSXiFcmkROZJr9PI8C2J
+#EXTINF:-1 xui-id="221823" tvg-id="" tvg-name="Telenovela Zdf" tvg-logo="http://xdplayer.tv:8080/images/5ea847181bdde6d7f9fcd2cae2295aab.png" group-title="PLUTO TV | ALEMANIA",Telenovela Zdf
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzg--2P7MLekReOM-MT3ZD1
+#EXTINF:-1 xui-id="221824" tvg-id="" tvg-name="Nurse Jackie" tvg-logo="http://xdplayer.tv:8080/images/4443230cc021d4f2da3d2e1beb23d0e7.png" group-title="PLUTO TV | ALEMANIA",Nurse Jackie
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyBM1DnB6o-jHOTCP_P3baI
+#EXTINF:-1 xui-id="221825" tvg-id="" tvg-name="Pluto Tv Power Frauen" tvg-logo="http://xdplayer.tv:8080/images/d8364a6e921d21e7d0a187a39fb906c5.png" group-title="PLUTO TV | ALEMANIA",Pluto Tv Power Frauen
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwLkvjsac_-N4zrSo5HogKq
+#EXTINF:-1 xui-id="221826" tvg-id="" tvg-name="Melrose Place" tvg-logo="http://xdplayer.tv:8080/images/1c08147c548fed6436ee21b75011ff7f.png" group-title="PLUTO TV | ALEMANIA",Melrose Place
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzjPk6OBJaawZ-h_U3Sgqs8
+#EXTINF:-1 xui-id="221827" tvg-id="" tvg-name="90210" tvg-logo="http://xdplayer.tv:8080/images/81f3376058209716ab4303610e53667a.png" group-title="PLUTO TV | ALEMANIA",90210
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwkoNn1ZwBpWJ6gRJDn9nsF
+#EXTINF:-1 xui-id="221828" tvg-id="" tvg-name="Beverly Hills 90210" tvg-logo="http://xdplayer.tv:8080/images/82f03993d95b229e07b78262e7d37106.png" group-title="PLUTO TV | ALEMANIA",Beverly Hills 90210
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmziXxzFCs1pPMxQcFV_OUV9
+#EXTINF:-1 xui-id="221829" tvg-id="" tvg-name="Awkward" tvg-logo="http://xdplayer.tv:8080/images/2b1e87434e0d198bfa7d9b3a7f1cba15.png" group-title="PLUTO TV | ALEMANIA",Awkward
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxhDyCNqcH_nlP8aM-JI_lL
+#EXTINF:-1 xui-id="221830" tvg-id="" tvg-name="Pluto Tv Serie" tvg-logo="http://xdplayer.tv:8080/images/3e1094c0b466ffe2b2b85059146c3e44.png" group-title="PLUTO TV | ALEMANIA",Pluto Tv Serie
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxO3qWc-GgCqFeikNO5zg_c
+#EXTINF:-1 xui-id="221831" tvg-id="" tvg-name="Das Haus Am Eaton Place" tvg-logo="http://xdplayer.tv:8080/images/21ed5281346f3c22d51ae50c32cab6be.png" group-title="PLUTO TV | ALEMANIA",Das Haus Am Eaton Place
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwAJGuBzGiLjPCzL_oB7GXF
+#EXTINF:-1 xui-id="221832" tvg-id="" tvg-name="Praxis Bülowbogen" tvg-logo="http://xdplayer.tv:8080/images/d2388a3eb577d796474c9d7e25fc1fbb.png" group-title="PLUTO TV | ALEMANIA",Praxis Bülowbogen
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzin4xbCyqypmD4CEfMUkn2
+#EXTINF:-1 xui-id="221833" tvg-id="" tvg-name="The Twilight Zone" tvg-logo="http://xdplayer.tv:8080/images/aae2dc987362d01feb8a0944bb3c0e8e.png" group-title="PLUTO TV | ALEMANIA",The Twilight Zone
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmy6rn_8h3a97pCgjTbiekmD
+#EXTINF:-1 xui-id="221834" tvg-id="" tvg-name="Mtv Serie" tvg-logo="http://xdplayer.tv:8080/images/248303d48352becdb919aa2373e112e7.png" group-title="PLUTO TV | ALEMANIA",Mtv Serie
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmz2PLz34AHEqKeBttQ2FZbP
+#EXTINF:-1 xui-id="221835" tvg-id="" tvg-name="Pluto Tv Dizikolik" tvg-logo="http://xdplayer.tv:8080/images/cbd71f57db29e1f7517c17ddaa30c48b.png" group-title="PLUTO TV | ALEMANIA",Pluto Tv Dizikolik
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzlnb9stQBZ1FL3yNooTfYx
+#EXTINF:-1 xui-id="221836" tvg-id="" tvg-name="Yüksek Sosyete – High Society" tvg-logo="http://xdplayer.tv:8080/images/71655f093c9e0d1298d7ab8d6d96eaf9.png" group-title="PLUTO TV | ALEMANIA",Yüksek Sosyete – High Society
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxc0KlZjCQsDziFPNGsINts
+#EXTINF:-1 xui-id="221837" tvg-id="" tvg-name="Çilek Kokusu – Strawberry Smell" tvg-logo="http://xdplayer.tv:8080/images/e660296976c9484b28f2fd6f310140a0.png" group-title="PLUTO TV | ALEMANIA",Çilek Kokusu – Strawberry Smell
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmz5VJamPVDEPYLfWdpGu45m
+#EXTINF:-1 xui-id="221838" tvg-id="" tvg-name="Naruto" tvg-logo="http://xdplayer.tv:8080/images/22fef711fa9eb7bf3da9e9e29e30a0e2.png" group-title="PLUTO TV | ALEMANIA",Naruto
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyhAXh-r9O7yqsn732LzO-d
+#EXTINF:-1 xui-id="221839" tvg-id="" tvg-name="Akiba Pass Tv Anime: Sport" tvg-logo="http://xdplayer.tv:8080/images/227a79affa1937d407aa1a0908cb31dd.png" group-title="PLUTO TV | ALEMANIA",Akiba Pass Tv Anime: Sport
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzeWhi3wDKvkBo9C4HsHUFI
+#EXTINF:-1 xui-id="221840" tvg-id="" tvg-name="Assassination Classroom" tvg-logo="http://xdplayer.tv:8080/images/e490f363bfee5b808b1cbc859ae0cfe3.png" group-title="PLUTO TV | ALEMANIA",Assassination Classroom
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxq376BlHy7J2EtiRNgys_J
+#EXTINF:-1 xui-id="221841" tvg-id="" tvg-name="Yu-gi-oh!" tvg-logo="http://xdplayer.tv:8080/images/5cea0aa29fb9f0fb4377a032d31a773d.png" group-title="PLUTO TV | ALEMANIA",Yu-gi-oh!
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmya_u4EC_hj7uftniVEkv80
+#EXTINF:-1 xui-id="221842" tvg-id="" tvg-name="Pluto Tv Anime" tvg-logo="http://xdplayer.tv:8080/images/e5979bb00e3063bac012731bf061a8c3.png" group-title="PLUTO TV | ALEMANIA",Pluto Tv Anime
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyWCabpvxaXdBxGJ1B7BTES
+#EXTINF:-1 xui-id="221843" tvg-id="" tvg-name="Pluto Tv Retro Toons" tvg-logo="http://xdplayer.tv:8080/images/36076f6e47e2712d6a74719294ab0192.png" group-title="PLUTO TV | ALEMANIA",Pluto Tv Retro Toons
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmy9vE8pcYuBBSdU7kJr7X1e
+#EXTINF:-1 xui-id="221844" tvg-id="" tvg-name="F.b.i. Files" tvg-logo="http://xdplayer.tv:8080/images/d76d9e8c9523b37a9a30a9849c256517.png" group-title="PLUTO TV | ALEMANIA",F.b.i. Files
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmztKrJwbVp-11iI9s3dmpoj
+#EXTINF:-1 xui-id="221845" tvg-id="" tvg-name="Hours To Kill – Zeitachse Des Todes" tvg-logo="http://xdplayer.tv:8080/images/d8fb4de36a881a16beae294ffbf9d2dd.png" group-title="PLUTO TV | ALEMANIA",Hours To Kill – Zeitachse Des Todes
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzaIG20P4cGoK5lWGikrl-K
+#EXTINF:-1 xui-id="221846" tvg-id="" tvg-name="Unentdeckt – Mörder Unter Uns" tvg-logo="http://xdplayer.tv:8080/images/0224b30108ef715f72f9f12386f0d15b.png" group-title="PLUTO TV | ALEMANIA",Unentdeckt – Mörder Unter Uns
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxPjn4jm2XyXa93B-U3a41X
+#EXTINF:-1 xui-id="221847" tvg-id="" tvg-name="Cold Blood" tvg-logo="http://xdplayer.tv:8080/images/793e71cbe5961c0b48a31a97e69d8eeb.png" group-title="PLUTO TV | ALEMANIA",Cold Blood
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzQVucp10XNK95IuoiFqKoq
+#EXTINF:-1 xui-id="221848" tvg-id="" tvg-name="Täterjagd" tvg-logo="http://xdplayer.tv:8080/images/2f69d73d56086748651f9d2e082d375d.png" group-title="PLUTO TV | ALEMANIA",Täterjagd
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyYAEb2qmi5x3OmhlaekI0E
+#EXTINF:-1 xui-id="221849" tvg-id="" tvg-name="Myth Hunters" tvg-logo="http://xdplayer.tv:8080/images/06c19b838ed6e44762f1b2ce73fb4d85.png" group-title="PLUTO TV | ALEMANIA",Myth Hunters
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmx5M3v-yiwl6TF2_dOvV54K
+#EXTINF:-1 xui-id="221850" tvg-id="" tvg-name="Pluto Tv True Crime" tvg-logo="http://xdplayer.tv:8080/images/3547b324d0c7782207784ca5911e4816.png" group-title="PLUTO TV | ALEMANIA",Pluto Tv True Crime
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxcGmza4AfSmvwqnnLhntdY
+#EXTINF:-1 xui-id="221851" tvg-id="" tvg-name="Pluto Tv Paranormal" tvg-logo="http://xdplayer.tv:8080/images/400bafe0ae44cd32bc772c933b424a1e.png" group-title="PLUTO TV | ALEMANIA",Pluto Tv Paranormal
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzT7t5rykdncCvKq0dBERTN
+#EXTINF:-1 xui-id="221852" tvg-id="" tvg-name="Pluto Tv Mystery" tvg-logo="http://xdplayer.tv:8080/images/187d46218961daef71dcd9c1e1d00dcf.png" group-title="PLUTO TV | ALEMANIA",Pluto Tv Mystery
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyZ5LylixJ8B1szJ9WlEwJJ
+#EXTINF:-1 xui-id="221853" tvg-id="" tvg-name="X-factor: Das Unfassbare" tvg-logo="http://xdplayer.tv:8080/images/922de5f45cb925dbc7cad4e3fa4e7cc3.png" group-title="PLUTO TV | ALEMANIA",X-factor: Das Unfassbare
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxLJKQ18EBY0Ml381GfopI1
+#EXTINF:-1 xui-id="221854" tvg-id="" tvg-name="48 Hours" tvg-logo="http://xdplayer.tv:8080/images/c015c59e99dcf2dada76b1091216d3c0.png" group-title="PLUTO TV | ALEMANIA",48 Hours
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwA_ek6IAP3Nxnr4GTN6GY3
+#EXTINF:-1 xui-id="221855" tvg-id="" tvg-name="Wicked Tuna" tvg-logo="http://xdplayer.tv:8080/images/96c32a4ad163804b42b0a9940c591da2.png" group-title="PLUTO TV | ALEMANIA",Wicked Tuna
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzb8dV1Ty9C2DSu94EBi2xu
+#EXTINF:-1 xui-id="221856" tvg-id="" tvg-name="Fluss-monster" tvg-logo="http://xdplayer.tv:8080/images/301395b0baade039ec4ba848d9d113c1.png" group-title="PLUTO TV | ALEMANIA",Fluss-monster
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzepiGsO9kzxeuh3Vlegm9M
+#EXTINF:-1 xui-id="221857" tvg-id="" tvg-name="Mtv Catfish Tv Show" tvg-logo="http://xdplayer.tv:8080/images/05b76f4409986316494f16657ca5c187.png" group-title="PLUTO TV | ALEMANIA",Mtv Catfish Tv Show
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwT7-KA7Ad077oLPTL5tYfq
+#EXTINF:-1 xui-id="221858" tvg-id="" tvg-name="Hell's Kitchen" tvg-logo="http://xdplayer.tv:8080/images/6441c75ca7df5ee733e98597c538bd4d.png" group-title="PLUTO TV | ALEMANIA",Hell's Kitchen
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmz02wpdn1oJpatvTzX-n72l
+#EXTINF:-1 xui-id="221859" tvg-id="" tvg-name="Storage Wars: Canada" tvg-logo="http://xdplayer.tv:8080/images/5bd2d67a73e7959bbe1b1cb4e929e983.png" group-title="PLUTO TV | ALEMANIA",Storage Wars: Canada
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzx5isYRAZVQN0WNTH0tlDt
+#EXTINF:-1 xui-id="221860" tvg-id="" tvg-name="Auction Hunters" tvg-logo="http://xdplayer.tv:8080/images/77882dcd91e6d97950fd1039839769bc.png" group-title="PLUTO TV | ALEMANIA",Auction Hunters
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmySQfssCbtAsJeeML6jW0iU
+#EXTINF:-1 xui-id="221861" tvg-id="" tvg-name="Ice Pilots" tvg-logo="http://xdplayer.tv:8080/images/442c7a1ec797277d0bb8e0e3eae0935c.png" group-title="PLUTO TV | ALEMANIA",Ice Pilots
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyk0ZiK63u_KAOt0-twC4JO
+#EXTINF:-1 xui-id="221862" tvg-id="" tvg-name="Der Hundetrainer" tvg-logo="http://xdplayer.tv:8080/images/6ffc294596f6a4cd29a9763100f8e502.png" group-title="PLUTO TV | ALEMANIA",Der Hundetrainer
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyIuDex4sA1xJRwrQsYK_Tw
+#EXTINF:-1 xui-id="221863" tvg-id="" tvg-name="Mtv Pimp My Ride" tvg-logo="http://xdplayer.tv:8080/images/0f44c87a463f065750a1bc7852527e9b.png" group-title="PLUTO TV | ALEMANIA",Mtv Pimp My Ride
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyo9iUkvrGc3JVPnBIiWhNc
+#EXTINF:-1 xui-id="221864" tvg-id="" tvg-name="Mtv Pluto Tv" tvg-logo="http://xdplayer.tv:8080/images/8d35def28c4cc745e46497d3ece23fa9.png" group-title="PLUTO TV | ALEMANIA",Mtv Pluto Tv
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmw0O8JKW5DP9_igABqeV3j8
+#EXTINF:-1 xui-id="221865" tvg-id="" tvg-name="Just.fishing" tvg-logo="http://xdplayer.tv:8080/images/bc0d89ceb0d2b82003815a09b25065b0.png" group-title="PLUTO TV | ALEMANIA",Just.fishing
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyrQBTdsxP3igtOk_wScxVi
+#EXTINF:-1 xui-id="221866" tvg-id="" tvg-name="Pluto Tv Food" tvg-logo="http://xdplayer.tv:8080/images/eb639756b30d9aa43ca529b592cbe2fb.png" group-title="PLUTO TV | ALEMANIA",Pluto Tv Food
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyR58-mqbu-kyrEAskMQvxA
+#EXTINF:-1 xui-id="221867" tvg-id="" tvg-name="Landlust Tv" tvg-logo="http://xdplayer.tv:8080/images/142b1b53eb9d34df2836e7ff39304a13.png" group-title="PLUTO TV | ALEMANIA",Landlust Tv
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxVw1uScLZdJUDOCb4gL7NX
+#EXTINF:-1 xui-id="221868" tvg-id="" tvg-name="Pluto Tv Home" tvg-logo="http://xdplayer.tv:8080/images/1251a5d2f013b5cd577989fd57213c5f.png" group-title="PLUTO TV | ALEMANIA",Pluto Tv Home
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwX6F0qCUaQIZAZPN05co9t
+#EXTINF:-1 xui-id="221869" tvg-id="" tvg-name="Car Chase" tvg-logo="http://xdplayer.tv:8080/images/f0ba51673a0dd74f2637ad31aebd2b47.png" group-title="PLUTO TV | ALEMANIA",Car Chase
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzrqjCtidUdYNRLA_YUqpFb
+#EXTINF:-1 xui-id="221870" tvg-id="" tvg-name="Hot Ones" tvg-logo="http://xdplayer.tv:8080/images/4a17cffd6ea1cc8f1061a8b851011dee.png" group-title="PLUTO TV | ALEMANIA",Hot Ones
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzAzqDvfkw4_izW2CM_4LT8
+#EXTINF:-1 xui-id="221871" tvg-id="" tvg-name="Pluto Tv Space" tvg-logo="http://xdplayer.tv:8080/images/fe28a5b7dfa57ec4574de106acfd3247.png" group-title="PLUTO TV | ALEMANIA",Pluto Tv Space
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmx9vnVCgdm-ohDnoprB7SWy
+#EXTINF:-1 xui-id="221872" tvg-id="" tvg-name="Pluto Tv Explore" tvg-logo="http://xdplayer.tv:8080/images/cf40ef450d0958188913e0f1b044bf36.png" group-title="PLUTO TV | ALEMANIA",Pluto Tv Explore
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzXHOJdwcPcFGO9T5KV9eTj
+#EXTINF:-1 xui-id="221873" tvg-id="" tvg-name="Pluto Tv Nature" tvg-logo="http://xdplayer.tv:8080/images/0f7b8381d4f5ac3d0bb25af0b35a2357.png" group-title="PLUTO TV | ALEMANIA",Pluto Tv Nature
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmx9O1fGfBCu4hsU6VLkt9ra
+#EXTINF:-1 xui-id="221874" tvg-id="" tvg-name="Pluto Tv Animals" tvg-logo="http://xdplayer.tv:8080/images/350dfc04062116aa00cc6b1e899986e5.png" group-title="PLUTO TV | ALEMANIA",Pluto Tv Animals
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmz0ho_PNG3lv8Iama0KxKZm
+#EXTINF:-1 xui-id="221875" tvg-id="" tvg-name="Terra Mater Wild" tvg-logo="http://xdplayer.tv:8080/images/269857f032e7defcc6280f5ea7f18b4d.png" group-title="PLUTO TV | ALEMANIA",Terra Mater Wild
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwxYPtEJZbdu30ONDkhHvvq
+#EXTINF:-1 xui-id="221876" tvg-id="" tvg-name="Pluto Tv Documentaries" tvg-logo="http://xdplayer.tv:8080/images/d2e560b91065a9d2cd0985c7ca7eddaf.png" group-title="PLUTO TV | ALEMANIA",Pluto Tv Documentaries
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmz1ebP9z8zVJjU6_CCXZv39
+#EXTINF:-1 xui-id="221877" tvg-id="" tvg-name="Pluto Tv Science" tvg-logo="http://xdplayer.tv:8080/images/f5006612d500cff468e0f78e0b2ed9e9.png" group-title="PLUTO TV | ALEMANIA",Pluto Tv Science
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwD88sFYU4IC7GGshGQVBIu
+#EXTINF:-1 xui-id="221878" tvg-id="" tvg-name="Pluto Tv Maschinen" tvg-logo="http://xdplayer.tv:8080/images/0d7a217046c990572d959508452924a4.png" group-title="PLUTO TV | ALEMANIA",Pluto Tv Maschinen
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzHiQZ8D-KXfRsWZzfXXoZM
+#EXTINF:-1 xui-id="221879" tvg-id="" tvg-name="Marco Polo Tv" tvg-logo="http://xdplayer.tv:8080/images/4ab2322370b841aebe44e44995c3a95c.png" group-title="PLUTO TV | ALEMANIA",Marco Polo Tv
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwwq1vgCmOx-Ue_GjZOjeW0
+#EXTINF:-1 xui-id="221880" tvg-id="" tvg-name="Bbc Travel" tvg-logo="http://xdplayer.tv:8080/images/309296f9faa2fea329bcd4b11b7103b3.png" group-title="PLUTO TV | ALEMANIA",Bbc Travel
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzKFeCMUJsnkVbLTGx6tJzW
+#EXTINF:-1 xui-id="221881" tvg-id="" tvg-name="Spiegel Tv Konflikte" tvg-logo="http://xdplayer.tv:8080/images/a64966e295e4ec66dc5848934583d46f.png" group-title="PLUTO TV | ALEMANIA",Spiegel Tv Konflikte
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyvisw3-1Q6zrBX8FhIK3IC
+#EXTINF:-1 xui-id="221882" tvg-id="" tvg-name="Spiegel Tv" tvg-logo="http://xdplayer.tv:8080/images/40e480d6566dde442e181dd5be83a43a.png" group-title="PLUTO TV | ALEMANIA",Spiegel Tv
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmx762LNgWzHIg_zPsZvjxBy
+#EXTINF:-1 xui-id="221883" tvg-id="" tvg-name="Pluto Tv History" tvg-logo="http://xdplayer.tv:8080/images/1a4797ec5cf4397b428026c82765156c.png" group-title="PLUTO TV | ALEMANIA",Pluto Tv History
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwZO7AhIVxtrNCQA7_hRur9
+#EXTINF:-1 xui-id="221884" tvg-id="" tvg-name="Pluto Tv Biografie" tvg-logo="http://xdplayer.tv:8080/images/3e9cb7dc57cf500254832a3aa74c89ae.png" group-title="PLUTO TV | ALEMANIA",Pluto Tv Biografie
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxqvGR7-SuLWRrnYrkMDz05
+#EXTINF:-1 xui-id="221885" tvg-id="" tvg-name="N24 Doku" tvg-logo="http://xdplayer.tv:8080/images/ac856c643d56f69a73ea14532dfd5494.png" group-title="PLUTO TV | ALEMANIA",N24 Doku
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmz0wQdr1nb3qGoZFy1KxZKF
+#EXTINF:-1 xui-id="221886" tvg-id="" tvg-name="Coast Guard" tvg-logo="http://xdplayer.tv:8080/images/15b55c31806d469fecc2cb797ee9b934.png" group-title="PLUTO TV | ALEMANIA",Coast Guard
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmz3kzKRf9oufRDvdJhBJGit
+#EXTINF:-1 xui-id="221887" tvg-id="" tvg-name="Mtv The Shores" tvg-logo="http://xdplayer.tv:8080/images/2dc7be0a147841920cada8055772f320.png" group-title="PLUTO TV | ALEMANIA",Mtv The Shores
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwkiFGXkLZWh2Q7eYMd1b4n
+#EXTINF:-1 xui-id="221888" tvg-id="" tvg-name="Germany Shore" tvg-logo="http://xdplayer.tv:8080/images/62b184fe0c59554fa2b9c0151ab11ec0.png" group-title="PLUTO TV | ALEMANIA",Germany Shore
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxnGIdzx73XvN41iyrqe25_
+#EXTINF:-1 xui-id="221889" tvg-id="" tvg-name="Mtv Teen Mom" tvg-logo="http://xdplayer.tv:8080/images/6e69f717510e590d2a0dbe1ac3d822a4.png" group-title="PLUTO TV | ALEMANIA",Mtv Teen Mom
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmy3kbyu8B7_KsCCn_KxrQHY
+#EXTINF:-1 xui-id="221890" tvg-id="" tvg-name="Mtv The Hills" tvg-logo="http://xdplayer.tv:8080/images/5b719d2ec3bd15b41c06165d1ea97586.png" group-title="PLUTO TV | ALEMANIA",Mtv The Hills
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzBz3YqlR8Xt720bAMK-x67
+#EXTINF:-1 xui-id="221891" tvg-id="" tvg-name="Freitag Nacht News" tvg-logo="http://xdplayer.tv:8080/images/ecd203a86fab862c57fc87e8d1963a71.png" group-title="PLUTO TV | ALEMANIA",Freitag Nacht News
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxwRUw8CV-UWnpjxTheqH2J
+#EXTINF:-1 xui-id="221892" tvg-id="" tvg-name="Takeshi's Castle" tvg-logo="http://xdplayer.tv:8080/images/33efd0068485795b1fc0cad731da8ae8.png" group-title="PLUTO TV | ALEMANIA",Takeshi's Castle
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyEjjgAsz9qcCWPHuhrEj1j
+#EXTINF:-1 xui-id="221893" tvg-id="" tvg-name="Wipeout (ov)" tvg-logo="http://xdplayer.tv:8080/images/d1217779f1f5b8f85e376699e8f1a931.png" group-title="PLUTO TV | ALEMANIA",Wipeout (ov)
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwph9zOWX0O61W8XFkoQH0p
+#EXTINF:-1 xui-id="221894" tvg-id="" tvg-name="Cc Pluto Tv" tvg-logo="http://xdplayer.tv:8080/images/a7780527c4f3923bdecbc948300e90f4.png" group-title="PLUTO TV | ALEMANIA",Cc Pluto Tv
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmzzfYV2jMV7YT5EDrxHBfuk
+#EXTINF:-1 xui-id="221895" tvg-id="" tvg-name="Cc Made In Germany" tvg-logo="http://xdplayer.tv:8080/images/66d7ebaa5a3c3b4820d4c5a56957c829.png" group-title="PLUTO TV | ALEMANIA",Cc Made In Germany
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyleBumuts5kS8kU5hgx7nr
+#EXTINF:-1 xui-id="221896" tvg-id="" tvg-name="Failarmy" tvg-logo="http://xdplayer.tv:8080/images/3dc7dc53005b783833b22be78ebcc9e4.png" group-title="PLUTO TV | ALEMANIA",Failarmy
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxfGBOI6_Gakxje_-pyVi8l
+#EXTINF:-1 xui-id="221897" tvg-id="" tvg-name="Mtv Ridiculousness" tvg-logo="http://xdplayer.tv:8080/images/967ee01b41cc6f3eace271fb3011ae86.png" group-title="PLUTO TV | ALEMANIA",Mtv Ridiculousness
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmw2CbdUaSJx_KoRLgkVh1At
+#EXTINF:-1 xui-id="221898" tvg-id="" tvg-name="Spongebob Schwammkopf" tvg-logo="http://xdplayer.tv:8080/images/2d73cf808b982e377776905de6a4b803.png" group-title="PLUTO TV | ALEMANIA",Spongebob Schwammkopf
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmwJ2jQipoSWXRZag6wk8Fdi
+#EXTINF:-1 xui-id="221899" tvg-id="" tvg-name="Spongebob In Italiano" tvg-logo="http://xdplayer.tv:8080/images/c8fe31fba985ef169b34c8c509afb092.png" group-title="PLUTO TV | ALEMANIA",Spongebob In Italiano
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmyaV2LyodZcf2In3_FgvxIX
+#EXTINF:-1 xui-id="221900" tvg-id="" tvg-name="Sünger Bob Kare Pantolon" tvg-logo="http://xdplayer.tv:8080/images/2777af0f31e750d5d4864e0360c0a0cb.png" group-title="PLUTO TV | ALEMANIA",Sünger Bob Kare Pantolon
+http://xdplayer.tv:8080/play/Y0S82TRm2jd1QI9EFqF7pIbmrmjf1C-Ik-Ig2vvhwmxUX4OIg09ys3JptFC2e2tA

@@ -22,7 +22,7 @@ from io import BytesIO
 class GoogleDrive:
   
   def __init__(self):
-    logger.announcement('Initializing GoogleDrive connection.', type='info')
+    logger.announcement('Initializing Drive.', type='info')
     try:
       SCOPES = ["https://www.googleapis.com/auth/drive"]
       creds = Credentials(
@@ -34,9 +34,9 @@ class GoogleDrive:
         scopes=SCOPES
       )
       self.service = build('drive', 'v3', credentials=creds)
-      logger.announcement('Initialized GoogleDrive connection.', type='success')
+      logger.announcement('Initialized Drive.', type='success')
     except Exception as e:
-      logger.error(f"Error initializing GoogleDrive: {str(e)}")
+      logger.error(f"Error initializing Drive: {str(e)}")
 
   def getSharedDriveInfo(self, drive_name):
     logger.info(f'Getting shared drive info for drive: {drive_name}')
@@ -319,7 +319,7 @@ class GoogleDrive:
 class Gmail:
 
   def __init__(self):
-    logger.announcement('Initializing Gmail connection.', type='info')
+    logger.announcement('Initializing Email.', type='info')
     SCOPES = ["https://mail.google.com/"]
     try:
       creds = Credentials(
@@ -331,9 +331,9 @@ class Gmail:
         scopes=SCOPES
       )
       self.service = build("gmail", "v1", credentials=creds)
-      logger.announcement('Initialized Gmail connection.', type='success')
+      logger.announcement('Initialized Email.', type='success')
     except Exception as e:
-      logger.error(f"Error initializing Gmail: {str(e)}")
+      logger.error(f"Error initializing Email: {str(e)}")
 
   def create_html_email(self, plain_text, subject):
     logger.info(f'Creating HTML email with subject: {subject}')

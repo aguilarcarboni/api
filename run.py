@@ -1,41 +1,27 @@
 from flask import Flask, request
 from flask_cors import CORS
-from werkzeug.middleware.proxy_fix import ProxyFix
 from flask_jwt_extended import JWTManager, verify_jwt_in_request, create_access_token, exceptions
 import os
-import logging
 from flask import jsonify
-from logging.handlers import RotatingFileHandler
-
 from app.helpers.logger import logger
-
 from dotenv import load_dotenv
 load_dotenv()
 
-def jwt_required_except_login():
+def jwt_required():
     if request.endpoint != 'login' and request.endpoint != 'index':
         try:
             verify_jwt_in_request()
         except exceptions.JWTExtendedException as e:
             return jsonify({"msg": str(e)}), 401
-        
-def configure_logging(app):
-    if not os.path.exists('logs'):
-        os.mkdir('logs')
-    file_handler = RotatingFileHandler('logs/api.log', maxBytes=10240, backupCount=10)
-    file_handler.setFormatter(logging.Formatter(
-        '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'
-    ))
-    logger.info('API startup')
 
-def create_app():
+def start_api():
     app = Flask(__name__)
     cors = CORS(app, resources={r"/*": {"origins": "*"}})
     app.config['CORS_HEADERS'] = 'Content-Type'
     app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
     jwt = JWTManager(app)
 
-    app.before_request(jwt_required_except_login)
+    app.before_request(jwt_required)
 
     from app.routes import database, explorer, news, wallet, market, drive
     app.register_blueprint(drive.bp, url_prefix='/drive')
@@ -77,4 +63,4 @@ def create_app():
 
     return app
 
-laserfocus = create_app()
+laserfocus = start_api()

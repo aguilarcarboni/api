@@ -1,7 +1,7 @@
 import requests
 import os
 
-url = f"0.0.0.0:{os.getenv('LF_API_PORT')}"
+url = f"127.0.0.1:{os.getenv('LF_API_PORT')}"
 
 def access_api(endpoint, method='GET', data=None):
     auth = requests.post(url + '/login', json={
