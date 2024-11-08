@@ -1,40 +1,46 @@
 from flask import Blueprint, request   
-from app.modules.home import get_services, get_states, call_service, light_off, light_on
+from app.modules.home import SmartHome
+
+Home = SmartHome()
 
 bp = Blueprint('home', __name__)
 
 # Get states of all entities
 @bp.route('/get_states', methods=['POST'])
 async def get_states_route():
-    input_json = request.get_json(force=True)
-    response = get_states(input_json)
+    payload = request.get_json(force=True)
+    response = Home.get_states(payload)
     return response
 
 # Get available services for all entities
 @bp.route('/get_services', methods=['POST'])
 async def get_services_route():
-    input_json = request.get_json(force=True)
-    response = get_services(input_json)
+    payload = request.get_json(force=True)
+    response = Home.get_services(payload)
     return response
 
 # Call service actions on your entities
 @bp.route('/call_service', methods=['POST'])
 async def call_service_route():
-    input_json = request.get_json(force=True)
-    response = call_service(input_json)
+    payload = request.get_json(force=True)
+    response = Home.call_service(payload)
     return response
 
 # Packets
 @bp.route('/light_off', methods=['POST'])
 async def light_off_route():
-
-    input_json = request.get_json(force=True)
-    response = light_off(input_json['lightId'])
+    payload = request.get_json(force=True)
+    response = Home.light_off(payload['lightId'])
     return response
 
 @bp.route('/light_on', methods=['POST'])
 async def light_on_route():
+    payload = request.get_json(force=True)
+    response = Home.light_on(payload['lightId'])
+    return response
 
-    input_json = request.get_json(force=True)
-    response = light_on(input_json['lightId'])
+@bp.route('/refresh_tv', methods=['POST'])
+async def refresh_tv_route():
+    payload = request.get_json(force=True)
+    response = Home.refresh_tv(payload['tvId'])
     return response

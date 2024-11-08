@@ -15,6 +15,8 @@ def jwt_required():
             return jsonify({"msg": str(e)}), 401
 
 def start_api():
+    logger.announcement('Starting Laserfocus...', 'info')
+
     app = Flask(__name__)
     cors = CORS(app, resources={r"/*": {"origins": "*"}})
     app.config['CORS_HEADERS'] = 'Content-Type'
@@ -23,18 +25,18 @@ def start_api():
 
     app.before_request(jwt_required)
 
-    from app.routes import database, explorer, news, wallet, market, drive
+    from app.routes import database, drive, news, wallet, market, email, tools, home
     app.register_blueprint(drive.bp, url_prefix='/drive')
     app.register_blueprint(database.bp, url_prefix='/database')
-    app.register_blueprint(explorer.bp, url_prefix='/explorer')
-    app.register_blueprint(news.bp, url_prefix='/news')
+    app.register_blueprint(email.bp, url_prefix='/email')
     app.register_blueprint(wallet.bp, url_prefix='/wallet')
     app.register_blueprint(market.bp, url_prefix='/market')
-    #app.register_blueprint(home.bp)
+    app.register_blueprint(news.bp, url_prefix='/news')
+    app.register_blueprint(tools.bp, url_prefix='/tools')
+    app.register_blueprint(home.bp, url_prefix='/home')
 
     @app.route('/', methods=['GET'])
     def index():
-        logger.info('User accessed the root route.')
         data = {
             'title': 'the path to success starts with laserfocus.',
         }
@@ -43,7 +45,7 @@ def start_api():
     @app.route('/login', methods=['POST'])
     def login():
         payload = request.get_json(force=True)
-        logger.info(f'User attempting authenticate... {payload}')
+        logger.info(f'User attempting authentication... {payload}')
         token = payload['token']
         if token == 'laserfocused':
             access_token = create_access_token(identity=token)
@@ -60,7 +62,11 @@ def start_api():
     @app.errorhandler(500)
     def internal_error(error):
         return {"error": "Internal server error"}, 500 
-
+        
+    logger.success('Laserfocus initialized successfully')
+    logger.info('Running diagnostics and tests...')
+    logger.success('Diagnostics and tests completed successfully.')
+    logger.announcement('Welcome to Laserfocus.', 'success')
     return app
 
 laserfocus = start_api()

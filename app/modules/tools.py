@@ -1,3 +1,8 @@
+from app.helpers.logger import logger
+
+logger.announcement('Initializing Tools.', 'info')
+logger.announcement('Tools initialized successfully', 'success')
+
 def calculate_energy_consumption(watt_hours: float) -> dict:
     """
     Calculate energy consumption and cost based on given watt-hours.
@@ -41,11 +46,3 @@ def calculate_energy_consumption(watt_hours: float) -> dict:
         "monthly_consumption_kwh": round(monthly_kwh, 2),
         "total_cost": round(total_cost, 2)
     }
-
-# Example usage
-if __name__ == "__main__":
-    machine_wh = int(input("Enter the machine's watt-hours: "))  # Example: 850 Wh
-    result = calculate_energy_consumption(machine_wh)
-    print(f"Daily consumption: {result['daily_consumption_kwh']} kWh")
-    print(f"Monthly consumption: {result['monthly_consumption_kwh']} kWh")
-    print(f"Total cost: ${result['total_cost']}")

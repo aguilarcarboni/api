@@ -42,9 +42,10 @@ def get_foreign_keys_route():
 @bp.route('/get_parent_lineage', methods=['POST'])
 def get_parent_lineage_route():
     payload = request.get_json(force=True)
-    if 'depth' not in payload:
-        payload['depth'] = 3
-    elif payload['depth'] > 10:
-        payload['depth'] = 10
-    response = get_parent_lineage(table=payload['table'], params=payload['params'], depth=payload['depth'])
+    
+    response = get_parent_lineage(
+        table=payload['table'], 
+        params=payload['params'], 
+        depth=3
+    )
     return response

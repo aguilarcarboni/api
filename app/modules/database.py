@@ -155,6 +155,29 @@ def delete(session, table: str, params: dict):
         raise
 
 @with_session
+def get_parent_lineage(session, table: str, params: dict, depth: int) -> Response:
+    """
+    Wrapper function to get the parent lineage of a table up to a specified depth.
+
+    Args:
+        session: The database session.
+        table (str): The name of the table to start the lineage from.
+        params (dict): Parameters to identify the specific record.
+        depth (int): The maximum depth of recursion (default is 3).
+
+    Returns:
+        Response: A Response object containing the parent lineage or an error message.
+    """
+    try:
+        logger.info(f"Attempting to retrieve parent lineage for table: {table} with depth: {depth}.")
+        lineage = get_parent_lineage_recursive(session,table, params, depth, 1)
+        if not lineage:
+            return Response.error("Failed to retrieve parent lineage")
+        return Response.success(lineage) 
+    except Exception as e:
+        logger.error(f"Error in get_parent_lineage: {str(e)}")
+        return Response.error(f"Failed to retrieve parent lineage: {str(e)}")
+    
 def get_foreign_keys(session, table: str, params: dict) -> Dict[str, str]:
     """
     Helper function to get foreign keys for a table.
@@ -192,17 +215,16 @@ def get_foreign_keys(session, table: str, params: dict) -> Dict[str, str]:
         logger.error(f"Error retrieving foreign keys for table {table}: {str(e)}")
         return Response.error(f"Failed to retrieve foreign keys: {str(e)}")
 
-@with_session
-def get_parent_lineage_recursive(session, table: str, params: dict, depth: int = 3, current_depth: int = 1) -> Dict[str, Any]:
+def get_parent_lineage_recursive(session, table: str, params: dict, depth: int, current_depth: int) -> Dict[str, Any]:
     """
     Recursive helper function to get the parent lineage of a table up to a specified depth.
     Returns a dictionary structure suitable for graphing in a directed graph.
     """
-    if depth <= 0:
+    if current_depth > depth:
         return {}
 
     try:
-        foreign_keys_response = get_foreign_keys(table, params)
+        foreign_keys_response = get_foreign_keys(session, table, params)
         if foreign_keys_response['status'] != 'success':
             return {}
 
@@ -225,27 +247,3 @@ def get_parent_lineage_recursive(session, table: str, params: dict, depth: int =
     except SQLAlchemyError as e:
         logger.error(f"Error retrieving parent lineage for table {table}: {str(e)}")
         return {}
-
-@with_session
-def get_parent_lineage(session, table: str, params: dict, depth: int = 3) -> Response:
-    """
-    Wrapper function to get the parent lineage of a table up to a specified depth.
-
-    Args:
-        session: The database session.
-        table (str): The name of the table to start the lineage from.
-        params (dict): Parameters to identify the specific record.
-        depth (int): The maximum depth of recursion (default is 3).
-
-    Returns:
-        Response: A Response object containing the parent lineage or an error message.
-    """
-    try:
-        logger.info(f"Attempting to retrieve parent lineage for table: {table} with depth: {depth}")
-        lineage = get_parent_lineage_recursive(session, table, params, depth)
-        if not lineage:
-            return Response.error("Failed to retrieve parent lineage")
-        return Response.success(lineage)
-    except Exception as e:
-        logger.error(f"Error in get_parent_lineage: {str(e)}")
-        return Response.error(f"Failed to retrieve parent lineage: {str(e)}")

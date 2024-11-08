@@ -335,48 +335,14 @@ class Gmail:
     except Exception as e:
       logger.error(f"Error initializing Email: {str(e)}")
 
-  def create_html_email(self, plain_text, subject):
-    logger.info(f'Creating HTML email with subject: {subject}')
-
+  def sendEmail(self, plain_text, to_email, subject):
     try:
-      # Load the HTML template
-      env = Environment(loader=FileSystemLoader('app/helpers/email_templates'))
-      template = env.get_template('trade_ticket.html')
+        logger.info(f'Sending email to: {to_email}')
 
-      # Render the template with the plain text content
-      html_content = template.render(content=plain_text, subject=subject)
-
-      # Inline the CSS
-      html_content_inlined = transform(html_content)
-
-      # Create a multipart message
-      message = MIMEMultipart('related')
-
-      # Attach the HTML content
-      message.attach(MIMEText(html_content_inlined, 'html'))
-
-      # Attach the logo image
-      logo_path = 'app/assets/agm-logo.png'
-      with open(logo_path, 'rb') as logo_file:
-          logo_mime = MIMEImage(logo_file.read())
-          logo_mime.add_header('Content-ID', '<logo>')
-          message.attach(logo_mime)
-
-      logger.success(f'Successfully created HTML email with subject: {subject}')
-      return Response.success(message)
-    except Exception as e:
-      logger.error(f"Error creating HTML email: {str(e)}")
-      return Response.error(f"Error creating HTML email: {str(e)}")
-
-  def sendClientEmail(self, plain_text, client_email, subject):
-    try:
-        logger.info(f'Sending client email to: {client_email}')
-        response = self.create_html_email(plain_text)
-        message = response['content']
-
-        message['To'] = client_email
+        message = MIMEMultipart('related')
+        message['To'] = to_email
         message['Subject'] = subject
-
+        message.attach(MIMEText(plain_text, 'plain'))
         raw_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
         create_message = {"raw": raw_message}
 
@@ -386,7 +352,8 @@ class Gmail:
             .send(userId="me", body=create_message)
             .execute()
         )
-        logger.success(f'Successfully sent client email to: {client_email}')
+        logger.success(f'Successfully sent email to: {to_email}')
         return Response.success({'emailId': send_message["id"]})
+    
     except Exception as e:
-        return Response.error(f"Error sending client email: {str(e)}")
+        return Response.error(f"Error sending email: {str(e)}")
