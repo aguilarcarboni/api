@@ -3,6 +3,8 @@ env
 
 cache
 
+*.m3u
+
 *__pycache__
 *.sqlite
 *.DS_Store

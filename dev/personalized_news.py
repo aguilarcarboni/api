@@ -1,195 +1,169 @@
-from flask import Flask, request, jsonify
-from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from sqlalchemy import create_engine, Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import Session
+from typing import List
 import nltk
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
-from collections import Counter
 
-# Download required NLTK data
-nltk.download('punkt')
-nltk.download('stopwords')
+from app.helpers.browser import Browser
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///news_aggregator.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
+Base = declarative_base()
 
-# Association tables for many-to-many relationships
-user_interests = db.Table('user_interests',
-    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
-    db.Column('interest_id', db.Integer, db.ForeignKey('interest.id'))
-)
-
-article_interests = db.Table('article_interests',
-    db.Column('article_id', db.Integer, db.ForeignKey('article.id')),
-    db.Column('interest_id', db.Integer, db.ForeignKey('interest.id'))
-)
-
-# Database Models
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
-    interests = db.relationship('Interest', secondary=user_interests, 
-                              backref=db.backref('users', lazy='dynamic'))
-
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'username': self.username,
-            'interests': [interest.name for interest in self.interests]
-        }
-
-class Interest(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), unique=True, nullable=False)
-    articles = db.relationship('Article', secondary=article_interests,
-                             backref=db.backref('interests', lazy='dynamic'))
-
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'name': self.name
-        }
-
-class Article(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(200), nullable=False)
-    content = db.Column(db.Text, nullable=False)
-    url = db.Column(db.String(500), unique=True, nullable=False)
-    source = db.Column(db.String(100), nullable=False)
-    published_date = db.Column(db.DateTime, nullable=False)
-
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'title': self.title,
-            'content': self.content,
-            'url': self.url,
-            'source': self.source,
-            'published_date': self.published_date.isoformat(),
-            'interests': [interest.name for interest in self.interests]
-        }
-
-def analyze_content(title: str, content: str) -> list:
-    """Analyze article content to determine relevant interests."""
-    # Combine title and content for analysis
-    text = f"{title} {content}".lower()
+class Interest(Base):
+    __tablename__ = 'interests'
     
-    # Tokenize and remove stopwords
-    stop_words = set(stopwords.words('english'))
-    tokens = word_tokenize(text)
-    tokens = [word for word in tokens if word.isalnum() and word not in stop_words]
+    id = Column(Integer, primary_key=True)
+    name = Column(String, unique=True)
+    keywords = Column(String)
+
+class Article(Base):
+    __tablename__ = 'articles'
     
-    # Get most common words as potential interests
-    word_freq = Counter(tokens)
-    return [word for word, freq in word_freq.most_common(5)]
+    id = Column(Integer, primary_key=True)
+    title = Column(String)
+    content = Column(String)
+    url = Column(String, unique=True)
+    source = Column(String)
+    published_date = Column(DateTime)
+    
+class ReadArticle(Base):
+    __tablename__ = 'read_articles'
+    
+    id = Column(Integer, primary_key=True)
+    article_id = Column(Integer, ForeignKey('articles.id'))
+    read_date = Column(DateTime, default=datetime.utcnow)
 
-# Routes
-@app.route('/users', methods=['POST'])
-def create_user():
-    data = request.get_json()
-    if not data or 'username' not in data:
-        return jsonify({'error': 'Username is required'}), 400
+class NewsAggregator:
+    def __init__(self, db_url: str):
+        self.engine = create_engine(db_url)
+        Base.metadata.create_all(self.engine)
+        nltk.download('punkt')
+        nltk.download('stopwords')
+        self.stop_words = set(stopwords.words('english'))
+    
+    def add_interest(self, interest: str, keywords: List[str]):
+        """Add a new interest category with keywords"""
+        with Session(self.engine) as session:
+            interest_obj = session.query(Interest).filter_by(name=interest).first()
+            if not interest_obj:
+                interest_obj = Interest(name=interest, keywords=','.join(keywords))
+                session.add(interest_obj)
+                session.commit()
+    
+    def remove_interest(self, interest: str):
+        """Remove an interest category"""
+        with Session(self.engine) as session:
+            interest_obj = session.query(Interest).filter_by(name=interest).first()
+            if interest_obj:
+                session.delete(interest_obj)
+                session.commit()
+    
+    def fetch_and_store_articles(self, sources: List[str]):
+        """Fetch articles from RSS feeds and store in database"""
+        with Session(self.engine) as session:
+            for url in sources:
+                soup = Browser().scraper(url)
+                # Find the sections containing headlines
+                headlines = soup.find_all('div', class_='stack__items')
+                for headline in headlines:
+                    print(headline.get_text().strip())
+                    existing = session.query(Article).filter_by(url=headline.get('href')).first()
+                    if not existing:
+                        article = Article(
+                            title=headline.get_text().strip(),
+                            content=headline.get_text().strip(),
+                            url=headline.get('href'),
+                            source=url,
+                            published_date=datetime.utcnow()
+                        )
+                        session.add(article)
+            session.commit()
+    
+    def get_personalized_news(self) -> List[dict]:
+        """Get news based on stored interests"""
+        with Session(self.engine) as session:
+            # Get all interests and their keywords
+            interests = session.query(Interest).all()
+            interest_keywords = []
+            for interest in interests:
+                interest_keywords.extend(interest.keywords.split(','))
+            
+            # Get all unread articles
+            read_article_ids = [ra.article_id for ra in session.query(ReadArticle).all()]
+            articles = session.query(Article)\
+                .filter(~Article.id.in_(read_article_ids))\
+                .order_by(Article.published_date.desc())\
+                .all()
+            
+            # Filter articles based on interests
+            personalized_articles = []
+            for article in articles:
+                # Tokenize and clean article title and content
+                text = f"{article.title} {article.content}"
+                tokens = word_tokenize(text.lower())
+                tokens = [t for t in tokens if t not in self.stop_words]
+                
+                # Check if any interest keywords match
+                if any(keyword.lower() in tokens for keyword in interest_keywords):
+                    personalized_articles.append({
+                        'id': article.id,
+                        'title': article.title,
+                        'content': article.content,
+                        'url': article.url,
+                        'source': article.source,
+                        'published_date': article.published_date
+                    })
+            
+            return personalized_articles
+    
+    def mark_article_as_read(self, article_id: int):
+        """Mark an article as read"""
+        with Session(self.engine) as session:
+            read_article = ReadArticle(article_id=article_id)
+            session.add(read_article)
+            session.commit()
+    
+    def get_interests(self) -> List[dict]:
+        """Get all stored interests"""
+        with Session(self.engine) as session:
+            interests = session.query(Interest).all()
+            return [{'name': i.name, 'keywords': i.keywords.split(',')} for i in interests]
 
-    try:
-        user = User(username=data['username'])
-        db.session.add(user)
-        db.session.commit()
-        return jsonify(user.to_dict()), 201
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({'error': str(e)}), 400
+# Example usage
+def main():
+    # Initialize the aggregator
+    aggregator = NewsAggregator('sqlite:///news.db')
+    
+    # Add interests
+    aggregator.add_interest('Technology', ['AI', 'Python', 'Machine Learning', 'Data Science'])
+    aggregator.add_interest('Space', ['NASA', 'SpaceX', 'Astronomy', 'Mars'])
+    
+    # Example RSS feeds (add your own)
+    sources = [
+        'https://www.cnn.com',
+    ]
+    
+    # Fetch and store articles
+    aggregator.fetch_and_store_articles(sources)
+    
+    # Get personalized news
+    news = aggregator.get_personalized_news()
+    for article in news:
+        print(f"Title: {article['title']}")
+        print(f"Source: {article['source']}")
+        print(f"URL: {article['url']}")
+        print("---")
+        
+        # Mark as read
+        aggregator.mark_article_as_read(article['id'])
+    
+    # Show current interests
+    interests = aggregator.get_interests()
+    print("\nCurrent Interests:")
+    for interest in interests:
+        print(f"{interest['name']}: {', '.join(interest['keywords'])}")
 
-@app.route('/users/<int:user_id>/interests', methods=['POST'])
-def add_user_interest(user_id):
-    data = request.get_json()
-    if not data or 'name' not in data:
-        return jsonify({'error': 'Interest name is required'}), 400
-
-    user = User.query.get(user_id)
-    if not user:
-        return jsonify({'error': 'User not found'}), 404
-
-    try:
-        # Get or create interest
-        interest = Interest.query.filter_by(name=data['name']).first()
-        if not interest:
-            interest = Interest(name=data['name'])
-            db.session.add(interest)
-
-        user.interests.append(interest)
-        db.session.commit()
-        return jsonify(user.to_dict()), 200
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({'error': str(e)}), 400
-
-@app.route('/articles', methods=['POST'])
-def create_article():
-    data = request.get_json()
-    required_fields = ['title', 'content', 'url', 'source']
-    if not data or not all(field in data for field in required_fields):
-        return jsonify({'error': 'Missing required fields'}), 400
-
-    try:
-        article = Article(
-            title=data['title'],
-            content=data['content'],
-            url=data['url'],
-            source=data['source'],
-            published_date=datetime.fromisoformat(data.get('published_date', datetime.now().isoformat()))
-        )
-        db.session.add(article)
-
-        # Analyze content and add interests
-        relevant_topics = analyze_content(article.title, article.content)
-        for topic in relevant_topics:
-            interest = Interest.query.filter_by(name=topic).first()
-            if interest:
-                article.interests.append(interest)
-
-        db.session.commit()
-        return jsonify({
-            'status': 'success',
-            'article': article.to_dict(),
-            'detected_interests': relevant_topics
-        }), 201
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({'error': str(e)}), 400
-
-@app.route('/users/<int:user_id>/feed')
-def get_user_feed(user_id):
-    user = User.query.get(user_id)
-    if not user:
-        return jsonify({'error': 'User not found'}), 404
-
-    # Get user's interests
-    user_interests = [interest.id for interest in user.interests]
-
-    # Query articles that match user's interests
-    articles = Article.query\
-        .join(article_interests)\
-        .join(Interest)\
-        .filter(Interest.id.in_(user_interests))\
-        .order_by(Article.published_date.desc())\
-        .limit(20)\
-        .all()
-
-    return jsonify([article.to_dict() for article in articles])
-
-# Error handlers
-@app.errorhandler(404)
-def not_found_error(error):
-    return jsonify({'error': 'Not found'}), 404
-
-@app.errorhandler(500)
-def internal_error(error):
-    db.session.rollback()
-    return jsonify({'error': 'Internal server error'}), 500
-
-if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
-    app.run(debug=True, host='0.0.0.0', port=10000)
+if __name__ == "__main__":
+    main()
