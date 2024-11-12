@@ -6,13 +6,11 @@ from typing import List
 import nltk
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
-
-from app.helpers.browser import Browser
+from app.modules.browser import Browser
 from app.helpers.logger import logger
 from app.helpers.response import Response
 
 browser = Browser()
-
 Base = declarative_base()
 
 class Interest(Base):
@@ -124,6 +122,7 @@ class NewsAggregator:
 
     def get_personalized_news(self) -> List[dict]:
         """Get news based on stored interests"""
+        logger.info('Getting personalized news')
         with Session(self.engine) as session:
             try:
 
@@ -143,7 +142,6 @@ class NewsAggregator:
                 # Filter articles based on interests
                 personalized_articles = []
                 for article in articles:
-                    print(article.title, '\n')
 
                     # Tokenize and clean article title and content
                     text = f"{article.title} {article.content}"
@@ -161,6 +159,7 @@ class NewsAggregator:
                             'published_date': article.published_date
                         })
                         
+                logger.success(f'Found {len(personalized_articles)} personalized articles')
                 return personalized_articles
                     
             except Exception as e:

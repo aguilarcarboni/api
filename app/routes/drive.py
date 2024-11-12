@@ -1,5 +1,5 @@
 from flask import Blueprint, request, send_file
-from app.modules.google import GoogleDrive
+from app.modules.drive import GoogleDrive
 from io import BytesIO
 
 from app.helpers.response import Response

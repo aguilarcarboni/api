@@ -3,19 +3,13 @@ import requests as rq
 import pandas as pd
 import csv
 from datetime import datetime
-
 import requests as rq
 import xml.etree.ElementTree as ET
 import time
 import pandas as pd
 import csv
-
 from app.helpers.response import Response
-
 import os
-from dotenv import load_dotenv
-
-load_dotenv()
 
 class IBKR:
 

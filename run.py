@@ -5,6 +5,7 @@ import os
 from flask import jsonify
 from app.helpers.logger import logger
 from dotenv import load_dotenv
+from app.helpers.api import access_api
 load_dotenv()
 
 def jwt_required():
@@ -64,9 +65,9 @@ def start_api():
         return {"error": "Internal server error"}, 500 
         
     logger.success('Laserfocus initialized successfully')
-    logger.info('Running diagnostics and tests...')
-    logger.success('Diagnostics and tests completed successfully.')
-    logger.announcement('Welcome to Laserfocus.', 'success')
     return app
 
 laserfocus = start_api()
+logger.info('Running diagnostics and tests...')
+logger.success('Diagnostics and tests completed successfully.')
+logger.announcement('Welcome to Laserfocus.', 'success')

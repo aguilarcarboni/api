@@ -5,10 +5,16 @@ import requests as rq
 from urllib.robotparser import RobotFileParser
 from urllib.parse import urlparse
 
+# TODO CACHE SCRAPED PAGES
+
 class Browser:
+    
     def __init__(self):
         logger.announcement('Initializing Browser', 'info')
         self.robot_parser = RobotFileParser()
+        self.headers = {
+            'User-Agent': 'Mozilla/5.0 (compatible; Jawa/1.0; +http://laserfocus.space/bot)'
+        }
         logger.announcement('Successfully initialized Browser', 'success')
 
     def _can_fetch(self, url: str) -> bool:
@@ -26,15 +32,15 @@ class Browser:
 
     def scraper(self, url: str) -> BeautifulSoup | Response:
 
-        logger.info(f"Scraping URL: {url}")
+        logger.warning(f"Scraping URL: {url}")
         
         # Check robots.txt rules first
         if not self._can_fetch(url):
             logger.error("Scraping not allowed according to robots.txt rules")
             return Response.error("Scraping not allowed for this URL")
 
-        # Send a request to fetch the HTML content
-        response = rq.get(url)
+        # Send a request with headers
+        response = rq.get(url, headers=self.headers)
         if response.status_code != 200:
             logger.error("Failed to retrieve the web page.")
             return Response.error("Failed to retrieve the web page.")

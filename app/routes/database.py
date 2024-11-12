@@ -33,12 +33,6 @@ def delete_user_route():
     response = delete(table=payload['table'], params=payload['params'])
     return response
 
-@bp.route('/get_foreign_keys', methods=['POST'])
-def get_foreign_keys_route():
-    payload = request.get_json(force=True)
-    response = get_foreign_keys(table=payload['table'], params=payload['params'])
-    return response
-
 @bp.route('/get_parent_lineage', methods=['POST'])
 def get_parent_lineage_route():
     payload = request.get_json(force=True)

@@ -1,3 +1,6 @@
+"""
+HELPER FOR TRANSFORMING GOOGLE CREDENTIALS INTO TOKENS
+"""
 from google_auth_oauthlib.flow import InstalledAppFlow
 
 SCOPES = ["https://mail.google.com/", "https://www.googleapis.com/auth/drive"]

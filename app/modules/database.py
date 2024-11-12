@@ -1,20 +1,16 @@
 import os
-from dotenv import load_dotenv
 from sqlalchemy import create_engine, MetaData, Table
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.exc import SQLAlchemyError
 from datetime import datetime
 from functools import wraps
-from typing import Dict, Any, List
-
+from typing import Dict, Any
 from app.helpers.response import Response
 from app.helpers.logger import logger
 
 logger.announcement('Initializing Database', 'info')
 
-# SQLAlchemy setup with connection pooling
-load_dotenv()
 DATABASE_URL = os.getenv("DATABASE_URL")
 if not DATABASE_URL:
     raise ValueError("DATABASE_URL must be set in the .env file")
@@ -127,7 +123,7 @@ def read(session, table: str, params: dict = None):
     except SQLAlchemyError as e:
         logger.error(f'Error reading from database: {str(e)}')
         raise
-    
+
 @with_session
 def delete(session, table: str, params: dict):
     logger.info(f'Attempting to delete entry from table: {table}')
