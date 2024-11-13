@@ -28,11 +28,13 @@ Base = automap_base(metadata=metadata)
 Base.prepare()
 
 # Get the reflected table classes
+"""
 user = Base.classes.user
 space = Base.classes.space
 event = Base.classes.event
 contact = Base.classes.contact
 page = Base.classes.page
+"""
 
 logger.announcement('Successfully initialized Database', 'success')
 

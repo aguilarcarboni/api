@@ -1,6 +1,10 @@
+# Python Gitignore
+
 # Personal
 cache/
-*.env
+creds/
+logs/
+*.DS_Store
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

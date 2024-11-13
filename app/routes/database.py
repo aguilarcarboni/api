@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from app.modules.database import create, read, update, delete, get_foreign_keys, get_parent_lineage
+from app.modules.database import create, read, update, delete, get_parent_lineage
 
 bp = Blueprint('database', __name__)
 

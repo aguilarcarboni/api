@@ -9,6 +9,7 @@ from nltk.corpus import stopwords
 from app.modules.browser import Browser
 from app.helpers.logger import logger
 from app.helpers.response import Response
+import os
 
 browser = Browser()
 Base = declarative_base()
@@ -40,8 +41,11 @@ class ReadArticle(Base):
 class NewsAggregator:
 
     def __init__(self):
+        
         logger.announcement('Initializing News Aggregator Service', 'info')
-        db_url = 'sqlite:///news.db'
+
+        db_path = os.path.join(os.path.dirname(__file__), '..', 'db', 'news.db')
+        db_url = f'sqlite:///{db_path}'
 
         self.engine = create_engine(db_url)
         Base.metadata.create_all(self.engine)
