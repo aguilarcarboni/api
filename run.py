@@ -26,7 +26,7 @@ def start_api():
 
     app.before_request(jwt_required)
 
-    from app.routes import database, drive, news, wallet, market, email, tools
+    from app.routes import database, drive, news, wallet, market, email, tools, home, spotify
     app.register_blueprint(drive.bp, url_prefix='/drive')
     app.register_blueprint(database.bp, url_prefix='/database')
     app.register_blueprint(email.bp, url_prefix='/email')
@@ -34,7 +34,8 @@ def start_api():
     app.register_blueprint(market.bp, url_prefix='/market')
     app.register_blueprint(news.bp, url_prefix='/news')
     app.register_blueprint(tools.bp, url_prefix='/tools')
-    #app.register_blueprint(home.bp, url_prefix='/home')
+    app.register_blueprint(home.bp, url_prefix='/home')
+    app.register_blueprint(spotify.bp, url_prefix='/spotify')
 
     @app.route('/', methods=['GET'])
     def index():

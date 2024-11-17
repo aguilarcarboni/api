@@ -1,5 +1,43 @@
 import pandas as pd
 
+class Algorithms:
+    def __init__(self):
+        self.grade_data = {
+            'Quizzes': [100, 0, 0, 0, 0, 0, 20, 85, 0, 90, 0, 50, 70, 90, 70, 100, 75, 100, 100, 80],
+            'Participation': 80,
+            'Project 1': 96,
+            'Midterm': 84,
+            'Project 2': 95,
+            'Final Exam': 80
+        }
+
+        self.weights = {
+            'Quizzes': 0.2,
+            'Participation': 0.05,
+            'Project 1': 0.1,
+            'Midterm': 0.15,
+            'Project 2': 0.25,
+            'Final Exam': 0.25
+        }
+
+class ObjectOriented:
+    def __init__(self):
+        self.grade_data = {
+            'Homework': [100, 100, 100],
+            'Quizzes': [90, 90, 100, 45],
+            'Project 1': 84,
+            'Project 2': 100,
+            'Final Project': 85, 
+        }
+
+        self.weights = {
+            'Homework': 0.1,
+            'Quizzes': 0.1,
+            'Project 1': 0.25,
+            'Project 2': 0.25,
+            'Final Project': 0.3
+        }
+
 class Architecture:
     def __init__(self):
         self.grade_data = {
@@ -17,53 +55,15 @@ class Architecture:
 class SoftwareEngineering:
     def __init__(self):
         self.grade_data = {
-            'Project': 100,
+            'Project': 90,
             'Midterm 1': 74, 
-            'Midterm 2': 84,
+            'Midterm 2': 75,
         }
 
         self.weights = {
             'Project': 0.5,
             'Midterm 1': 0.25,
             'Midterm 2': 0.25
-        }
-
-class ObjectOriented:
-    def __init__(self):
-        self.grade_data = {
-            'Homework': [100, 100, 100],
-            'Quizzes': [90, 90, 100],
-            'Project 1': 84,
-            'Project 2': 100,
-            'Final Project': 85, 
-        }
-
-        self.weights = {
-            'Homework': 0.1,
-            'Quizzes': 0.1,
-            'Project 1': 0.25,
-            'Project 2': 0.25,
-            'Final Project': 0.3
-        }
-
-class Algorithms:
-    def __init__(self):
-        self.grade_data = {
-            'Quizzes': [100, 0, 0, 0, 0, 0, 20, 85, 0, 90, 0, 50, 70, 90, 70, 100, 75, 100, 100, 0],
-            'Participation': 100,
-            'Project 1': 96,
-            'Midterm': 84,
-            'Project 2': 95,
-            'Final Exam': 80
-        }
-
-        self.weights = {
-            'Quizzes': 0.2,
-            'Participation': 0.05,
-            'Project 1': 0.1,
-            'Midterm': 0.15,
-            'Project 2': 0.25,
-            'Final Exam': 0.25
         }
 
 class GradeCalculator:

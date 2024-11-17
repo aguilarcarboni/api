@@ -64,14 +64,14 @@ class NewsAggregator:
     
     def add_interest(self, interest: str, keywords: List[str]):
         """Add a new interest category with keywords"""
-        logger.info(f'Adding interest: {interest} with keywords: {keywords}')
+        logger.announcement(f'Adding interest: {interest} with keywords: {keywords}', 'info')
         with Session(self.engine) as session:
             interest_obj = session.query(Interest).filter_by(name=interest).first()
             if not interest_obj:
                 interest_obj = Interest(name=interest, keywords=','.join(keywords))
                 session.add(interest_obj)
                 session.commit()
-                logger.success(f'Added interest: {interest} with keywords: {keywords}')
+                logger.announcement(f'Added interest: {interest} with keywords: {keywords}', 'success')
                 return Response.success(f'Added interest: {interest} with keywords: {keywords}')
             else:
                 logger.error(f'Interest: {interest} already exists')
@@ -79,7 +79,7 @@ class NewsAggregator:
     
     def remove_interest(self, interest: str):
         """Remove an interest category"""
-        logger.info(f'Removing interest: {interest}')
+        logger.announcement(f'Removing interest: {interest}', 'info')
         with Session(self.engine) as session:
             try:
                 interest_obj = session.query(Interest).filter_by(name=interest).first()
@@ -87,7 +87,7 @@ class NewsAggregator:
                     session.delete(interest_obj)
                     session.commit()
                     logger.success(f'Removed interest: {interest}')
-                    return Response.success(f'Removed interest: {interest}')
+                    return Response.announcement(f'Removed interest: {interest}', 'success')
                 else:
                     logger.error(f'Interest: {interest} does not exist')
                     return Response.error(f'Interest: {interest} does not exist')
@@ -98,6 +98,7 @@ class NewsAggregator:
     def fetch_news(self):
         """Fetch articles from RSS feeds and store in database"""
         with Session(self.engine) as session:
+            logger.announcement('Fetching news from all sources', 'info')
             try:
                 articles_data = []
                 for source in self.sources:
@@ -106,6 +107,7 @@ class NewsAggregator:
                 logger.info(f'Scraped {len(articles_data)} articles from {len(self.sources)} sources')
                 
                 for article_data in articles_data:
+                    logger.info(f'Attempting to store article: {article_data}')
                     existing = session.query(Article).filter_by(url=article_data['url']).first()
                     if not existing:
                         article = Article(
@@ -116,9 +118,12 @@ class NewsAggregator:
                             published_date=datetime.utcnow()
                         )
                         session.add(article)
+                        logger.success(f'Stored article.')
+                    else:
+                        logger.info(f'Article already exists: {article_data["title"]}')
 
                 session.commit()
-                logger.success(f'Stored {len(articles_data)} articles from {len(self.sources)} sources')
+                logger.info(f'Stored {len(articles_data)} articles from {len(self.sources)} sources')
                 return Response.success(f'Stored {len(articles_data)} articles from {len(self.sources)} sources')
             except Exception as e:
                 logger.error(f'Error fetching and storing articles from {len(self.sources)} sources: {e}')
@@ -126,7 +131,7 @@ class NewsAggregator:
 
     def get_personalized_news(self) -> List[dict]:
         """Get news based on stored interests"""
-        logger.info('Getting personalized news')
+        logger.announcement('Getting personalized news', 'info')
         with Session(self.engine) as session:
             try:
 
@@ -163,8 +168,8 @@ class NewsAggregator:
                             'published_date': article.published_date
                         })
                         
-                logger.success(f'Found {len(personalized_articles)} personalized articles')
-                return personalized_articles
+                logger.announcement(f'Found {len(personalized_articles)} personalized articles', 'success')
+                return Response.success(personalized_articles)
                     
             except Exception as e:
                 logger.error(f'Error getting personalized news: {e}')
@@ -188,7 +193,7 @@ class NewsAggregator:
         with Session(self.engine) as session:
             try:
                 interests = session.query(Interest).all()
-                return [{'name': i.name, 'keywords': i.keywords.split(',')} for i in interests]
+                return Response.success([{'name': i.name, 'keywords': i.keywords.split(',')} for i in interests])
             except Exception as e:
                 logger.error(f'Error getting interests: {e}')
                 return Response.error(f'Error getting interests: {e}')
@@ -199,7 +204,7 @@ class CNN:
 
         logger.info('Initializing CNN')
         self.url = 'https://www.cnn.com'
-        self.max_articles = 30
+        self.max_articles = 5
         logger.success('CNN initialized')
 
     def scrape_articles(self):

@@ -3,37 +3,55 @@ from app.helpers.response import Response
 import requests
 import json
 from websocket import create_connection
+import os
 
 class SmartHome:
 
     def __init__(self):
         logger.announcement('Initializing Smart Home', 'info')
-        token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiI3YmM2MzI5NTQzYmQ0MmUyODgwMmNlNzg3ZDFlOWQyMCIsImlhdCI6MTczMTA5NjAyNSwiZXhwIjoyMDQ2NDU2MDI1fQ.GWsuI1GuIbg96XKMrATg2pAO8sNk_r94GWIKHiaOElw"
-        try:
-            self.ws = create_connection("ws://192.168.0.21:8123/api/websocket")
-            response = self.ws.recv()
-            response = json.loads(response)
-            if (response['type'] != "auth_required"):
-                logger.error("Smart Home authentication failed.")
-                raise Exception("Smart Home authentication failed.")
-        except:
-            logger.error("Smart Home not found.")
-            raise Exception("Smart Home not found.")
-
+        self.token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiI3YmM2MzI5NTQzYmQ0MmUyODgwMmNlNzg3ZDFlOWQyMCIsImlhdCI6MTczMTA5NjAyNSwiZXhwIjoyMDQ2NDU2MDI1fQ.GWsuI1GuIbg96XKMrATg2pAO8sNk_r94GWIKHiaOElw"
+        self.ws = None
         self.nextId = 0
+        self.connect()
 
+    def connect(self):
+        """Establish websocket connection and authenticate"""
         try:
-            self.ws.send(json.dumps({'type': 'auth', 'access_token': token}))
-            response = self.ws.recv()
-            response = json.loads(response)
-            if (response['type'] != "auth_ok"):
-                logger.error("Smart Home authentication failed.")
-                raise Exception("Smart Home authentication failed.")
-        except:
-            logger.error("Smart Home authentication failed.")
-            raise Exception("Smart Home authentication failed.")
+            logger.info(f"Connecting to Smart Home at {os.getenv('HOME_ASSISTANT_URL')}/api/websocket")
+            self.ws = create_connection(f"{os.getenv('HOME_ASSISTANT_URL')}/api/websocket")
+            logger.success("WebSocket connection established")
+            
+            # Handle initial auth
+            response = json.loads(self.ws.recv())
+            if response['type'] != "auth_required":
+                raise Exception("Unexpected response type during authentication")
+            
+            # Send auth token
+            self.ws.send(json.dumps({'type': 'auth', 'access_token': self.token}))
+            response = json.loads(self.ws.recv())
+            if response['type'] != "auth_ok":
+                raise Exception("Authentication failed")
+                
+            logger.announcement("Successfully initialized Smart Home.", 'success')
+        except Exception as e:
+            logger.error(f"Smart Home connection failed: {str(e)}")
+            raise
 
-        logger.announcement("Successfully initialized Smart Home.", 'success')
+    def disconnect(self):
+        """Safely close the websocket connection"""
+        if self.ws:
+            try:
+                logger.info("Disconnecting from Smart Home...")
+                self.ws.close()
+                logger.success("Successfully disconnected from Smart Home")
+            except Exception as e:
+                logger.error(f"Error disconnecting from Smart Home: {str(e)}")
+            finally:
+                self.ws = None
+
+    def __del__(self):
+        """Destructor to ensure connection is closed"""
+        self.disconnect()
 
     def getNextId(self):
         self.nextId += 1
