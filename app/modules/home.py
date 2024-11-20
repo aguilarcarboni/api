@@ -128,31 +128,3 @@ class SmartHome:
         response = self.ws.recv()
         logger.success(f'Light {lightId} turned off successfully. {response}')
         return Response.success(response)
-
-    def refresh_tv():
-
-        logger.announcement('Refreshing TV playlist...', 'info')
-        
-        url = "http://xdplayer.tv:8080"
-        username = "aguilarcarboni"
-        password = "pXU2Hx6NMu"
-        get_all_streams = f"/get.php?username={username}&password={password}&type=m3u_plus&output=ts"
-
-        logger.info('Fetching playlist...')
-        response = requests.get(url + get_all_streams)
-        if response.status_code != 200:
-            logger.error(f'Failed to fetch playlist: {response.status_code}')
-            return Response.error(f'Failed to fetch playlist: {response.status_code}')
-        logger.success('Playlist fetched successfully')
-
-        # Save the first 2000 lines of the m3u file
-        logger.info('Saving playlist...')
-        with open('/Users/andres/Documents/Projects/Laserfocus/laserfocus-api/cache/tv/playlist.m3u', 'w', encoding='utf-8') as f:
-            lines = response.text.splitlines()
-            for i, line in enumerate(lines[:int(2000)]):
-                if i % 100 == 0:
-                    logger.info(f'Writing {i}/{len(lines)} lines...')
-                f.write(line + '\n')
-
-        logger.announcement('Playlist saved successfully', 'success')
-        return Response.success('Playlist saved successfully')

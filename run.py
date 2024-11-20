@@ -6,6 +6,9 @@ from flask import jsonify
 from app.helpers.logger import logger
 from dotenv import load_dotenv
 from app.helpers.api import access_api
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+
 load_dotenv()
 
 def jwt_required():
@@ -24,20 +27,48 @@ def start_api():
     app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
     jwt = JWTManager(app)
 
+    # Initialize rate limiter
+    limiter = Limiter(
+        app=app,
+        key_func=get_remote_address,
+        default_limits=["84600 per day", "3600 per hour"],
+        storage_uri="memory://"
+    )
+
+    # Custom error handler for rate limiting
+    @app.errorhandler(429)
+    def ratelimit_handler(e):
+        logger.error(f"Rate limit exceeded: {e.description}")
+        return jsonify({
+            "error": "Rate limit exceeded",
+            "message": e.description
+        }), 429
+
     app.before_request(jwt_required)
 
-    from app.routes import database, drive, news, wallet, market, email, tools, home, spotify
+    # Import and register blueprints
+    from app.routes import database, drive, news, market, email, tools, spotify, sports, tv
+    from app.routes.wallet import bac
+    
+    # Add specific rate limits for sensitive endpoints
+    limiter.limit("600 per minute")(database.bp)
+    
     app.register_blueprint(drive.bp, url_prefix='/drive')
     app.register_blueprint(database.bp, url_prefix='/database')
     app.register_blueprint(email.bp, url_prefix='/email')
-    app.register_blueprint(wallet.bp, url_prefix='/wallet')
     app.register_blueprint(market.bp, url_prefix='/market')
     app.register_blueprint(news.bp, url_prefix='/news')
     app.register_blueprint(tools.bp, url_prefix='/tools')
-    app.register_blueprint(home.bp, url_prefix='/home')
+    #app.register_blueprint(home.bp, url_prefix='/home')
     app.register_blueprint(spotify.bp, url_prefix='/spotify')
+    app.register_blueprint(sports.bp, url_prefix='/sports')
+    app.register_blueprint(tv.bp, url_prefix='/tv')
+
+    # Wallet 
+    app.register_blueprint(bac.bp, url_prefix='/wallet/bac')
 
     @app.route('/', methods=['GET'])
+    @limiter.exempt  # Exempt index route from rate limiting
     def index():
         data = {
             'title': 'the path to success starts with laserfocus.',
@@ -56,7 +87,7 @@ def start_api():
         
         logger.error(f'User failed to authenticate.')
         return {"msg": "Invalid token"}, 401
-    
+
     @app.errorhandler(404)
     def not_found_error(error):
         return {"error": "Not found"}, 404

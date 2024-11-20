@@ -38,9 +38,3 @@ async def light_on_route():
     payload = request.get_json(force=True)
     response = Home.light_on(payload['lightId'])
     return response
-
-@bp.route('/refresh_tv', methods=['POST'])
-async def refresh_tv_route():
-    payload = request.get_json(force=True)
-    response = Home.refresh_tv(payload['tvId'])
-    return response

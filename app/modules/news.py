@@ -59,6 +59,7 @@ class NewsAggregator:
 
         self.add_interest('Technology', ['AI', 'machine learning', 'deep learning', 'neural networks', 'artificial intelligence', 'machine learning', 'deep learning', 'neural networks', 'artificial intelligence'])
         self.add_interest('Business', ['stock market', 'investing', 'finance', 'economy', 'markets', 'business', 'economics', 'market', 'stocks', 'investing', 'finance', 'economy', 'markets', 'business', 'economics', 'market', 'stocks', 'investing', 'finance', 'economy', 'markets', 'business', 'economics', 'market', 'stocks'])
+        self.add_interest('Politics', ['politics', 'politician', 'politicians', 'politics', 'politician', 'politicians', 'politics', 'politician', 'politicians', 'politics', 'politician', 'politicians', 'politics', 'politician', 'politicians'])
 
         logger.announcement('News Aggregator Service initialized', 'success')
     
@@ -107,7 +108,7 @@ class NewsAggregator:
                 logger.info(f'Scraped {len(articles_data)} articles from {len(self.sources)} sources')
                 
                 for article_data in articles_data:
-                    logger.info(f'Attempting to store article: {article_data}')
+                    logger.info(f'Attempting to store article {article_data["title"]}')
                     existing = session.query(Article).filter_by(url=article_data['url']).first()
                     if not existing:
                         article = Article(
@@ -204,7 +205,7 @@ class CNN:
 
         logger.info('Initializing CNN')
         self.url = 'https://www.cnn.com'
-        self.max_articles = 5
+        self.max_articles = 30
         logger.success('CNN initialized')
 
     def scrape_articles(self):

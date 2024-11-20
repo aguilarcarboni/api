@@ -5,10 +5,8 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 
 SCOPES = ["https://mail.google.com/", "https://www.googleapis.com/auth/drive"]
 
-date = '20241024'
-
 flow = InstalledAppFlow.from_client_secrets_file(
-        f"secret.json", SCOPES
+        f"creds.json", SCOPES
 )
 
 creds = flow.run_local_server(port=0)

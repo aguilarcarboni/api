@@ -92,13 +92,16 @@ def update(session, table: str, params: dict, data: dict):
 
         if not item:
             return Response.error(f"{table.capitalize()} with given parameters not found")
+        
+        logger.info(f'Updating entry timestamp.')
+        data['updated'] = datetime.now()
 
         query.update(data)
         session.flush()
 
         updated_item = query.first()
-        logger.success(f"Successfully updated {table} with new data {updated_item._asdict()}")
-        return Response.success(f"Successfully updated {table} with new data {updated_item._asdict()}")
+        logger.success(f"Successfully updated entry with id: {updated_item.id} in table: {table}.")
+        return Response.success(f"Successfully updated entry with id: {updated_item.id} in table: {table}.")
     except SQLAlchemyError as e:
         logger.error(f"Error updating {table}: {str(e)}")
         raise
@@ -140,14 +143,14 @@ def delete(session, table: str, params: dict):
 
         item = query.first()
         if not item:
-            return Response.error(f"{table.capitalize()} with given parameters not found")
+            return Response.error(f"Entry with given parameters not found in table: {table}.")
 
         delete_stmt = tbl.delete().where(tbl.c.id == item.id)
         session.execute(delete_stmt)
         session.flush()
 
-        logger.success(f"Successfully deleted {table} with id: {item.id}")
-        return Response.success(f"{table.capitalize()} deleted successfully")
+        logger.success(f"Successfully deleted entry with id: {item.id} from table: {table}.")
+        return Response.success(f"Successfully deleted entry with id: {item.id} from table: {table}.")
     except SQLAlchemyError as e:
         logger.error(f"Error deleting {table}: {str(e)}")
         raise
