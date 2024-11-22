@@ -31,7 +31,7 @@ class Browser:
             logger.warning(f"Could not fetch robots.txt: {e}")
             return False
 
-    def scraper(self, url: str) -> BeautifulSoup | Response:
+    def scraper(self, url: str):
 
         logger.warning(f"Scraping URL: {url}")
         

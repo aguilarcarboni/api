@@ -21,12 +21,7 @@ COPY . .
 
 # Copy the .env file into the container
 COPY .env .
+COPY run.sh .
+RUN chmod +x run.sh
 
-# Set environment variables from .env file
-ENV $(cat .env | xargs)
-
-# Expose the port the app runs on
-EXPOSE ${LF_API_PORT}
-
-# Run the application with Gunicorn
-CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:${LF_API_PORT} --workers 2 --threads 4 --timeout 180 run:laserfocus"]
+ENTRYPOINT ["./run.sh"]

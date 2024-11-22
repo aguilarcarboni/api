@@ -82,6 +82,7 @@ def start_api():
     def login():
         payload = request.get_json(force=True)
         logger.info(f'User attempting authentication... {payload}')
+        print(payload)
         token = payload['token']
         if token == 'laserfocused':
             access_token = create_access_token(identity=token)
