@@ -7,4 +7,4 @@ export $(cat .env | xargs)
 lsof -ti :${LF_API_PORT} | xargs kill -9 2>/dev/null || true
 
 # Start Gunicorn with environment variables
-gunicorn --bind 0.0.0.0:${LF_API_PORT} --workers 2 --threads 2 --timeout 180 run:laserfocus
+gunicorn --bind 0.0.0.0:${LF_API_PORT} --workers 2 --threads 4 --timeout 180 run:laserfocus

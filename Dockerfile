@@ -29,4 +29,4 @@ ENV $(cat .env | xargs)
 EXPOSE ${LF_API_PORT}
 
 # Run the application with Gunicorn
-CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:${LF_API_PORT} run:laserfocus"]
+CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:${LF_API_PORT} --workers 2 --threads 4 --timeout 180 run:laserfocus"]
