@@ -3,7 +3,7 @@ import pandas as pd
 class Algorithms:
     def __init__(self):
         self.grade_data = {
-            'Quizzes': [100, 0, 0, 0, 0, 0, 20, 85, 0, 90, 0, 50, 70, 90, 70, 100, 75, 100, 100, 80],
+            'Quizzes': [100, 20, 20, 60, 100, 0, 20, 85, 0, 90, 100, 50, 70, 90, 70, 100, 75, 100, 100, 80],
             'Participation': 80,
             'Project 1': 96,
             'Midterm': 84,
