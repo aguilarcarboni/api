@@ -42,7 +42,6 @@ def start_api():
 
     # Import and register blueprints
     from src.app import database, drive, news, market, email, tools, sports, tv, lists
-    from src.app.wallet import bac
     
     # Add specific rate limits for sensitive endpoints
     limiter.limit("600 per minute")(database.bp)
@@ -60,7 +59,7 @@ def start_api():
     app.register_blueprint(tv.bp, url_prefix='/tv')
 
     # Wallet 
-    app.register_blueprint(bac.bp, url_prefix='/wallet/bac')
+    #app.register_blueprint(bac.bp, url_prefix='/wallet/bac')
 
     #app.register_blueprint(home.bp, url_prefix='/home')
     #app.register_blueprint(spotify.bp, url_prefix='/spotify')
