@@ -1,33 +1,41 @@
 import pandas as pd
 
+# Project 2
+# Final Exam
 class Algorithms:
+
     def __init__(self):
+
         self.grade_data = {
-            'Quizzes': [100, 20, 20, 60, 100, 0, 20, 85, 0, 90, 100, 50, 70, 90, 70, 100, 75, 100, 100, 80],
             'Participation': 80,
-            'Project 1': 96,
+            'Quizzes': [100, 20, 20, 60, 100, 0, 20, 85, 0, 90, 100, 50, 70, 90, 70, 100, 75, 100, 100, 80],
             'Midterm': 84,
+            'Project 1': 96,
             'Project 2': 95,
-            'Final Exam': 80
+            'Final Exam': 50
         }
 
         self.weights = {
-            'Quizzes': 0.2,
             'Participation': 0.05,
-            'Project 1': 0.1,
+            'Quizzes': 0.2,
             'Midterm': 0.15,
+            'Project 1': 0.1,
             'Project 2': 0.25,
             'Final Exam': 0.25
         }
 
+# Quiz
+# Final Project
+# Homeworks and notes
 class ObjectOriented:
+
     def __init__(self):
         self.grade_data = {
             'Homework': [100, 100, 100],
             'Quizzes': [90, 90, 100, 45],
             'Project 1': 84,
             'Project 2': 100,
-            'Final Project': 85, 
+            'Final Project': 87
         }
 
         self.weights = {
@@ -38,12 +46,15 @@ class ObjectOriented:
             'Final Project': 0.3
         }
 
+# Missing:
+# Project
 class Architecture:
+
     def __init__(self):
         self.grade_data = {
-            'Homework': [100, 75, 95, 90, 90, 45, 90],
-            'Quizzes': [100, 60, 80, 90, 90, 80, 80, 50, 100],
-            'Project': 75,
+            'Homework': [100, 75, 95, 90, 90, 45, 90, 69, 90, 90],
+            'Quizzes': [100, 60, 80, 90, 90, 80, 80, 50, 100, 90, 80, 100],
+            'Project': 92
         }
 
         self.weights = {
@@ -52,16 +63,25 @@ class Architecture:
             'Project': 0.2
         }
 
+# Missing:
+# Deliverable 4
 class SoftwareEngineering:
     def __init__(self):
+
         self.grade_data = {
-            'Project': 90,
-            'Midterm 1': 74, 
-            'Midterm 2': 75,
+            'Deliverable 1': 98,
+            'Deliverable 2': 88,
+            'Deliverable 3': 98,
+            'Deliverable 4': 120,
+            'Midterm 1': 73, 
+            'Midterm 2': 63,
         }
 
         self.weights = {
-            'Project': 0.5,
+            'Deliverable 1': 0.1,
+            'Deliverable 2': 0.1,
+            'Deliverable 3': 0.15,
+            'Deliverable 4': 0.15,
             'Midterm 1': 0.25,
             'Midterm 2': 0.25
         }
