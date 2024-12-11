@@ -24,37 +24,37 @@ class Algorithms:
             'Final Exam': 0.25
         }
 
-# Quiz
 # Final Project
-# Homeworks and notes
+# Notes
 class ObjectOriented:
 
     def __init__(self):
         self.grade_data = {
-            'Homework': [100, 100, 100],
-            'Quizzes': [90, 90, 100, 45],
+            'Homework': [100, 70, 70],
+            'Notes': [100, 100, 0],
+            'Quizzes': [90, 90, 100, 45, 85],
             'Project 1': 84,
             'Project 2': 100,
-            'Final Project': 87
+            'Final Project': 95
         }
 
         self.weights = {
-            'Homework': 0.1,
+            'Homework': 0.07,
+            'Notes': 0.03,
             'Quizzes': 0.1,
             'Project 1': 0.25,
             'Project 2': 0.25,
             'Final Project': 0.3
         }
 
-# Missing:
-# Project
+# Final Project
 class Architecture:
 
     def __init__(self):
         self.grade_data = {
-            'Homework': [100, 75, 95, 90, 90, 45, 90, 69, 90, 90],
+            'Homework': [100, 75, 95, 90, 90, 45, 90, 69, 65, 100],
             'Quizzes': [100, 60, 80, 90, 90, 80, 80, 50, 100, 90, 80, 100],
-            'Project': 92
+            'Project': 50
         }
 
         self.weights = {
@@ -63,7 +63,6 @@ class Architecture:
             'Project': 0.2
         }
 
-# Missing:
 # Deliverable 4
 class SoftwareEngineering:
     def __init__(self):
