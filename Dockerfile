@@ -16,13 +16,21 @@ COPY requirements.txt .
 # Install the required packages
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the application code
+# Create directories for persistent storage
+RUN mkdir -p /app/src/db
+RUN mkdir -p /app/cache
+
+# Create volume mount points
+VOLUME /app/src/db
+VOLUME /app/cache
+
+# Copy the application code
 COPY . .
 
-# Copy the .env file into the container
-COPY run.sh .
+# Make run script executable
 RUN chmod +x run.sh
 
+# Set the default environment variables
 ENV JWT_SECRET_KEY=${JWT_SECRET_KEY}
 
 ENV DATABASE_URL=${DATABASE_URL}
