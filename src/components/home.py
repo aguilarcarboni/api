@@ -53,14 +53,14 @@ class SmartHome:
         """Destructor to ensure connection is closed"""
         self.disconnect()
 
-    def getNextId(self):
+    def get_next_id(self):
         self.nextId += 1
         return self.nextId
 
     def get_states(self, payload):
         
         logger.info('Getting available states...')
-        payload["id"] = self.getNextId()
+        payload["id"] = self.get_next_id()
         payload["type"] = "get_states"
 
         self.ws.send(json.dumps(payload))
@@ -75,7 +75,7 @@ class SmartHome:
 
     def get_services(self, payload):
         logger.info('Getting all available service actions...')
-        payload["id"] = self.getNextId()
+        payload["id"] = self.get_next_id()
         payload["type"] = "get_services"
         self.ws.send(json.dumps(payload))
         response = json.loads(self.ws.recv())
@@ -87,7 +87,7 @@ class SmartHome:
 
     def call_service(self, payload):
         logger.info('Calling service...')
-        payload["id"] = self.getNextId()
+        payload["id"] = self.get_next_id()
         payload["type"] = "call_service"
         self.ws.send(json.dumps(payload))
         response = self.ws.recv()
@@ -98,7 +98,7 @@ class SmartHome:
 
         logger.info(f'Turning light {lightId} on...')
         payload = {
-            "id": self.getNextId(),
+            "id": self.get_next_id(),
             "type": "call_service",
             "domain": "light",
             "service": "turn_on",
@@ -115,7 +115,7 @@ class SmartHome:
     def light_off(self, lightId):
         logger.info(f'Turning light {lightId} off...')
         payload = {
-        "id": self.getNextId(),
+        "id": self.get_next_id(),
         "type": "call_service",
         "domain": "light",
         "service": "turn_off",

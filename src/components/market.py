@@ -8,7 +8,7 @@ logger.announcement('Initializing Markets', 'info')
 tickers = ['SPY', 'QQQ', 'TSLA', 'NVDA', 'AAPL', 'AMZN', 'NVDA', 'AMD', 'GOOGL', 'MSFT', 'V']
 logger.announcement('Successfully initialized Markets', 'success')
 
-def getHistoricalData(tickers):
+def get_historical_data(tickers):
 
     logger.info(f'Getting historical market data for tickers: {tickers}')
     marketData = {}

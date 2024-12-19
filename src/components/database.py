@@ -146,7 +146,7 @@ def delete(session, table: str, params: dict):
         session.flush()
 
         logger.success(f"Successfully deleted entry with id: {item.id} from table: {table}.")
-        return Response.success(item.as_dict())
+        return Response.success(item.id)
     
     except SQLAlchemyError as e:
         logger.error(f"Error deleting {table}: {str(e)}")

@@ -50,6 +50,7 @@ class NewsAggregator:
 
         self.engine = create_engine(db_url)
         Base.metadata.create_all(self.engine)
+        
         nltk.download('punkt')
         nltk.download('stopwords')
         

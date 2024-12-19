@@ -27,7 +27,7 @@ class Gmail:
     except Exception as e:
       logger.error(f"Error initializing Email: {str(e)}")
 
-  def sendEmail(self, plain_text, to_email, subject):
+  def send_email(self, plain_text, to_email, subject):
     try:
         logger.info(f'Sending email to: {to_email}')
 

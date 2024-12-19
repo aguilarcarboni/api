@@ -25,7 +25,6 @@ def fetch_playlist():
         return Response.success(content)
 
     # If file doesn't exist, fetch from API
-
     max_lines = 2000
 
     get_all_streams = f"/get.php?username={XTREAM_USER}&password={XTREAM_PASS}&type=m3u_plus&output=m3u8"
