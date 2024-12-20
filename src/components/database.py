@@ -71,7 +71,7 @@ def create(session, table: str, data: dict):
 
 @with_session
 def update(session, table: str, params: dict, data: dict):
-    logger.info(f'Attempting to update entry in table: {table}')
+    logger.info(f'Attempting to update entry in table: {table} with params: {params}')
     
     try:
         tbl = Table(table, metadata, autoload_with=engine)
@@ -95,7 +95,7 @@ def update(session, table: str, params: dict, data: dict):
         updated_item = query.first()
         logger.success(f"Successfully updated entry with id: {updated_item.id} in table: {table}.")
 
-        return Response.success(updated_item.as_dict())
+        return Response.success(updated_item.id)
     
     except SQLAlchemyError as e:
         logger.error(f"Error updating {table}: {str(e)}")
@@ -103,7 +103,7 @@ def update(session, table: str, params: dict, data: dict):
 
 @with_session
 def read(session, table: str, params: dict = None):
-    logger.info(f'Attempting to read entry from table: {table}')
+    logger.info(f'Attempting to read entry from table: {table} with params: {params}')
     
     try:
         tbl = Table(table, metadata, autoload_with=engine)
@@ -127,7 +127,7 @@ def read(session, table: str, params: dict = None):
 
 @with_session
 def delete(session, table: str, params: dict):
-    logger.info(f'Attempting to delete entry from table: {table}')
+    logger.info(f'Attempting to delete entry from table: {table} with params: {params}')
     
     try:
         tbl = Table(table, metadata, autoload_with=engine)
