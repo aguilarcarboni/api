@@ -1,14 +1,13 @@
 from flask import Flask, request, send_from_directory
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager, verify_jwt_in_request, create_access_token, exceptions
-from flask import jsonify
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from src.utils.logger import logger
+from src.utils.response import Response
 
 import os
 from dotenv import load_dotenv
-from src.utils.logger import logger
-from src.utils.response import Response
 
 load_dotenv()
 
@@ -23,6 +22,7 @@ def start_api():
     
     logger.announcement('Starting Laserfocus...', 'info')
 
+    # Initialize Flask app
     app = Flask(__name__)
     cors = CORS(app, resources={r"/*": {"origins": "*"}})
     app.config['CORS_HEADERS'] = 'Content-Type'
@@ -37,29 +37,31 @@ def start_api():
         storage_uri="memory://"
     )
 
+    # Register JWT before request according to some parameters
     app.before_request(jwt_required)
 
-    # Import and register blueprints
-    from src.app import database, drive, news, market, email, tools, sports, tv, lists
-    
-    app.register_blueprint(drive.bp, url_prefix='/drive')
-    app.register_blueprint(database.bp, url_prefix='/database')
-    app.register_blueprint(email.bp, url_prefix='/email')
+    # User apps
+    from src.app import news, market, email, tools, sports, tv, home
     app.register_blueprint(tools.bp, url_prefix='/tools')
-
-    app.register_blueprint(lists.bp, url_prefix='/lists')
-
+    app.register_blueprint(email.bp, url_prefix='/email')
     app.register_blueprint(market.bp, url_prefix='/market')
     app.register_blueprint(news.bp, url_prefix='/news')
     app.register_blueprint(sports.bp, url_prefix='/sports')
     app.register_blueprint(tv.bp, url_prefix='/tv')
+    app.register_blueprint(home.bp, url_prefix='/home')
 
-    #app.register_blueprint(bac.bp, url_prefix='/wallet/bac')
-    #app.register_blueprint(home.bp, url_prefix='/home')
+    # Developer apps
+    from src.app import database, drive,  databases, wallet
+    app.register_blueprint(drive.bp, url_prefix='/drive')
+    app.register_blueprint(database.bp, url_prefix='/database')
+    app.register_blueprint(databases.bp, url_prefix='/databases')
+    app.register_blueprint(wallet.bp, url_prefix='/wallet')
+
+    # Development apps
     #app.register_blueprint(spotify.bp, url_prefix='/spotify')
-
     limiter.limit("600 per minute")(database.bp)
 
+    # Define routes
     @app.route('/', methods=['GET'])
     def index():
         return Response.success('the path to success starts with laserfocus.'), 200
@@ -91,28 +93,29 @@ def start_api():
 
     @app.errorhandler(404)
     def not_found_error(error):
+        logger.error(f'Not found: {error}')
         return Response.error("Not found"), 404
 
     @app.errorhandler(500)
     def internal_error(error):
+        logger.error(f'Internal server error: {error}')
         return Response.error("Internal server error"), 500 
 
     @app.errorhandler(400)
     def bad_request_error(error):
-        app.logger.error(f'Bad request: {error}')
+        logger.error(f'Bad request: {error}')
         return Response.error("Bad request"), 400
 
     @app.errorhandler(401)
     def unauthorized_error(error):
-        app.logger.error(f'Unauthorized access attempt: {error}')
+        logger.error(f'Unauthorized access attempt: {error}')
         return Response.error("Unauthorized"), 401
 
     @app.errorhandler(403)
     def forbidden_error(error):
-        app.logger.error(f'Forbidden access attempt: {error}')
+        logger.error(f'Forbidden access attempt: {error}')
         return Response.error("Forbidden"), 403
 
-    logger.success('Laserfocus initialized successfully')
     return app
 
 laserfocus = start_api()

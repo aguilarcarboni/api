@@ -3,8 +3,9 @@
 # Personal
 cache/*
 logs/*
+src/db/*
+
 *.DS_Store
-src/db/*.db
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

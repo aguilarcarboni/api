@@ -34,6 +34,30 @@ class GoogleDrive:
     except Exception as e:
       logger.error(f"Error initializing Drive: {str(e)}")
 
+  def get_user_info(self):
+    """
+    Gets information about the user, including storage quota and capabilities.
+    
+    Returns:
+        dict: A Response object containing:
+            - On success: {'status': 'success', 'content': user_info}
+                where user_info includes storage quota, user details, and other Drive capabilities
+            - On failure: {'status': 'error', 'content': error_message}
+    """
+    logger.info('Getting user information from Drive')
+    try:
+      fields = (
+        'storageQuota,user,appInstalled,maxUploadSize,'
+        'importFormats,exportFormats,canCreateDrives,'
+        'folderColorPalette,driveThemes'
+      )
+      about = self.service.about().get(fields=fields).execute()
+      logger.success('Successfully retrieved user information')
+      return Response.success(about)
+    except Exception as e:
+      logger.error(f"Error retrieving user information: {str(e)}")
+      return Response.error(f"Error retrieving user information: {str(e)}")
+
   def get_shared_drive_info(self, drive_name):
     logger.info(f'Getting shared drive info for drive: {drive_name}')
     try:

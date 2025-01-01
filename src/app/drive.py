@@ -7,6 +7,10 @@ bp = Blueprint('drive', __name__)
 
 Drive = GoogleDrive()
 
+@bp.route('/user-info', methods=['GET'])
+def get_user_info_route():
+    return Drive.get_user_info()
+
 """
 Get the information of a shared drive
 
