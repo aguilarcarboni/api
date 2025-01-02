@@ -45,7 +45,7 @@ def fetch_channels_from_provider():
 
     logger.info('Fetching playlist...')
     
-    db.delete('tv')
+    db.delete_all('tv')
     
     # Get all streams in m3u8 format
 

@@ -157,13 +157,29 @@ class DatabaseHandler:
                 session.flush()
 
                 logger.success(f"Successfully deleted entry with id: {item.id} from table: {table}.")
-                return Response.success(item.as_dict())
+                return Response.success(item)
             
             except SQLAlchemyError as e:
                 logger.error(f"Error deleting {table}: {str(e)}")
                 return Response.error(f'Database error: {str(e)}')
 
         return _delete(table, params)
+    
+    def delete_all(self, table: str):
+        @self.with_session
+        def _delete_all(session, table: str):
+            logger.info(f'Attempting to delete all entries from table: {table}')
+            try:
+                tbl = Table(table, self.metadata, autoload_with=self.engine)
+                session.execute(tbl.delete())
+                session.flush()
+                logger.success(f'Successfully deleted all entries from table: {table}')
+                return Response.success(f'Successfully deleted all entries from table: {table}')
+            except SQLAlchemyError as e:
+                logger.error(f'Error deleting all entries from table: {str(e)}')
+                return Response.error(f'Database error: {str(e)}')
+
+        return _delete_all(table)
 
     def get_tables(self):
         @self.with_session
