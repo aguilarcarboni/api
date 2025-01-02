@@ -116,7 +116,6 @@ class DatabaseHandler:
             
             try:
                 tbl = Table(table, self.metadata, autoload_with=self.engine)
-                print(tbl)
                 query = session.query(tbl)
 
                 if params:

@@ -1,12 +1,17 @@
 from flask import request, Blueprint
 from src.components.databases.watchlist import db as watchlist_db
+from src.components.wallet.wallet import db as wallet_db
+from src.components.tv import db as tv_db
+
 from src.utils.response import Response
 
 bp = Blueprint('databases', __name__)
 
 # Dictionary of available databases
 databases = {
-    'watchlist': watchlist_db
+    'watchlist': watchlist_db,
+    'wallet': wallet_db,
+    'tv': tv_db
 }
 
 @bp.route('/list', methods=['GET'])

@@ -1,8 +1,12 @@
 from flask import Blueprint, request
 
-from src.components.wallet.statements.sources.bac import db, generateStatements
+from src.components.wallet.components.bac import db, generateStatements
 
 bp = Blueprint('wallet', __name__)
+
+@bp.route("/bac/accounts", methods=['POST'])
+def bac_accounts_route():
+    return db.read('account')
 
 @bp.route("/bac/expenses", methods=['POST'])
 def bac_expenses_route():
@@ -14,5 +18,5 @@ def bac_expenses_route():
 def bac_generate_statements_route():
     payload = request.get_json(force=True)
     account = payload['account']
-    file_name = payload['file_name']
-    return generateStatements(account, file_name)
+    month = payload['month']
+    return generateStatements(account, month)

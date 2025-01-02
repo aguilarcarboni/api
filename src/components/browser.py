@@ -7,16 +7,13 @@ import os
 from src.utils.logger import logger
 from src.utils.response import Response
 
-
-# TODO CACHE SCRAPED PAGES
-
 class Browser:
     
     def __init__(self):
         logger.announcement('Initializing Browser', 'info')
         self.robot_parser = RobotFileParser()
         self.headers = {
-            'User-Agent': 'Mozilla/5.0 (compatible; Jawa/1.0; +http://laserfocus.space/bot)'
+            'User-Agent': 'Mozilla/5.0 (compatible; Jawa/1.0; +http://api.laserfocus.space/bot)'
         }
         logger.announcement('Successfully initialized Browser', 'success')
 

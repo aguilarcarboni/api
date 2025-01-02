@@ -5,7 +5,7 @@ from datetime import datetime
 import pandas as pd
 import csv
 
-from src.components.wallet.statements.statements import db
+from src.components.wallet.wallet import db
 
 from src.utils.response import Response
 from src.utils.api import access_api
@@ -19,55 +19,62 @@ def generateStatements(account, month):
 
     logger.announcement(f"Generating statements for account: {account}, month: {month}", 'info')
 
-    # Download source file from drive
-    # Must be downloaded from BAC account
-    response = db.read('account', {'name': account})
+    # Get account from database
+    response = db.read('account', {'id': account})
     accounts = response['content']
 
     if len(accounts) != 1:
-        logger.error(f"Error finding account: {accounts}")
-        return Response.error('Error finding account.')
+        return Response.error('Error finding account. Review database.')
     
-    account_id = accounts[0]['drive_source_id']
+    account_drive_id = accounts[0]['drive_source_id']
+    account_id = accounts[0]['id']
 
-    response = access_api('/drive/get_file_info', 'POST', {'file_name':f'{month}.csv', 'parent_id':account_id})
+    logger.announcement("Downloading statements file...", 'info')
+
+    # Download source file from drive
+    response = access_api('/drive/get_file_info', 'POST', {'file_name':f'{month}.csv', 'parent_id':account_drive_id})
+    if response['status'] != 'success':
+        return Response.error('Failed to find statements file.')
+    
     file_id = response['content']['id']
     response = access_api('/drive/download_file', 'POST', {'file_id':file_id})
-    
     try:
         file_text = response.decode('latin1')
     except Exception as e:
-        logger.error(f"Error decoding file: {str(e)}")
-        return Response.error('Error decoding file.')
+        return Response.error(f'Error decoding file.')
+    
+    logger.announcement("Successfully downloaded statements file.", 'success')
 
+    # Parse and process statements
+    logger.announcement("Parsing statements...", 'info')
     df_statements, account_number = parseStatements(file_text)
+    logger.announcement("Successfully parsed statements.", 'success')
 
     logger.announcement(f"Identified account number: {account_number}, verifying account...", 'info')
 
-    response = db.read('account')
-    accounts = response['content']
-
-    if len(accounts) == 0:
-        return Response.error('No accounts found.')
-
     verified = False
     for acct in accounts:
-        if acct['account_id'] == account_number and acct['name'] == account:
-            logger.announcement(f"Account verified: {acct}", 'success')
+        if acct['id'] == account_number:
+            logger.announcement(f"Account verified.", 'success')
             verified = True
 
     if not verified:
         logger.error(f"Account not found: {account_number} {account}")
         return Response.error('Account not found.')
 
-    # Extract debits and credits
+    logger.announcement("Extracting debits and credits...", 'info')
     df_debits, df_credits = getEntries(df_statements)
+    logger.announcement("Successfully extracted debits and credits.", 'success')
 
-    # Categorize entries
+    """
+    logger.announcement("Categorizing entries...", 'info')
     df_debits = categorizeStatements(df_debits)
     df_credits = categorizeStatements(df_credits)
+    logger.announcement("Successfully categorized entries.", 'success')
+    """
 
     # Post process data
+    logger.announcement("Post processing data...", 'info')
     df_all = pd.concat([df_debits, df_credits])
     df_all['Balance'] = df_all['Balance'].astype(float)
     df_all['Debit'] = df_all['Debit'].astype(float)
@@ -86,25 +93,26 @@ def generateStatements(account, month):
 
         # Transform keys to lowercase to match column names
         expense_transformed = {
-            'Date': str(expense['Date']),
-            'Reference': expense['Reference'],
-            'Code': expense['Code'],
-            'Description': expense['Description'],
-            'Category': expense['Category'],
-            'Balance': expense['Balance'],
-            'Debit': expense['Debit'],
-            'Credit': expense['Credit'],
-            'Total': expense['Total']
+            'date': str(expense['Date']),
+            'reference': expense['Reference'],
+            'code': expense['Code'],
+            'description': expense['Description'],
+            'category': expense['Category'],
+            'balance': expense['Balance'],
+            'debit': expense['Debit'],
+            'credit': expense['Credit'],
+            'total': expense['Total'],
+            'account_id': account_id
         }
-        logger.info(f"Saving expense: {expense_transformed}")
         try:
             db.create('expense', expense_transformed)
             num_saved += 1
         except Exception as e:
             logger.error(f"Error saving expense: {str(e)}")
-            return Response.error('Error saving expense.')
-        
-    logger.announcement(f"Successfully saved {num_saved}/{len(expenses_dict)} expenses to database.", 'success')
+
+    logger.announcement("Successfully post processed data.", 'success')
+    
+    logger.announcement(f"Successfully processed {month} financial statements for account: {account}.", 'success')
     return Response.success(f'Successfully processed {month} financial statements for account: {account}.')
 
 def parseStatements(file_text):
@@ -200,11 +208,3 @@ def categorizeStatements(df_statements):
         logger.success("Successfully categorized credits.")
 
     return df_statements
-
-def manuallyCategorizeStatements(df_statements):
-    for index, row in df_statements[df_statements['Category'] == ''].iterrows():
-        category = input('Enter category for statement:')
-        df_statements.loc[index, 'Category'] = category
-
-    return df_statements
-

@@ -45,7 +45,12 @@ def fetch_channels_from_provider():
 
     logger.info('Fetching playlist...')
     
+    db.delete('tv')
+    
     # Get all streams in m3u8 format
+
+    # TODO cache the playlist
+
     get_all_streams = f"/get.php?username={XTREAM_USER}&password={XTREAM_PASS}&type=m3u_plus&output=m3u8"
     response = requests.get(XTREAM_BASE_URL + get_all_streams)
     if response.status_code != 200:

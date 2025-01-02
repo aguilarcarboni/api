@@ -9,9 +9,12 @@ def access_api(endpoint, method='GET', data=None):
     try:
         # Add timeout to prevent hanging
         auth = requests.post(url + '/login', json={'token': 'laserfocused'})
+
+        if auth.json()['status'] != 'success':
+            raise Exception(auth.json()['content'])
         
         response = requests.request(method, url + endpoint, json=data, headers={
-            'Authorization': f'Bearer {auth.json()["access_token"]}'
+            'Authorization': f'Bearer {auth.json()["content"]}'
         })
         
         try:
