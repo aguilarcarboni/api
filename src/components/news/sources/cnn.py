@@ -55,6 +55,14 @@ def parse(article_url):
     article_content = return_text_if_not_none(soup.find('div', {'class': 'article__content'}))
     timestamp = return_text_if_not_none(soup.find('div', {'class': 'timestamp'}))
     
+    # Find main image
+    image_container = soup.find('div', {'class': 'image__container'})
+    main_image = ''
+    if image_container:
+        img_tag = image_container.find('img', {'class': 'image__dam-img'})
+        if img_tag and 'src' in img_tag.attrs:
+            main_image = img_tag['src']
+    
     timestamp_data = parse_timestamp(timestamp) if timestamp else ['', '', '', '']
     
     return {
@@ -65,7 +73,8 @@ def parse(article_url):
         'timestamp_type': timestamp_data[0],
         'time': timestamp_data[1],
         'day': timestamp_data[2],
-        'year': timestamp_data[3]
+        'year': timestamp_data[3],
+        'image': main_image
     }
 
 def parse_timestamp(timestamp):

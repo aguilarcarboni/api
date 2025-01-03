@@ -26,6 +26,7 @@ class Expense(Base):
     date = Column(String)
     code = Column(String)
     description = Column(String)
+    category = Column(String)
     category_id = Column(Integer)
     balance = Column(Float)
     debit = Column(Float)

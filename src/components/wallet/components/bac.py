@@ -66,12 +66,10 @@ def generateStatements(account, month):
     df_debits, df_credits = getEntries(df_statements)
     logger.announcement("Successfully extracted debits and credits.", 'success')
 
-    """
     logger.announcement("Categorizing entries...", 'info')
     df_debits = categorizeStatements(df_debits)
     df_credits = categorizeStatements(df_credits)
     logger.announcement("Successfully categorized entries.", 'success')
-    """
 
     # Post process data
     logger.announcement("Post processing data...", 'info')
