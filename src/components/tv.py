@@ -8,10 +8,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
 from src.utils.database import DatabaseHandler
 
-logger.announcement('Initializing TV', 'info')
-XTREAM_BASE_URL = "http://xdplayer.tv:8080"
-XTREAM_USER = "aguilarcarboni"
-XTREAM_PASS = "pXU2Hx6NMu"
+logger.announcement('Initializing TV Service', 'info')
 
 Base = declarative_base()
 
@@ -29,7 +26,16 @@ class TV(Base):
     updated = Column(String)
     created = Column(String)
 
-logger.announcement('Initializing TV Service', 'info')
+class Credentials(Base):
+    """Credentials table"""
+    __tablename__ = 'credentials'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, unique=True)
+    username = Column(String)
+    password = Column(String)
+    url = Column(String)
+    created = Column(String)
+    updated = Column(String)
 
 db_name = 'tv'
 db_path = os.path.join(os.path.dirname(__file__), '..', 'db', f'{db_name}.db')
@@ -39,20 +45,41 @@ engine = create_engine(db_url)
 
 db = DatabaseHandler(base=Base, engine=engine, type='sqlite')
 
+"""
+XTREAM_BASE_URL = "http://xdplayer.tv:8080"
+XTREAM_USER = "aguilarcarboni"
+XTREAM_PASS = "pXU2Hx6NMu"
+"""
+
 logger.announcement('Successfully initialized TV Service', 'success')
 
-def fetch_channels_from_provider():
+def fetch_channels_from_provider(user_id: int):
 
     logger.info('Fetching playlist...')
+
+    # Get user credentials
+    credentials = db.read('credentials', {'user_id': user_id})
+
+    print(credentials)
+
+    if credentials['status'] != 'success':
+        logger.error('Failed to fetch credentials')
+        return Response.error('Failed to fetch credentials')
     
+    if len(credentials['content']) != 1:
+        logger.error('Credentials error')
+        return Response.error('Credentials error')
+    
+    url = credentials['content'][0]['url']
+    username = credentials['content'][0]['username']
+    password = credentials['content'][0]['password']
+
+    # Clear current tv channels
     db.delete_all('tv')
-    
+
     # Get all streams in m3u8 format
-
-    # TODO cache the playlist
-
-    get_all_streams = f"/get.php?username={XTREAM_USER}&password={XTREAM_PASS}&type=m3u_plus&output=m3u8"
-    response = requests.get(XTREAM_BASE_URL + get_all_streams)
+    get_all_streams = f"/get.php?username={username}&password={password}&type=m3u_plus&output=m3u8"
+    response = requests.get(url + get_all_streams)
     if response.status_code != 200:
         logger.error(f'Failed to fetch playlist: {response.status_code}')
         return Response.error(f'Failed to fetch playlist: {response.status_code}')
@@ -113,6 +140,18 @@ def fetch_channels_from_provider():
 
     logger.announcement('Playlist saved successfully', 'success')
     return Response.success('Playlist saved successfully')
+
+def create_credentials(user_id: int, url: str, username: str, password: str):
+    db.create('credentials', {
+        'user_id': user_id,
+        'url': url,
+        'username': username,
+        'password': password
+    })
+    return Response.success('Credentials created successfully')
+
+def get_credentials(user_id: int):
+    return db.read('credentials', {'user_id': user_id})
 
 def get_channels():
     return db.read('tv')
