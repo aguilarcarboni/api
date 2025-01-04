@@ -92,6 +92,8 @@ def fetch_news():
     """Fetch articles from RSS feeds and store in database"""
     logger.announcement('Fetching news from all sources', 'info')
     try:
+        db.delete_all('articles')
+
         articles_data = []
         for source in sources:
             articles_data.extend(source.scrape_articles())

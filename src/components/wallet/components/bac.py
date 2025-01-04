@@ -19,6 +19,9 @@ def generateStatements(account, month):
 
     logger.announcement(f"Generating statements for account: {account}, month: {month}", 'info')
 
+    # Delete all expenses for the current month
+    db.delete_all('expense')
+
     # Get account from database
     response = db.read('account', {'id': account})
     accounts = response['content']
@@ -66,10 +69,12 @@ def generateStatements(account, month):
     df_debits, df_credits = getEntries(df_statements)
     logger.announcement("Successfully extracted debits and credits.", 'success')
 
+    
     logger.announcement("Categorizing entries...", 'info')
     df_debits = categorizeStatements(df_debits)
     df_credits = categorizeStatements(df_credits)
     logger.announcement("Successfully categorized entries.", 'success')
+    
 
     # Post process data
     logger.announcement("Post processing data...", 'info')
@@ -170,38 +175,45 @@ def getEntries(df_statements):
 def categorizeStatements(df_statements):
     logger.info("Categorizing statements")
 
-    # Debits
-    if len(df_statements[df_statements['Debit'].astype(float) == 0]) == 0:
+    # Debits/Expenses
+    number_of_debits = len(df_statements[df_statements['Debit'].astype(float) == 0])
+
+    if number_of_debits == 0:
     
         for index, row in df_statements.iterrows():
 
             for subscription in ['COMPA', 'SEGURO BELD', 'COMPASS']:
                 if subscription in row['Description']:
-                    df_statements.loc[index, 'Category'] = 'Subscriptions'
+                    category = db.read('category', {'name': 'Subscriptions', 'type': 'expense'})['content'][0]
+                    df_statements.loc[index,'Category'] = category['name']
 
             # Categorize income
             for gas_station in ['DELTA', 'SERVICIO', 'SERVICENTRO', 'GAS', 'Uber Rides']:
                 if gas_station in row['Description']:
-                    df_statements.loc[index,'Category'] = 'Transportation'
+                    category = db.read('category', {'name': 'Transportation', 'type': 'expense'})['content'][0]
+                    df_statements.loc[index,'Category'] = category['name']
 
             for savings_account in ['960587293', 'SAVINGS']:
                 if savings_account in row['Description']:
-                    df_statements.loc[index,'Category'] = 'Savings'
-        
+                    category = db.read('category', {'name': 'Savings', 'type': 'expense'})['content'][0]
+                    df_statements.loc[index,'Category'] = category['name']
+
         logger.success("Successfully categorized debits.")
 
-    # Credits             
+    # Credits/Incomes          
     else:
 
         for index, row in df_statements.iterrows():
 
             for savings_account in ['960587293', 'SAVINGS']:
                 if savings_account in row['Description']:
-                    df_statements.loc[index,'Category'] = 'Savings'
+                    category = db.read('category', {'name': 'Savings', 'type': 'income'})['content'][0]
+                    df_statements.loc[index,'Category'] = category['name']
 
             for income_source in ['DEP', '1Q', '2Q', 'INCOME']:
                 if income_source in row['Description']:
-                    df_statements.loc[index,'Category'] = 'Income'
+                    category = db.read('category', {'name': 'Salary', 'type': 'income'})['content'][0]
+                    df_statements.loc[index,'Category'] = category['name']
         
         logger.success("Successfully categorized credits.")
 

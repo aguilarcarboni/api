@@ -5,7 +5,7 @@ browser = Browser()
 
 logger.info('Initializing CNN as a News Source')
 url = 'https://www.cnn.com'
-max_articles = 30
+max_articles = 100
 logger.success('Successfully initialized CNN')
 
 def scrape_articles():
@@ -23,9 +23,6 @@ def scrape_articles():
             
         if url_is_article(full_url):
             article_urls.add(full_url)
-        
-        if len(article_urls) >= max_articles:
-            break
             
     for article_url in list(article_urls)[:max_articles]:
         parsed_data = parse(article_url)
