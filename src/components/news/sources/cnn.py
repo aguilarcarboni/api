@@ -1,11 +1,12 @@
 from src.utils.logger import logger
 from src.components.browser import Browser
+from datetime import datetime
 
 browser = Browser()
 
 logger.info('Initializing CNN as a News Source')
 url = 'https://www.cnn.com'
-max_articles = 100
+max_articles = 30
 logger.success('Successfully initialized CNN')
 
 def scrape_articles():
@@ -13,7 +14,8 @@ def scrape_articles():
     all_data = []
     soup = browser.scraper(url)
     article_urls = set()
-    
+    current_year = datetime.now().year
+
     for a in soup.find_all('a', href=True):
         href = a['href']
         if href and href.startswith('/') and href != '#':
@@ -21,7 +23,7 @@ def scrape_articles():
         else:
             full_url = href
             
-        if url_is_article(full_url):
+        if url_is_article(full_url, current_year):
             article_urls.add(full_url)
             
     for article_url in list(article_urls)[:max_articles]:
@@ -30,7 +32,7 @@ def scrape_articles():
         
     return all_data
 
-def url_is_article(url, current_year='2024'):
+def url_is_article(url, current_year):
     if url:
         if 'cnn.com/{}/'.format(current_year) in url and '/gallery/' not in url:
             return True
