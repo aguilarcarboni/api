@@ -1,7 +1,47 @@
 import pandas as pd
 
-# Project 2
-# Final Exam
+"""SPRING 2025"""
+class HigherMath:
+
+    def __init__(self):
+
+        self.grade_data = {
+            'Homeworks/Quizzes': [0],
+            'Midterm 1': 0,
+            'Midterm 2': 0,
+            'Midterm 3': 0,
+            'Final Exam': 0
+        }
+
+        self.weights = {
+            'Homeworks/Quizzes': 0.15,
+            'Midterm 1': 0.20,
+            'Midterm 2': 0.20,
+            'Midterm 3': 0.20,
+            'Final Exam': 0.25
+        }
+
+class Databases:
+
+    def __init__(self):
+
+        self.grade_data = {
+            'Quizzes': [0],
+            'Assignments': [0],
+            'Exam 1': 0,
+            'Exam 2': 0,
+            'Project': 0
+        }
+
+        self.weights = {
+            'Quizzes': 0.15,
+            'Assignments': 0.15,
+            'Exam 1': 0.25,
+            'Exam 2': 0.25,
+            'Project': 0.2
+        }
+
+"""FALL 2024"""
 class Algorithms:
 
     def __init__(self):
@@ -24,8 +64,6 @@ class Algorithms:
             'Final Exam': 0.25
         }
 
-# Final Project
-# Notes
 class ObjectOriented:
 
     def __init__(self):
@@ -35,7 +73,7 @@ class ObjectOriented:
             'Quizzes': [90, 90, 100, 45, 85],
             'Project 1': 84,
             'Project 2': 100,
-            'Final Project': 95
+            'Final Project': 100
         }
 
         self.weights = {
@@ -47,14 +85,13 @@ class ObjectOriented:
             'Final Project': 0.3
         }
 
-# Final Project
 class Architecture:
 
     def __init__(self):
         self.grade_data = {
             'Homework': [100, 75, 95, 90, 90, 45, 90, 69, 65, 100],
             'Quizzes': [100, 60, 80, 90, 90, 80, 80, 50, 100, 90, 80, 100],
-            'Project': 50
+            'Project': 60
         }
 
         self.weights = {
@@ -63,7 +100,6 @@ class Architecture:
             'Project': 0.2
         }
 
-# Deliverable 4
 class SoftwareEngineering:
     def __init__(self):
 
@@ -71,7 +107,7 @@ class SoftwareEngineering:
             'Deliverable 1': 98,
             'Deliverable 2': 88,
             'Deliverable 3': 98,
-            'Deliverable 4': 120,
+            'Deliverable 4': 125,
             'Midterm 1': 73, 
             'Midterm 2': 63,
         }
@@ -111,24 +147,5 @@ if __name__ == "__main__":
     print("Algorithms")
     algorithms = Algorithms()
     calculator = GradeCalculator(algorithms)
-    calculator.calculate_grades()
-    calculator.print_grades()
-
-    print("\nObject Oriented")
-    object_oriented = ObjectOriented()
-
-    calculator = GradeCalculator(object_oriented)
-    calculator.calculate_grades()
-    calculator.print_grades()
-
-    print("\nArchitecture")
-    architecture = Architecture()
-    calculator = GradeCalculator(architecture)
-    calculator.calculate_grades()
-    calculator.print_grades()
-
-    print("\nSoftware Engineering")
-    software_engineering = SoftwareEngineering()
-    calculator = GradeCalculator(software_engineering)
     calculator.calculate_grades()
     calculator.print_grades()
