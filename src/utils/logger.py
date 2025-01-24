@@ -5,13 +5,20 @@ import logging
 
 class Logger:
     def __init__(self):
+
         custom_theme = Theme({
-            "info": "cyan",
-            "warning": "yellow",
-            "error": "bold red",
-            "critical": "bold white on red",
+            "red": "#FF4B4B",  # Bright red
+            "yellow": "#FFB300",  # Amber
+            "green": "#00C853",  # Bright green
+            "bold red": "#FF4B4B",  # Bright red
+            "bold yellow": "#FFB300",  # Amber
+            "bold green": "#00C853",  # Bright green
         })
-        self.console = Console(theme=custom_theme)
+        self.console = Console(
+            theme=custom_theme,
+            color_system="truecolor"
+        )
+        
         logging.basicConfig(
             level=logging.DEBUG,
             format="%(message)s",
@@ -32,6 +39,7 @@ class Logger:
         logging.getLogger('nltk').setLevel(logging.ERROR)
         logging.getLogger('chardet').setLevel(logging.ERROR)
         logging.getLogger('sqlalchemy').setLevel(logging.ERROR)
+        logging.getLogger('geventwebsocket').setLevel(logging.ERROR)
 
     def info(self, message):
         self.logger.debug(f"[blue]{message}[/blue]", extra={'markup': True})
@@ -39,18 +47,19 @@ class Logger:
     def success(self, message):
         self.logger.debug(f"[green]{message}[/green]", extra={'markup': True})
 
-    def warning(self, message):
-        self.logger.warning(f"[yellow]{message}[/yellow]\n", extra={'markup': True})
-
     def announcement(self, message, type='info'):
         if type == 'info':
-            self.logger.info(f"\n[blue][bold]{message}[/bold][/blue]", extra={'markup': True})
+            self.logger.info(f"[red bold]{message}[/red bold]", extra={'markup': True})
         elif type == 'success':
-            self.logger.info(f"[bold][green]{message}[/green][/bold]\n", extra={'markup': True})
+            self.logger.info(f"[white bold]{message}[/white bold]\n", extra={'markup': True})
         else:
             raise ValueError("Invalid type. Choose 'info' or 'success'.")
+        
+    def warning(self, message):
+        self.logger.warning(f"[yellow bold on white]{message}[/yellow bold on white]", extra={'markup': True})
 
     def error(self, message):
-        self.logger.error(f"[red]{message}[/red]\n", extra={'markup': True})
+        self.logger.error(f"[red bold on white]{message}[/red bold on white]", extra={'markup': True})
+
 
 logger = Logger()

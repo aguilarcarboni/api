@@ -40,4 +40,4 @@ engine = create_engine(db_url)
 
 db = DatabaseHandler(base=Base, engine=engine, type='sqlite')
 
-logger.success('Successfully initialized Watchlist Service')
+logger.announcement('Successfully initialized Watchlist Service', 'success')

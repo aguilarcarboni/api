@@ -4,7 +4,7 @@
 .cursorrules
 cache/*
 logs/*
-src/db/*
+src/db/*.db
 
 *.DS_Store
 

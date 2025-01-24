@@ -8,13 +8,9 @@ from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 import os
 
-from src.components.news.sources import cnn
 from src.utils.logger import logger
 from src.utils.response import Response
 from src.utils.database import DatabaseHandler
-from src.components.browser import Browser
-
-browser = Browser()
 Base = declarative_base()
 
 class Interest(Base):
@@ -49,7 +45,7 @@ class ReadArticle(Base):
     updated = Column(String)
     created = Column(String)
     
-logger.announcement('Initializing News Aggregator', 'info')
+logger.announcement('Initializing News Service', 'info')
 
 db_path = os.path.join(os.path.dirname(__file__), '..', '..', 'db', 'news.db')
 db_url = f'sqlite:///{db_path}'
@@ -57,8 +53,8 @@ engine = create_engine(db_url)
 
 db = DatabaseHandler(base=Base, engine=engine, type='sqlite')
 
-nltk.download('punkt')
-nltk.download('stopwords')
+nltk.download('punkt', quiet=True)
+nltk.download('stopwords', quiet=True)
 
 stop_words = set(stopwords.words('english'))
 
@@ -70,11 +66,14 @@ Sources must have a scrape_articles() method that returns a list of dictionaries
     - source
     - published_date
 """
+logger.info('Initializing news sources')
+from src.components.news.sources import cnn
 sources = [
     cnn
 ]
+logger.success('Successfully initialized news sources')
 
-logger.announcement('Successfully initialized news service', 'success')
+logger.announcement('Successfully initialized News Service', 'success')
 
 def add_interest(interest: str, keywords: List[str]):
     """Add a new interest category with keywords"""

@@ -8,14 +8,21 @@ from src.utils.logger import logger
 from src.utils.response import Response
 
 class Browser:
+    _instance = None
+    
+    def __new__(cls):
+        if cls._instance is None:
+            logger.announcement('Initializing Browser', 'info')
+            cls._instance = super(Browser, cls).__new__(cls)
+            cls._instance.robot_parser = RobotFileParser()
+            cls._instance.headers = {
+                'User-Agent': 'Mozilla/5.0 (compatible; Jawa/1.0; +http://api.laserfocus.space/bot)'
+            }
+            logger.announcement('Successfully initialized Browser', 'success')
+        return cls._instance
     
     def __init__(self):
-        logger.announcement('Initializing Browser', 'info')
-        self.robot_parser = RobotFileParser()
-        self.headers = {
-            'User-Agent': 'Mozilla/5.0 (compatible; Jawa/1.0; +http://api.laserfocus.space/bot)'
-        }
-        logger.announcement('Successfully initialized Browser', 'success')
+        pass
 
     def _can_fetch(self, url: str) -> bool:
         """Check if scraping is allowed for the given URL."""

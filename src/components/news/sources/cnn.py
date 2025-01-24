@@ -1,13 +1,10 @@
-from src.utils.logger import logger
-from src.components.browser import Browser
+from src.utils.browser import Browser
 from datetime import datetime
 
 browser = Browser()
 
-logger.info('Initializing CNN as a News Source')
 url = 'https://www.cnn.com'
 max_articles = 30
-logger.success('Successfully initialized CNN')
 
 def scrape_articles():
 
