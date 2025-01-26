@@ -11,9 +11,8 @@ class Movies(Base):
     __tablename__ = 'movies'
     id = Column(Integer, primary_key=True, autoincrement=True)
     title = Column(String)
-    director = Column(String)
-    year = Column(Integer)
     rating = Column(Float)
+    status = Column(String)
     notes = Column(String)
     updated = Column(String)
     created = Column(String)
