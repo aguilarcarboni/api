@@ -5,7 +5,7 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
 from src.utils.response import Response
-from laserfocus_tools import logger
+from src.utils.logger import logger
 
 import os
 from dotenv import load_dotenv
