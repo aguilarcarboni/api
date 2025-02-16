@@ -19,6 +19,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Create directories for persistent storage
 RUN mkdir -p /app/src/db
 RUN mkdir -p /app/cache
+RUN mkdir -p /app/cache/websites
+RUN mkdir -p /app/cache/tv
 
 # Create volume mount points
 VOLUME /app/src/db
