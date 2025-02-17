@@ -53,8 +53,15 @@ engine = create_engine(db_url)
 
 db = DatabaseHandler(base=Base, engine=engine, type='sqlite')
 
-nltk.download('punkt', quiet=True)
-nltk.download('stopwords', quiet=True)
+path = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'venv', 'nltk_data')
+if not os.path.exists(path):
+    os.makedirs(path)
+
+nltk.download('punkt', quiet=True, download_dir=path)
+nltk.download('stopwords', quiet=True, download_dir=path)
+nltk.download('wordnet', quiet=True, download_dir=path)
+nltk.download('omw-1.4', quiet=True, download_dir=path)
+nltk.download('punkt_tab', quiet=True, download_dir=path)
 
 stop_words = set(stopwords.words('english'))
 

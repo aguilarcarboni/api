@@ -87,6 +87,8 @@ def fetch_channels_from_provider(user_id: int):
 
     logger.info('Saving playlist to cache and database...')
     playlist_path = os.path.join(os.path.dirname(__file__), '..', '..', 'cache', 'tv', 'playlist.m3u')
+    if not os.path.exists(playlist_path):
+        os.makedirs(os.path.dirname(playlist_path))
 
     with open(playlist_path, 'w', encoding='utf-8') as f:
         lines = response.text.splitlines()
