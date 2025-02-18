@@ -78,7 +78,7 @@ def fetch_channels_from_provider(user_id: int):
     db.delete_all('tv')
 
     # Get all streams in m3u8 format
-    get_all_streams = f"/get.php?username={username}&password={password}&type=m3u_plus&output=m3u8"
+    get_all_streams = f"/panel_api.php?username={username}&password={password}&type=m3u_plus&output=m3u8"
     response = requests.get(url + get_all_streams)
     if response.status_code != 200:
         logger.error(f'Failed to fetch playlist: {response.status_code}')
