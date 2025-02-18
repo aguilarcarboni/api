@@ -8,6 +8,14 @@ logger.announcement('Initializing Markets', 'info')
 tickers = ['SPY', 'QQQ', 'TSLA', 'NVDA', 'AAPL', 'AMZN', 'NVDA', 'AMD', 'GOOGL', 'MSFT', 'V']
 logger.announcement('Successfully initialized Markets', 'success')
 
+def get_current_data(ticker):
+    try:
+        tickerData = yf.Ticker(ticker)
+        return Response.success(tickerData.info)
+    except Exception as e:
+        logger.error(f'Error getting current market data for {ticker}: {e}')
+        return Response.error(f'Error getting current market data for {ticker}: {e}')
+
 def get_historical_data(tickers):
 
     logger.info(f'Getting historical market data for tickers: {tickers}')
@@ -39,3 +47,6 @@ def get_historical_data(tickers):
 
     logger.success(f"Successfully retrieved market data for {len(tickers)} tickers")
     return Response.success(marketData)
+
+
+

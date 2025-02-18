@@ -49,8 +49,7 @@ def start_api():
     app.register_blueprint(wallet.bp, url_prefix='/wallet')
 
     # User apps
-    from src.app import news, market, email, tools, sports, tv
-    app.register_blueprint(tools.bp, url_prefix='/tools')
+    from src.app import news, market, email, sports, tv
     app.register_blueprint(email.bp, url_prefix='/email')
     app.register_blueprint(market.bp, url_prefix='/market')
     app.register_blueprint(news.bp, url_prefix='/news')
@@ -58,6 +57,7 @@ def start_api():
     app.register_blueprint(tv.bp, url_prefix='/tv')
 
     # Development apps
+    #from src.app import home
     #app.register_blueprint(home.bp, url_prefix='/home')
     #app.register_blueprint(spotify.bp, url_prefix='/spotify')
 

@@ -3,7 +3,7 @@ from websocket import create_connection, WebSocketConnectionClosedException
 import os
 import time
 from functools import wraps
-
+from src.components.database.closet import closet_db
 from src.utils.logger import logger
 from src.utils.response import Response
 
@@ -35,6 +35,10 @@ class SmartHome:
         self.ws = None
         self.nextId = 0
         self.connect()
+        self.closet_db = closet_db
+
+    def read_closet(self):
+        return self.closet_db.read_db()
 
     def connect(self):
         """Establish websocket connection and authenticate"""
