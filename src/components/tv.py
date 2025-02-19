@@ -92,7 +92,11 @@ def fetch_channels_from_provider(user_id: int):
         return Response.error('Invalid response format')
 
     # Process and save each channel
+    counter = 0
     for channel_id, channel_data in streams['available_channels'].items():
+        if counter > 10:
+            break
+        counter += 1
         channel = {
             'stream_id': channel_data.get('stream_id'),
             'name': channel_data.get('name'),

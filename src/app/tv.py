@@ -15,12 +15,12 @@ def get_channels_route():
 @bp.route('/channels/favorite', methods=['POST'])
 def favorite_channel_route():
     payload = request.get_json()
-    return favorite_channel(payload['tvg_id'])
+    return favorite_channel(payload['stream_id'])
 
 @bp.route('/channels/unfavorite', methods=['POST'])
 def unfavorite_channel_route():
     payload = request.get_json()
-    return unfavorite_channel(payload['tvg_id'])
+    return unfavorite_channel(payload['stream_id'])
 
 @bp.route('/create-credentials', methods=['POST'])
 def create_credentials_route():
