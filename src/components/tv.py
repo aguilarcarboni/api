@@ -91,28 +91,24 @@ def fetch_channels_from_provider(user_id: int):
         logger.error('Invalid response format')
         return Response.error('Invalid response format')
 
-    # Process and save each channel
-    counter = 0
+    # Process and save each live TV channel
     for channel_id, channel_data in streams['available_channels'].items():
-        if counter > 10:
-            break
-        counter += 1
-        channel = {
-            'stream_id': channel_data.get('stream_id'),
-            'name': channel_data.get('name'),
-            'title': channel_data.get('title'),
-            'stream_type': channel_data.get('stream_type'),
-            'type_name': channel_data.get('type_name'),
-            'stream_icon': channel_data.get('stream_icon'),
-            'epg_channel_id': channel_data.get('epg_channel_id'),
-            'category_name': channel_data.get('category_name'),
-            'category_id': channel_data.get('category_id'),
-            'live': channel_data.get('live'),
-            'added': channel_data.get('added'),
-            'favorite': False
-        }
-        
-        db.create('tv', channel)
+        if channel_data.get('live') == 1 or channel_data.get('live') == '1':
+            channel = {
+                'stream_id': channel_data.get('stream_id'),
+                'name': channel_data.get('name'),
+                'title': channel_data.get('title'),
+                'stream_type': channel_data.get('stream_type'),
+                'type_name': channel_data.get('type_name'),
+                'stream_icon': channel_data.get('stream_icon'),
+                'epg_channel_id': channel_data.get('epg_channel_id'),
+                'category_name': channel_data.get('category_name'),
+                'category_id': channel_data.get('category_id'),
+                'live': channel_data.get('live'),
+                'added': channel_data.get('added'),
+                'favorite': False
+            }
+            db.create('tv', channel)
 
     logger.success('Playlist fetched successfully')
     logger.info('Saving playlist to cache and database...')
