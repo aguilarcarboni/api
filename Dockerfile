@@ -5,7 +5,7 @@ FROM python:3.9-slim
 LABEL maintainer="aguilarcarboni"
 LABEL name="laserfocus-api"
 LABEL version="1.0"
-LABEL description="the path to success starts with laserfocus."
+LABEL description=""
 
 # Set the working directory in the container
 WORKDIR /app
@@ -33,18 +33,33 @@ COPY . .
 RUN chmod +x run.sh
 
 # Set the default environment variables
+
+# Authentication
+ARG JWT_SECRET_KEY
 ENV JWT_SECRET_KEY=${JWT_SECRET_KEY}
 
+# Database
+ARG DATABASE_URL
 ENV DATABASE_URL=${DATABASE_URL}
 
+# Google Services
+ARG GOOGLE_TOKEN
+ARG GOOGLE_REFRESH_TOKEN
+ARG GOOGLE_TOKEN_URI
+ARG GOOGLE_CLIENT_ID
+ARG GOOGLE_CLIENT_SECRET
 ENV GOOGLE_TOKEN=${GOOGLE_TOKEN}
 ENV GOOGLE_REFRESH_TOKEN=${GOOGLE_REFRESH_TOKEN}
 ENV GOOGLE_TOKEN_URI=${GOOGLE_TOKEN_URI}
 ENV GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
 ENV GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
 
+# Home Assistant
+ARG HOME_ASSISTANT_URL
 ENV HOME_ASSISTANT_URL=${HOME_ASSISTANT_URL}
 
+# API
+ARG LF_API_PORT
 ENV LF_API_PORT=${LF_API_PORT}
 EXPOSE ${LF_API_PORT}
 

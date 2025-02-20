@@ -1,7 +1,12 @@
 #!/bin/bash
 
-# Load environment variables first
-export $(cat .env | xargs)
+# Start Gunicorn with environment variables and increased timeout
+if [ -f .env ]; then
+    while IFS= read -r line || [ -n "$line" ]; do
+        if [[ $line =~ ^[^#] ]]; then
+            eval "export $line"
+        fi
+    done < .env
+fi
 
-# Start Gunicorn with environment variables
-gunicorn --bind 0.0.0.0:${LF_API_PORT} --timeout 180 run:laserfocus
+gunicorn --bind 0.0.0.0:${LF_API_PORT} --timeout 120 run:laserfocus
