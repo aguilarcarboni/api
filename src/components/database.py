@@ -62,10 +62,12 @@ def create(session, table: str, data: dict):
         result = session.execute(new_record)
         session.flush()
         new_id = result.inserted_primary_key[0]
+
+        # Replace this
         logger.success(f'Successfully created entry with id: {new_id}')
         return Response.success(new_id)
     
-    except SQLAlchemyError as e:
+    except Exception as e:
         logger.error(f'Error creating record: {str(e)}')
         return Response.error(f'Database error: {str(e)}')
 
@@ -97,9 +99,9 @@ def update(session, table: str, params: dict, data: dict):
 
         return Response.success(updated_item.id)
     
-    except SQLAlchemyError as e:
+    except Exception as e:
         logger.error(f"Error updating {table}: {str(e)}")
-        raise
+        return Response.error(f"Database error: {str(e)}")
 
 @with_session
 def read(session, table: str, params: dict = None):
@@ -121,9 +123,9 @@ def read(session, table: str, params: dict = None):
         logger.success(f'Successfully read {len(serialized_results)} entries from table: {table}')
         return Response.success(serialized_results)
     
-    except SQLAlchemyError as e:
+    except Exception as e:
         logger.error(f'Error reading from database: {str(e)}')
-        raise
+        return Response.error(f"Database error: {str(e)}")
 
 @with_session
 def delete(session, table: str, params: dict):
@@ -148,9 +150,9 @@ def delete(session, table: str, params: dict):
         logger.success(f"Successfully deleted entry with id: {item.id} from table: {table}.")
         return Response.success(item.id)
     
-    except SQLAlchemyError as e:
+    except Exception as e:
         logger.error(f"Error deleting {table}: {str(e)}")
-        raise
+        return Response.error(f"Database error: {str(e)}")
 
 @with_session
 def get_parent_lineage(session, table: str, params: dict, depth: int) -> Response:
@@ -210,7 +212,7 @@ def get_foreign_keys(session, table: str, params: dict) -> Dict[str, str]:
 
         logger.success(f"Successfully retrieved foreign keys for table: {table}, result: {keys}")
         return Response.success(keys)
-    except SQLAlchemyError as e:
+    except Exception as e:
         logger.error(f"Error retrieving foreign keys for table {table}: {str(e)}")
         return Response.error(f"Failed to retrieve foreign keys: {str(e)}")
 
@@ -243,6 +245,6 @@ def get_parent_lineage_recursive(session, table: str, params: dict, depth: int, 
                 node['children'].append(child_node)
 
         return node
-    except SQLAlchemyError as e:
+    except Exception as e:
         logger.error(f"Error retrieving parent lineage for table {table}: {str(e)}")
-        return {}
+        return Response.error(f"Failed to retrieve parent lineage: {str(e)}")

@@ -15,7 +15,6 @@ def create_route():
     payload = request.get_json(force=True)
     return create(table=payload['table'], data=payload['data'])
 
-
 """
 Read records from the database
 
@@ -63,11 +62,4 @@ Payload:
 @bp.route('/get_parent_lineage', methods=['POST'])
 def get_parent_lineage_route():
     payload = request.get_json(force=True)
-    
-    response = get_parent_lineage(
-        table=payload['table'], 
-        params=payload['params'], 
-        depth=3
-    )
-
-    return response
+    return get_parent_lineage(table=payload['table'], params=payload['params'], depth=3)
