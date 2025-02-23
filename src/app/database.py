@@ -13,7 +13,7 @@ Payload:
 @bp.route('/create', methods=['POST'])
 def create_route():
     payload = request.get_json(force=True)
-    return create(table=payload['table'], data=payload['data'])
+    return create(table=payload['table'], data=payload['data']), 200
 
 """
 Read records from the database
@@ -25,7 +25,7 @@ Payload:
 @bp.route('/read', methods=['POST'])
 def read_route():
     payload = request.get_json(force=True)
-    return read(table=payload['table'], params=payload['params'])
+    return read(table=payload['table'], params=payload['params']), 200
 
 """
 Update a record in the database

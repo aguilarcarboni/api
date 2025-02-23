@@ -6,6 +6,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from datetime import datetime
 from functools import wraps
 from typing import Dict, Any
+from src.utils.exception import handle_exception
 
 from src.utils.response import Response
 from src.utils.logger import logger
@@ -46,31 +47,43 @@ def with_session(func):
             session.close()
     return wrapper
 
+@handle_exception
 @with_session
 def create(session, table: str, data: dict):
     logger.info(f'Attempting to create new entry in table: {table}')
 
-    try:
-        tbl = Table(table, metadata, autoload_with=engine)
-        current_time = datetime.now()
-        data = {
-            'created': current_time,
-            'updated': current_time,
-            **data
-        }
-        new_record = tbl.insert().values(**data)
-        result = session.execute(new_record)
-        session.flush()
-        new_id = result.inserted_primary_key[0]
+    tbl = Table(table, metadata, autoload_with=engine)
+    current_time = datetime.now()
+    data = {
+        'created': current_time,
+        'updated': current_time,
+        **data
+    }
+    new_record = tbl.insert().values(**data)
+    result = session.execute(new_record)
+    session.flush()
+    new_id = result.inserted_primary_key[0]
 
-        # Replace this
-        logger.success(f'Successfully created entry with id: {new_id}')
-        return Response.success(new_id)
+    return new_id
+
+@handle_exception
+@with_session
+def read(session, table: str, params: dict = None):
+    logger.info(f'Attempting to read entry from table: {table} with params: {params}')
+    tbl = Table(table, metadata, autoload_with=engine)
+    query = session.query(tbl)
+
+    if params:
+        for key, value in params.items():
+            if hasattr(tbl.c, key):
+                query = query.filter(getattr(tbl.c, key) == value)
+        
+    results = query.all()
+
+    serialized_results = [row._asdict() for row in results]
+    logger.success(f'Successfully read {len(serialized_results)} entries from table: {table}')
+    return serialized_results
     
-    except Exception as e:
-        logger.error(f'Error creating record: {str(e)}')
-        return Response.error(f'Database error: {str(e)}')
-
 @with_session
 def update(session, table: str, params: dict, data: dict):
     logger.info(f'Attempting to update entry in table: {table} with params: {params}')
@@ -101,30 +114,6 @@ def update(session, table: str, params: dict, data: dict):
     
     except Exception as e:
         logger.error(f"Error updating {table}: {str(e)}")
-        return Response.error(f"Database error: {str(e)}")
-
-@with_session
-def read(session, table: str, params: dict = None):
-    logger.info(f'Attempting to read entry from table: {table} with params: {params}')
-    
-    try:
-        tbl = Table(table, metadata, autoload_with=engine)
-        query = session.query(tbl)
-
-        if params:
-            for key, value in params.items():
-                if hasattr(tbl.c, key):
-                    query = query.filter(getattr(tbl.c, key) == value)
-            
-        results = query.all()
-
-        serialized_results = [row._asdict() for row in results]
-        
-        logger.success(f'Successfully read {len(serialized_results)} entries from table: {table}')
-        return Response.success(serialized_results)
-    
-    except Exception as e:
-        logger.error(f'Error reading from database: {str(e)}')
         return Response.error(f"Database error: {str(e)}")
 
 @with_session
