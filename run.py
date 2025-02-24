@@ -42,24 +42,12 @@ def start_api():
     app.before_request(jwt_required)
 
     # Developer apps
-    from src.app import database, drive,  databases, wallet
+    from src.app import database, drive,  databases, wallet, email
     app.register_blueprint(drive.bp, url_prefix='/drive')
     app.register_blueprint(database.bp, url_prefix='/database')
     app.register_blueprint(databases.bp, url_prefix='/databases')
     app.register_blueprint(wallet.bp, url_prefix='/wallet')
-
-    # User apps
-    from src.app import news, market, email, sports, tv
     app.register_blueprint(email.bp, url_prefix='/email')
-    app.register_blueprint(market.bp, url_prefix='/market')
-    app.register_blueprint(news.bp, url_prefix='/news')
-    app.register_blueprint(sports.bp, url_prefix='/sports')
-    app.register_blueprint(tv.bp, url_prefix='/tv')
-
-    # Development apps
-    #from src.app import home
-    #app.register_blueprint(home.bp, url_prefix='/home')
-    #app.register_blueprint(spotify.bp, url_prefix='/spotify')
 
     limiter.limit("600 per minute")(database.bp)
 
