@@ -6,6 +6,11 @@ import os
 from src.utils.logger import logger
 
 logger.announcement('Initializing Wallet Service', 'info')
+
+db_path = os.path.join(os.path.dirname(__file__), '..', '..', 'db', 'wallet.db')
+db_url = f'sqlite:///{db_path}'
+engine = create_engine(db_url)
+
 Base = declarative_base()
 
 class Account(Base):
@@ -44,10 +49,6 @@ class Category(Base):
     updated = Column(String)
     created = Column(String)
 
-db_path = os.path.join(os.path.dirname(__file__), '..', '..', 'db', 'wallet.db')
-db_url = f'sqlite:///{db_path}'
-
-engine = create_engine(db_url)
 db = DatabaseHandler(base=Base, engine=engine, type='sqlite')
 
 # Create Accounts

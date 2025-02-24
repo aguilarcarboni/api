@@ -42,14 +42,14 @@ def start_api():
     app.before_request(jwt_required)
 
     # Developer apps
-    from src.app import database, drive,  databases, wallet, email
-    app.register_blueprint(drive.bp, url_prefix='/drive')
-    app.register_blueprint(database.bp, url_prefix='/database')
+    from src.app import drive,  databases, wallet, email
     app.register_blueprint(databases.bp, url_prefix='/databases')
+    app.register_blueprint(drive.bp, url_prefix='/drive')
     app.register_blueprint(wallet.bp, url_prefix='/wallet')
     app.register_blueprint(email.bp, url_prefix='/email')
+    #app.register_blueprint(database.bp, url_prefix='/database')
 
-    limiter.limit("600 per minute")(database.bp)
+    limiter.limit("600 per minute")(databases.bp)
 
     # Define routes
     @app.route('/', methods=['GET'])

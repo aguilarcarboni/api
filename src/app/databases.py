@@ -1,12 +1,16 @@
 from flask import request, Blueprint
+from src.components.database import db as main_db
 from src.components.wallet.wallet import db as wallet_db
+from src.components.users import db as users_db
 from src.utils.response import Response
 
 bp = Blueprint('databases', __name__)
 
 # Dictionary of available public databases
 databases = {
+    'main': main_db,
     'wallet': wallet_db,
+    'users': users_db
 }
 
 @bp.route('/list', methods=['GET'])
