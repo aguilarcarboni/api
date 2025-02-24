@@ -51,13 +51,13 @@ class Category(Base):
 
 db = DatabaseHandler(base=Base, engine=engine, type='sqlite')
 
+"""
 # Create Accounts
 logger.info('Populating accounts...')
 db.create('account', {'name': 'BAC Cash', 'id': 'CR83010200009295665295', 'drive_source_id': '15J8BHOj73Au9Fk6yN0oVu2rm79ccEHf7'})
 
 # Create Categories
 logger.info('Populating categories for budget...')
-
 categories = [
     {'id': 1, 'name': 'Food', 'type': 'expense', 'amount': 45000},
     {'id': 2, 'name': 'Transportation', 'type': 'expense', 'amount': 35000},
@@ -75,3 +75,4 @@ for category in categories:
     db.create('category', category)
 
 logger.announcement("Successfully initialized Wallet Service", type='success')
+"""
