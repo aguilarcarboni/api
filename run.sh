@@ -9,4 +9,4 @@ if [ -f .env ]; then
     done < .env
 fi
 
-gunicorn --bind 0.0.0.0:${LF_API_PORT} --timeout 120 run:laserfocus
+gunicorn --bind 0.0.0.0:${PORT} --timeout 120 run:laserfocus
