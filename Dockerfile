@@ -32,8 +32,6 @@ COPY . .
 # Make run script executable
 RUN chmod +x run.sh
 
-# Set the default environment variables
-
 # Authentication
 ARG JWT_SECRET_KEY
 ENV JWT_SECRET_KEY=${JWT_SECRET_KEY}
@@ -59,8 +57,8 @@ ARG HOME_ASSISTANT_URL
 ENV HOME_ASSISTANT_URL=${HOME_ASSISTANT_URL}
 
 # API
-ARG LF_API_PORT
-ENV LF_API_PORT=${LF_API_PORT}
-EXPOSE ${LF_API_PORT}
+ARG PORT
+ENV PORT=${PORT}
+EXPOSE ${PORT}
 
 ENTRYPOINT ["./run.sh"]
