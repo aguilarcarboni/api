@@ -1,14 +1,12 @@
 # Python Gitignore
 
 # Personal
-logs/*
 *.DS_Store
 .cursorrules
 
-cache/websites/*.html
-cache/tv/*.m3u8
-
-src/db/*.db
+cache/*
+src/db/*
+logs/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
