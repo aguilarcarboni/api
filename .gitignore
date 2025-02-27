@@ -2,7 +2,6 @@
 
 # Personal
 *.DS_Store
-.cursorrules
 
 cache/*
 src/db/*
