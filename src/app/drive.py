@@ -1,7 +1,7 @@
 from flask import Blueprint, request, send_file
 from io import BytesIO
 from src.components.drive import GoogleDrive
-from src.utils.response import Response
+from laserfocus.utils.response import Response
 
 bp = Blueprint('drive', __name__)
 

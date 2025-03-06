@@ -4,8 +4,8 @@ import csv
 import pandas as pd
 import time
 
-from src.utils.logger import logger
-from src.utils.response import Response
+from laserfocus.utils.logger import logger
+from laserfocus.utils.response import Response
 
 logger.announcement("Initializing IBKR Wallet Service", type='info')
 

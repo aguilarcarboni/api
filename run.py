@@ -4,8 +4,8 @@ from flask_jwt_extended import JWTManager, verify_jwt_in_request, create_access_
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
-from src.utils.response import Response
-from src.utils.logger import logger
+from laserfocus.utils.response import Response
+from laserfocus.utils.logger import logger
 
 import os
 from dotenv import load_dotenv

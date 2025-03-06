@@ -4,7 +4,7 @@ from src.components.users import db as users_db
 from src.components.laserfocus import db as laserfocus_db
 from src.components.wallet.wallet import db as wallet_db
 
-from src.utils.response import Response
+from laserfocus.utils.response import Response
 
 bp = Blueprint('databases', __name__)
 

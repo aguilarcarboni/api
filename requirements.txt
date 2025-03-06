@@ -42,3 +42,6 @@ uuid==1.30
 
 # Financial Data
 yfinance==0.2.37
+
+# Laserfocus
+laserfocus

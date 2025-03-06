@@ -1,9 +1,9 @@
 
 import requests
 import os
-from laserfocus.utils.logger import logger
+from .logger import logger
 
-url = f"http://127.0.0.1:{os.getenv('LF_API_PORT')}"
+url = os.getenv('LF_API_URL')
 
 def access_api(endpoint, method='GET', data=None):
     try:

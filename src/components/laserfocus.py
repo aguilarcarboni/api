@@ -1,9 +1,9 @@
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Boolean, JSON
 from sqlalchemy.ext.declarative import declarative_base
-from src.utils.database import DatabaseHandler
 import os
 
-from src.utils.logger import logger
+from laserfocus.utils.database import DatabaseHandler
+from laserfocus.utils.logger import logger
 
 logger.announcement('Initializing Database Service', 'info')
 

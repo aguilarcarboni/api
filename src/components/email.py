@@ -6,8 +6,8 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from typing import List, Dict, Optional, Union
 
-from src.utils.logger import logger
-from src.utils.response import Response
+from laserfocus.utils.logger import logger
+from laserfocus.utils.response import Response
 
 class Gmail:
 

@@ -3,8 +3,8 @@ from googleapiclient.errors import HttpError
 from google.oauth2.credentials import Credentials
 from googleapiclient.http import MediaIoBaseDownload, MediaIoBaseUpload
 
-from src.utils.logger import logger
-from src.utils.response import Response
+from laserfocus.utils.logger import logger
+from laserfocus.utils.response import Response
 
 import pandas as pd
 from io import BytesIO, StringIO

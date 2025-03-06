@@ -2,7 +2,9 @@
 
 # Personal
 *.DS_Store
+.cursorrules
 
+# API
 cache/*
 src/db/*
 logs/*
