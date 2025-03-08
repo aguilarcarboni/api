@@ -23,14 +23,12 @@ class User(Base):
     created = Column(String)
     visibility = Column(String)
     role = Column(String)
-    email = Column(String)
+    email = Column(String, unique=True)
     password = Column(String)
-    username = Column(String)
-    space_id = Column(Integer)
-    image = Column(String)
+    username = Column(String, unique=True)
+    space_id = Column(Integer, unique=True)
+    image = Column(String, nullable=True)
 
 db = DatabaseHandler(base=Base, engine=engine, type='sqlite')
-
-#db.create('user', {'name': 'Andres', 'status': 'active', 'visibility': 'private', 'role': 'owner', 'email': 'aguilarcarboni@gmail.com', 'password': 'Jxk5odrUasO9k7Su', 'username': 'aguilarcarboni', 'space_id': 1, 'image': None})
-
+db.create('user', {'name': 'Andres', 'status': 'active', 'visibility': 'private', 'role': 'owner', 'email': 'aguilarcarboni@gmail.com', 'password': 'Jxk5odrUasO9k7Su', 'username': 'aguilarcarboni', 'space_id': 1, 'image': None})
 logger.announcement("Successfully initialized User Service", type='success')

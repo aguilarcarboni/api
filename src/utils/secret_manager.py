@@ -13,7 +13,7 @@ def get_secret(secret_id):
         client = secretmanager.SecretManagerServiceClient()
 
         # Define your project ID and secret name
-        project_id = "laserfocused"
+        project_id = "laser-focused"
         version_id = "1"
 
         # Build the secret version path
