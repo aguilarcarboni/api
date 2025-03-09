@@ -5,101 +5,164 @@ import os
 from laserfocus.utils.database import DatabaseHandler
 from laserfocus.utils.logger import logger
 
-logger.announcement('Initializing Database Service', 'info')
+class LaserFocus:
+    _instance = None
+    _initialized = False
 
-db_path = os.path.join(os.path.dirname(__file__), '..', 'db', 'laserfocus.db')
-db_url = f'sqlite:///{db_path}'
-engine = create_engine(db_url)
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super(LaserFocus, cls).__new__(cls)
+        return cls._instance
 
-Base = declarative_base()
+    def __init__(self):
+        if not self._initialized:
+            logger.announcement('Initializing Database Service', 'info')
 
-class Space(Base):
-    """Space table"""
-    __tablename__ = 'space'
-    id = Column(Integer, primary_key=True, unique=True)
-    name = Column(String)
-    updated = Column(String)
-    created = Column(String)
-    status = Column(String)
-    visibility = Column(String)
+            db_path = os.path.join(os.path.dirname(__file__), '..', 'db', 'laserfocus.db')
+            db_url = f'sqlite:///{db_path}'
+            self.engine = create_engine(db_url)
 
-class Task(Base):
-    """Task table"""
-    __tablename__ = 'task'
-    id = Column(Integer, primary_key=True, unique=True)
-    space_id = Column(Integer, ForeignKey('space.id'))
-    name = Column(String)
-    updated = Column(String)
-    created = Column(String)
-    status = Column(String)
-    visibility = Column(String)
-    due = Column(String)
-    priority = Column(String)
+            self.Base = declarative_base()
+            self._setup_models()
+            self.db = DatabaseHandler(base=self.Base, engine=self.engine, type='sqlite')
 
-class TaskLink(Base):
-    """TaskLink table"""
-    __tablename__ = 'task_link'
-    id = Column(Integer, primary_key=True, unique=True)
-    from_task_id = Column(Integer)
-    to_task_id = Column(Integer)
-    updated = Column(String)
-    created = Column(String)
+            # Create fake data for user
+            self.db.create(table='user', data={'name': 'Andres', 'status': 'active', 'visibility': 'private', 'role': 'owner', 'email': 'aguilarcarboni@gmail.com', 'password': 'Jxk5odrUasO9k7Su', 'username': 'aguilarcarboni', 'space_id': 1, 'image': None})
+            self.db.create(table='space', data={'name': 'Default', 'status': 'active', 'visibility': 'public'})
 
-class Event(Base):
-    """Event table"""
-    __tablename__ = 'event'
-    id = Column(Integer, primary_key=True, unique=True)
-    space_id = Column(Integer, ForeignKey('space.id'))
-    name = Column(String)
-    updated = Column(String)
-    created = Column(String)
-    status = Column(String)
-    visibility = Column(String)
-    description = Column(String)
-    start = Column(String)
-    all_day = Column(Boolean)
-    ends = Column(String)
-    is_recurring = Column(Boolean)
-    recurring_interval = Column(Integer)
-    recurring_end = Column(String)
-    transparency = Column(String)
-    location = Column(JSON)
+            # Create fake data for project
+            self.db.create(table='project', data={'name': 'Home', 'status': 'active', 'visibility': 'public', 'space_id': 2})
+            self.db.create(table='space', data={'name': 'Home', 'status': 'active', 'visibility': 'public'})
+            self.db.create(table='task', data={'name': 'Default', 'status': 'active', 'visibility': 'public', 'space_id': 2, 'due': '2025-01-01', 'priority': 1})
+            
+            logger.announcement("Successfully initialized Database Service", type='success')
+            self._initialized = True
 
-class Journal(Base):
-    """Journal table"""
-    __tablename__ = 'journal'
-    id = Column(Integer, primary_key=True, unique=True)
-    space_id = Column(Integer, ForeignKey('space.id'))
-    name = Column(String)
-    updated = Column(String)
-    created = Column(String)
-    status = Column(String)
-    visibility = Column(String)
-    description = Column(String)
+    def _setup_models(self):
 
-class Page(Base):
-    """Page table"""
-    __tablename__ = 'page'
-    id = Column(Integer, primary_key=True, unique=True)
-    journal_id = Column(Integer, ForeignKey('journal.id'))
-    name = Column(String)
-    updated = Column(String)
-    created = Column(String)
-    status = Column(String)
-    visibility = Column(String)
-    content = Column(String)
+        class User(self.Base):
+            """User table"""
+            __tablename__ = 'user'
+            id = Column(Integer, primary_key=True, unique=True)
+            name = Column(String, nullable=False)
+            status = Column(String, nullable=False)
+            updated = Column(String, nullable=False)
+            created = Column(String, nullable=False)
+            visibility = Column(String, nullable=False)
+            role = Column(String, nullable=False)
+            email = Column(String, unique=True, nullable=False)
+            password = Column(String, nullable=False)
+            username = Column(String, unique=True, nullable=False)
+            space_id = Column(Integer, unique=True, nullable=False)
+            image = Column(String, nullable=True)
 
-class PageLink(Base):
-    """PageLink table"""
-    __tablename__ = 'page_link'
-    id = Column(Integer, primary_key=True, unique=True)
-    from_page_id = Column(Integer, ForeignKey('page.id'))
-    to_page_id = Column(Integer, ForeignKey('page.id'))
-    updated = Column(String)
-    created = Column(String)    
+        class Space(self.Base):
+            """Space table"""
+            __tablename__ = 'space'
+            id = Column(Integer, primary_key=True, unique=True)
+            name = Column(String, unique=True, nullable=False)
+            updated = Column(String, nullable=False)
+            created = Column(String, nullable=False)
+            status = Column(String, nullable=False)
+            visibility = Column(String, nullable=False)
 
-db = DatabaseHandler(base=Base, engine=engine, type='sqlite')
+        class Project(self.Base):
+            """Project table"""
+            __tablename__ = 'project'
+            id = Column(Integer, primary_key=True, unique=True)
+            space_id = Column(Integer, ForeignKey('space.id'), nullable=False)
+            name = Column(String, nullable=False)
+            updated = Column(String, nullable=False)
+            created = Column(String, nullable=False)
+            status = Column(String, nullable=False)
+            visibility = Column(String, nullable=False)
 
-#db.create('space', {'name': 'Default', 'status': 'active', 'visibility': 'private'})
+        class Task(self.Base):
+            """Task table"""
+            __tablename__ = 'task'
+            id = Column(Integer, primary_key=True, unique=True)
+            space_id = Column(Integer, ForeignKey('space.id'), nullable=False)
+            name = Column(String, nullable=False)
+            updated = Column(String, nullable=False)
+            created = Column(String, nullable=False)
+            status = Column(String, nullable=False)
+            visibility = Column(String, nullable=False)
+            due = Column(String, nullable=False)
+            priority = Column(Integer, nullable=False)
 
-logger.announcement("Successfully initialized Database Service", type='success')
+        class TaskLink(self.Base):
+            """TaskLink table"""
+            __tablename__ = 'task_link'
+            id = Column(Integer, primary_key=True, unique=True)
+            from_task_id = Column(Integer, ForeignKey('task.id'), nullable=False)
+            to_task_id = Column(Integer, ForeignKey('task.id'), nullable=False)
+            updated = Column(String, nullable=False)
+            created = Column(String, nullable=False)
+
+        class Event(self.Base):
+            """Event table"""
+            __tablename__ = 'event'
+            id = Column(Integer, primary_key=True, unique=True)
+            space_id = Column(Integer, ForeignKey('space.id'))
+            name = Column(String, nullable=False)
+            updated = Column(String, nullable=False)
+            created = Column(String, nullable=False)
+            status = Column(String, nullable=False)
+            visibility = Column(String, nullable=False)
+            description = Column(String, nullable=False)
+            start = Column(String, nullable=False)
+            all_day = Column(Boolean, nullable=False)
+            ends = Column(String, nullable=False)
+            is_recurring = Column(Boolean, nullable=False)
+            recurring_interval = Column(Integer, nullable=False)
+            recurring_end = Column(String, nullable=False)
+            transparency = Column(String, nullable=False)
+            location = Column(JSON, nullable=False)
+
+        class Journal(self.Base):
+            """Journal table"""
+            __tablename__ = 'journal'
+            id = Column(Integer, primary_key=True, unique=True)
+            space_id = Column(Integer, ForeignKey('space.id'), nullable=False)
+            name = Column(String, nullable=False)
+            updated = Column(String, nullable=False)
+            created = Column(String, nullable=False)
+            status = Column(String, nullable=False)
+            visibility = Column(String, nullable=False)
+            description = Column(String, nullable=False)
+
+        class Page(self.Base):
+            """Page table"""
+            __tablename__ = 'page'
+            id = Column(Integer, primary_key=True, unique=True)
+            journal_id = Column(Integer, ForeignKey('journal.id'), nullable=False)
+            name = Column(String, nullable=False)
+            updated = Column(String, nullable=False)
+            created = Column(String, nullable=False)
+            status = Column(String, nullable=False)
+            visibility = Column(String, nullable=False)
+            content = Column(String, nullable=False)
+
+        class PageLink(self.Base):
+            """PageLink table"""
+            __tablename__ = 'page_link'
+            id = Column(Integer, primary_key=True, unique=True)
+            from_page_id = Column(Integer, ForeignKey('page.id'), nullable=False)
+            to_page_id = Column(Integer, ForeignKey('page.id'), nullable=False)
+            updated = Column(String, nullable=False)
+            created = Column(String, nullable=False)
+        
+
+        # Store model classes as attributes of the instance
+        self.User = User
+        self.Space = Space
+        self.Project = Project
+        self.Task = Task
+        self.TaskLink = TaskLink
+        self.Event = Event
+        self.Journal = Journal
+        self.Page = Page
+        self.PageLink = PageLink
+
+# Create a single instance that can be imported and used throughout the application
+laserfocus = LaserFocus()
