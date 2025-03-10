@@ -46,18 +46,11 @@ def start_api():
     # Apply JWT authentication to all routes except login
     app.before_request(jwt_required_except_login)
 
-    # Developer apps
-    from src.app import drive, email
-    app.register_blueprint(drive.bp, url_prefix='/drive')
-    app.register_blueprint(email.bp, url_prefix='/email')
-
     from src.app import user, space, task
     app.register_blueprint(user.bp, url_prefix='/users')
     app.register_blueprint(space.bp, url_prefix='/spaces')
     app.register_blueprint(task.bp, url_prefix='/tasks')
 
-    limiter.limit("600 per minute")(drive.bp)
-    limiter.limit("600 per minute")(email.bp)
     limiter.limit("600 per minute")(user.bp)
     limiter.limit("600 per minute")(task.bp)
     
