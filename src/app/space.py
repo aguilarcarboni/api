@@ -1,10 +1,7 @@
 from flask import request, Blueprint
-from src.components.laserfocus import LaserFocus
+from src.components.laserfocus import db
 
 bp = Blueprint('space', __name__)
-
-laserfocus = LaserFocus()
-db = laserfocus.db
 
 @bp.route('/create', methods=['POST'])
 def create_route():

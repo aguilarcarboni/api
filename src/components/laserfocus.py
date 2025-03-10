@@ -165,4 +165,4 @@ class LaserFocus:
         self.PageLink = PageLink
 
 # Create a single instance that can be imported and used throughout the application
-laserfocus = LaserFocus()
+db = LaserFocus().db
