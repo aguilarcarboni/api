@@ -10,7 +10,7 @@ def get_secret(secret_id):
         client = secretmanager.SecretManagerServiceClient()
 
         # Define your project ID and secret name
-        project_id = "agm-datalake"
+        project_id = "laser-focused"
         version_id = "1"
 
         # Build the secret version path
@@ -32,7 +32,7 @@ def get_secret(secret_id):
             except Exception as e:
                 logger.error(f"All decoding attempts failed")
                 raise Exception(f"Error fetching secret: {e}")
-
+            
         logger.success(f"Successfully fetched and decoded secret")
         return secrets
         

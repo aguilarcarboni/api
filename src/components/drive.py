@@ -16,7 +16,6 @@ import base64
 from typing import Union
 
 class GoogleDrive:
-  # Class variable to store the singleton instance
   _instance = None
   
   @classmethod
@@ -32,14 +31,13 @@ class GoogleDrive:
     return cls._instance
   
   def __init__(self):
-    # Skip initialization if instance already exists
     if GoogleDrive._instance is not None:
       logger.info('Using existing Drive instance')
       return
       
     logger.announcement('Initializing Drive', type='info')
 
-    admin_creds = get_secret('OAUTH_PYTHON_CREDENTIALS_ADMIN')
+    admin_creds = get_secret('OAUTH_PYTHON_CREDENTIALS')
     try:
       SCOPES = ["https://www.googleapis.com/auth/drive"]
       creds = Credentials(

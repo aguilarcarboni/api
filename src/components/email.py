@@ -19,7 +19,7 @@ class Gmail:
   def __init__(self):
     logger.announcement('Initializing Gmail connection.', type='info')
     SCOPES = ["https://mail.google.com/"]
-    creds = get_secret('OAUTH_PYTHON_CREDENTIALS_INFO')
+    creds = get_secret('OAUTH_PYTHON_CREDENTIALS')
     try:
       creds = Credentials(
         token=creds['token'],

@@ -51,8 +51,12 @@ def start_api():
     app.register_blueprint(space.bp, url_prefix='/spaces')
     app.register_blueprint(task.bp, url_prefix='/tasks')
 
+    from src.app import document_center
+    app.register_blueprint(document_center.bp, url_prefix='/document_center')
+
     limiter.limit("600 per minute")(user.bp)
     limiter.limit("600 per minute")(task.bp)
+    limiter.limit("600 per minute")(document_center.bp)
     
     # Create index route
     @app.route('/')

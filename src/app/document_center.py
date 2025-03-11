@@ -4,15 +4,15 @@ from src.components.document_center import DocumentCenter
 bp = Blueprint('document_center', __name__)
 DocumentCenter = DocumentCenter()
 
-@bp.route('/get_folder_dictionary', methods=['GET'])
-def get_folder_dictionary_route():
+@bp.route('/folder_dictionary', methods=['GET'])
+def folder_dictionary_route():
   return DocumentCenter.get_folder_dictionary()
 
 @bp.route('/read', methods=['POST'])
 def read_route():
   body = request.get_json(force=True)
-  query = body['query']
-  return DocumentCenter.read_files(query)
+  params = body['params']
+  return DocumentCenter.read_files(params)
 
 @bp.route('/delete', methods=['POST'])
 def delete_route():
@@ -30,4 +30,12 @@ def upload_route():
   parent_folder_id = body['parent_folder_id']
   document_info = body['document_info']
   uploader = body['uploader']
-  return DocumentCenter.upload_file(file_name, mime_type, file_data, parent_folder_id, document_info, uploader)
+  
+  return DocumentCenter.upload_file(
+    file_name=file_name, 
+    mime_type=mime_type, 
+    file_data=file_data, 
+    parent_folder_id=parent_folder_id, 
+    document_info=document_info,
+    uploader=uploader
+  )
