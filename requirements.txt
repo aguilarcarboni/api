@@ -19,6 +19,9 @@ requests_cache==1.2.1
 retry_requests==2.0.0
 websocket_client==1.8.0
 Werkzeug==3.1.0
+Flask-SocketIO==5.3.7
+gevent==23.9.0
+gevent-websocket==0.10.1
 
 # Database
 psycopg2-binary==2.9.9
@@ -45,4 +48,4 @@ uuid==1.30
 yfinance==0.2.37
 
 # Laserfocus
-laserfocus==0.1.2
+laserfocus
