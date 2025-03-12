@@ -46,16 +46,18 @@ def start_api():
     # Apply JWT authentication to all routes except login
     app.before_request(jwt_required_except_login)
 
-    from src.app import user, space, task
+    from src.app import user, space, task, event
     app.register_blueprint(user.bp, url_prefix='/users')
     app.register_blueprint(space.bp, url_prefix='/spaces')
     app.register_blueprint(task.bp, url_prefix='/tasks')
+    app.register_blueprint(event.bp, url_prefix='/events')
 
     from src.app import document_center
     app.register_blueprint(document_center.bp, url_prefix='/document_center')
 
     limiter.limit("600 per minute")(user.bp)
     limiter.limit("600 per minute")(task.bp)
+    limiter.limit("600 per minute")(event.bp)
     limiter.limit("600 per minute")(document_center.bp)
     
     # Create index route
