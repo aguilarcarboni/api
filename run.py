@@ -46,11 +46,12 @@ def start_api():
     # Apply JWT authentication to all routes except login
     app.before_request(jwt_required_except_login)
 
-    from src.app import user, space, task, event
+    from src.app import user, space, task, event, project
     app.register_blueprint(user.bp, url_prefix='/users')
     app.register_blueprint(space.bp, url_prefix='/spaces')
     app.register_blueprint(task.bp, url_prefix='/tasks')
     app.register_blueprint(event.bp, url_prefix='/events')
+    app.register_blueprint(project.bp, url_prefix='/projects')
 
     from src.app import document_center
     app.register_blueprint(document_center.bp, url_prefix='/document_center')

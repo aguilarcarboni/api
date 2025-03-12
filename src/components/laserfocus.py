@@ -30,11 +30,6 @@ class LaserFocus:
             self.db.create(table='user', data={'name': 'Andres', 'status': 'active', 'visibility': 'private', 'role': 'owner', 'email': 'aguilarcarboni@gmail.com', 'password': 'Jxk5odrUasO9k7Su', 'username': 'aguilarcarboni', 'space_id': 1, 'image': None})
             self.db.create(table='space', data={'name': 'Default', 'status': 'active', 'visibility': 'public'})
 
-            # Create fake data for project
-            self.db.create(table='project', data={'name': 'Home', 'status': 'active', 'visibility': 'public', 'space_id': 2})
-            self.db.create(table='space', data={'name': 'Home', 'status': 'active', 'visibility': 'public'})
-            self.db.create(table='task', data={'name': 'Default', 'status': 'active', 'visibility': 'public', 'space_id': 2, 'due': '2025-01-01', 'priority': 1})
-            
             logger.announcement("Successfully initialized Database Service", type='success')
             self._initialized = True
 
