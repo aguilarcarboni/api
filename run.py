@@ -1,91 +1,67 @@
-from flask import Flask, request, send_from_directory
+from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
-from flask_jwt_extended import JWTManager, verify_jwt_in_request, create_access_token, exceptions
+from flask_jwt_extended import JWTManager, verify_jwt_in_request, exceptions, create_access_token
+from dotenv import load_dotenv
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
-from flask import jsonify
-
-from laserfocus.utils.logger import logger
-
-import os
-from dotenv import load_dotenv
+from src.utils.logger import logger
 from datetime import timedelta
+from src.utils.managers.secret_manager import get_secret
+
 load_dotenv()
+public_routes = ['docs', 'index', 'token', 'oauth.login', 'oauth.create', 'yfinance.get_scroller_data']
 
-public_routes = ['docs', 'index', 'login']
-
-# JWT authentication middleware
 def jwt_required_except_login():
+    logger.info(f'\nRequest endpoint: {request.endpoint}')
     if request.endpoint not in public_routes:
         try:
             verify_jwt_in_request()
         except exceptions.JWTExtendedException as e:
             return jsonify({"msg": str(e)}), 401
-
+ 
 def start_api():
-    
-    logger.announcement('Starting Laserfocus...', 'info')
 
+    try:
+        jwt_secret_key = get_secret('JWT_SECRET_KEY')
+    except Exception as e:
+        logger.error(f"Failed to fetch JWT secret key: {str(e)}")
+        raise Exception("Failed to initialize API - could not fetch JWT secret key")
+    
     app = Flask(__name__, static_folder='static')
     cors = CORS(app, resources={r"/*": {"origins": "*"}})
     app.config['CORS_HEADERS'] = 'Content-Type'
     
     # Add JWT configuration
-    app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
-    app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(milliseconds=3600000)  # 1 hour in milliseconds
+    app.config['JWT_SECRET_KEY'] = jwt_secret_key
+
+    # Default expiration time (1 hour)
+    DEFAULT_TOKEN_EXPIRES = timedelta(hours=1)
+    app.config['JWT_ACCESS_TOKEN_EXPIRES'] = DEFAULT_TOKEN_EXPIRES
     jwt = JWTManager(app)
 
     # Initialize Limiter
     limiter = Limiter(
         get_remote_address,
         app=app,
-        default_limits=["60 per minute"],
-        storage_uri='memory://'
+        default_limits=["600 per minute"],
+        storage_uri='memory://',
+        strategy="fixed-window"
     )
 
     # Apply JWT authentication to all routes except login
     app.before_request(jwt_required_except_login)
 
-    from src.app import user, space, task, event, project
-    app.register_blueprint(user.bp, url_prefix='/users')
-    app.register_blueprint(space.bp, url_prefix='/spaces')
-    app.register_blueprint(task.bp, url_prefix='/tasks')
-    app.register_blueprint(event.bp, url_prefix='/events')
-    app.register_blueprint(project.bp, url_prefix='/projects')
-
-    from src.app import document_center
-    app.register_blueprint(document_center.bp, url_prefix='/document_center')
-
-    limiter.limit("600 per minute")(user.bp)
-    limiter.limit("600 per minute")(task.bp)
-    limiter.limit("600 per minute")(event.bp)
-    limiter.limit("600 per minute")(document_center.bp)
-    
-    # Create index route
+    # Index page
     @app.route('/')
     def index():
         return send_from_directory('public/static', 'index.html')
     
-    # Create documentation pages
+    # Documentation page
     @app.route('/docs')
     def docs():
         return send_from_directory('public/static', 'docs.html')
     
-    @app.route('/docs/drive')
-    def drive():
-        return send_from_directory('public/static/docs', 'drive.html')
-
-    # Create backend routes
-    @app.route('/login', methods=['POST'])
-    def login():
-        logger.info(f'Login request.')
-        payload = request.get_json(force=True)
-        token = payload['token']
-        if token == "laserfocused":
-            access_token = create_access_token(identity=token)
-            return jsonify(access_token=access_token), 200
-        return jsonify({"msg": "Bad token"}), 401
-
+    # Error handlers
     @app.errorhandler(404)
     def not_found_error(error):
         return jsonify({"error": "Not found"}), 404
@@ -108,10 +84,65 @@ def start_api():
     def forbidden_error(error):
         app.logger.error(f'Forbidden access attempt: {error}')
         return jsonify({"error": "Forbidden", "message": "You don't have permission to access this resource"}), 403
+
+    # JWT Token
+    from src.components.users import read_user_by_id
+    @app.route('/token', methods=['POST'])
+    def token():
+        logger.announcement('Token request.')
+        payload = request.get_json(force=True)
+
+        token = payload['token']
+        scopes = payload['scopes']
+
+        if token is None or token == '':
+            return jsonify({"msg": "Unauthorized"}), 401
+
+        if scopes is None or scopes == '':
+            return jsonify({"msg": "Unauthorized"}), 401
+
+        expires_delta = DEFAULT_TOKEN_EXPIRES
+        user = read_user_by_id(str(token))
+
+        if user and user is not None and user['id'] == token:
+            logger.info(f'Generating access token for user with scopes {scopes}.')
+            access_token = create_access_token(
+                identity=token,
+                additional_claims={"scopes": scopes},
+                expires_delta=expires_delta
+            )
+            logger.announcement(f'Authenticated user', 'success')
+            return jsonify(
+                access_token=access_token,
+                expires_in=int(expires_delta.total_seconds())
+            ), 200
+
+        logger.error(f'Failed to authenticate user {token}')
+        return jsonify({"msg": "Unauthorized"}), 401
     
+    # OAuth
+    from src.app.auth import oauth
+    app.register_blueprint(oauth.bp, url_prefix='/oauth')
+    
+    # Documents
+    from src.app.documents import client_documents
+    app.register_blueprint(client_documents.bp, url_prefix='/documents/clients')
+
+    # Tools
+    from src.app.tools import reporting, email
+    app.register_blueprint(reporting.bp, url_prefix='/reporting')
+    app.register_blueprint(email.bp, url_prefix='/email')
+
+    # CRUD
+    from src.app import user, space, task, event, project
+    app.register_blueprint(user.bp, url_prefix='/users')
+    app.register_blueprint(space.bp, url_prefix='/spaces')
+    app.register_blueprint(task.bp, url_prefix='/tasks')
+    app.register_blueprint(event.bp, url_prefix='/events')
+    app.register_blueprint(project.bp, url_prefix='/projects')
+
     return app
 
 app = start_api()
-logger.info('Running diagnostics and tests...')
-logger.success('Diagnostics and tests completed successfully.')
-logger.announcement('Welcome to Laserfocus.', 'success')
+logger.announcement('Running safety checks...', type='info')
+logger.announcement('Successfully started API', type='success')
