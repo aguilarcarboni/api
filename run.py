@@ -4,9 +4,9 @@ from flask_jwt_extended import JWTManager, verify_jwt_in_request, exceptions, cr
 from dotenv import load_dotenv
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
-from src.utils.logger import logger
+from laserfocus.utils.logger import logger
 from datetime import timedelta
-from src.utils.managers.secret_manager import get_secret
+import os
 
 load_dotenv()
 public_routes = ['docs', 'index', 'token', 'oauth.login', 'oauth.create', 'yfinance.get_scroller_data']
@@ -22,7 +22,7 @@ def jwt_required_except_login():
 def start_api():
 
     try:
-        jwt_secret_key = get_secret('JWT_SECRET_KEY')
+        jwt_secret_key = os.getenv('JWT_SECRET_KEY')
     except Exception as e:
         logger.error(f"Failed to fetch JWT secret key: {str(e)}")
         raise Exception("Failed to initialize API - could not fetch JWT secret key")
@@ -123,23 +123,11 @@ def start_api():
     # OAuth
     from src.app.auth import oauth
     app.register_blueprint(oauth.bp, url_prefix='/oauth')
-    
-    # Documents
-    from src.app.documents import client_documents
-    app.register_blueprint(client_documents.bp, url_prefix='/documents/clients')
-
-    # Tools
-    from src.app.tools import reporting, email
-    app.register_blueprint(reporting.bp, url_prefix='/reporting')
-    app.register_blueprint(email.bp, url_prefix='/email')
 
     # CRUD
-    from src.app import user, space, task, event, project
-    app.register_blueprint(user.bp, url_prefix='/users')
-    app.register_blueprint(space.bp, url_prefix='/spaces')
-    app.register_blueprint(task.bp, url_prefix='/tasks')
-    app.register_blueprint(event.bp, url_prefix='/events')
-    app.register_blueprint(project.bp, url_prefix='/projects')
+    from src.app import users, events
+    app.register_blueprint(users.bp, url_prefix='/users')
+    app.register_blueprint(events.bp, url_prefix='/events')
 
     return app
 

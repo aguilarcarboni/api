@@ -21,11 +21,8 @@ class Supabase:
     def __init__(self):
         if not self._initialized:
             logger.announcement('Initializing Database Service', 'info')
-
-            supabase_user = os.getenv('SUPABASE_USER')
-            supabase_password = os.getenv('SUPABASE_PASSWORD')
             
-            self.db_url = f'postgresql://postgres.{supabase_user}:{supabase_password}@aws-0-us-west-1.pooler.supabase.com:6543/postgres?gssencmode=disable'
+            self.db_url = 'sqlite:///laserfocus.db'
             self.engine = create_engine(self.db_url)
             
             self.Base = declarative_base()

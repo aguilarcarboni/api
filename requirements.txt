@@ -46,3 +46,5 @@ uuid==1.30
 # Financial Data
 ib_insync==0.9.86
 yfinance==0.2.37
+
+laserfocus==0.1.26
