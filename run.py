@@ -4,7 +4,7 @@ from flask_jwt_extended import JWTManager, verify_jwt_in_request, exceptions, cr
 from dotenv import load_dotenv
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
-from laserfocus.utils.logger import logger
+from src.utils.logger import logger
 from datetime import timedelta
 import os
 
@@ -86,7 +86,6 @@ def start_api():
         return jsonify({"error": "Forbidden", "message": "You don't have permission to access this resource"}), 403
 
     # JWT Token
-    from src.components.users import read_user_by_id
     @app.route('/token', methods=['POST'])
     def token():
         logger.announcement('Token request.')
@@ -102,9 +101,8 @@ def start_api():
             return jsonify({"msg": "Unauthorized"}), 401
 
         expires_delta = DEFAULT_TOKEN_EXPIRES
-        user = read_user_by_id(str(token))
 
-        if user and user is not None and user['id'] == token:
+        if token == os.getenv('AUTHENTICATION_TOKEN'):
             logger.info(f'Generating access token for user with scopes {scopes}.')
             access_token = create_access_token(
                 identity=token,
@@ -119,18 +117,13 @@ def start_api():
 
         logger.error(f'Failed to authenticate user {token}')
         return jsonify({"msg": "Unauthorized"}), 401
-    
-    # OAuth
-    from src.app.auth import oauth
-    app.register_blueprint(oauth.bp, url_prefix='/oauth')
 
-    # CRUD
-    from src.app import users, events
-    app.register_blueprint(users.bp, url_prefix='/users')
-    app.register_blueprint(events.bp, url_prefix='/events')
+    # Custom routes
+    from src.app import trading
+    app.register_blueprint(trading.bp, url_prefix='/trading')
 
     return app
 
 app = start_api()
 logger.announcement('Running safety checks...', type='info')
-logger.announcement('Successfully started API', type='success')
+logger.announcement('Successfully started Personal API', type='success')

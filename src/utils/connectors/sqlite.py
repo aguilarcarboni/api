@@ -2,8 +2,8 @@ from sqlalchemy import Boolean, create_engine, Column, Text, Integer, JSON
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.declarative import declarative_base
 
-from laserfocus.utils.managers.database import DatabaseManager
-from laserfocus.utils.logger import logger
+from src.utils.managers.database_manager import DatabaseManager
+from src.utils.logger import logger
 import uuid
 from datetime import datetime
 

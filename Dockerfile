@@ -30,16 +30,9 @@ COPY . .
 # Make run script executable
 RUN chmod +x run.sh
 
-# Set the default environment variables
-ARG JWT_SECRET_KEY
-ENV JWT_SECRET_KEY=${JWT_SECRET_KEY}
-
-ARG AUTHENTICATION_TOKEN
-ENV AUTHENTICATION_TOKEN=${AUTHENTICATION_TOKEN}
-
+# API
 ARG PORT
 ENV PORT=${PORT}
-
 EXPOSE ${PORT}
 
 ENTRYPOINT ["./run.sh"]

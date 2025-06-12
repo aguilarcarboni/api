@@ -19,6 +19,7 @@ retry_requests==2.0.0
 websocket_client==1.8.0
 Werkzeug==3.1.0
 gevent==25.4.2
+gevent-websocket==0.10.1
 flask_socketio==5.5.1
 
 # Database
@@ -30,6 +31,7 @@ google_api_python_client==2.136.0
 google_auth_oauthlib==1.2.1
 firebase_admin==6.5.0
 google-cloud-secret-manager==2.23.1
+google-generativeai==0.8.5
 
 # Text Processing and Utilities
 beautifulsoup4==4.12.3
@@ -46,5 +48,3 @@ uuid==1.30
 # Financial Data
 ib_insync==0.9.86
 yfinance==0.2.37
-
-laserfocus==0.1.26
