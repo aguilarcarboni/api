@@ -21,7 +21,7 @@ class Supabase:
 
     def __init__(self):
         if not self._initialized:
-            logger.announcement('Initializing Database Service', 'info')
+            logger.announcement('Initializing Supabase Service', 'info')
 
             supabase_user = get_secret('SUPABASE_USER')
             supabase_password = get_secret('SUPABASE_PASSWORD')
@@ -34,7 +34,7 @@ class Supabase:
             
             self.db = DatabaseManager(base=self.Base, engine=self.engine)
             
-            logger.announcement('Successfully initialized Database Service', 'success')
+            logger.announcement('Successfully initialized Supabase Service', 'success')
             self._initialized = True
 
     def _setup_models(self):

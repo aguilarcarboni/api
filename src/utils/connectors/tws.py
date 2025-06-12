@@ -4,10 +4,10 @@ import time
 import math
 import os
 
-logger.announcement("Initializing IBKR Connector", 'info')
-logger.announcement("IBKR Connector initialized", 'success')
+logger.announcement("Initializing TWS Connector", 'info')
+logger.announcement("TWS Connector initialized", 'success')
 
-class IBKRConnector:
+class TWSConnector:
 
     def __init__(self):
         self.ib = IB()

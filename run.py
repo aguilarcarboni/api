@@ -119,7 +119,8 @@ def start_api():
         return jsonify({"msg": "Unauthorized"}), 401
 
     # Custom routes
-    from src.app import trading
+    from src.app import users, trading
+    app.register_blueprint(users.bp, url_prefix='/users')
     app.register_blueprint(trading.bp, url_prefix='/trading')
 
     return app
