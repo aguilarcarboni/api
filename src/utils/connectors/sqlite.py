@@ -36,20 +36,7 @@ class SQLite:
             self._initialized = True
 
     def _setup_models(self):
-
-        class User(self.Base):
-            __tablename__ = 'user'
-            id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-            created = Column(Text, nullable=False, default=datetime.now().strftime('%Y%m%d%H%M%S'))
-            updated = Column(Text, nullable=False, default=datetime.now().strftime('%Y%m%d%H%M%S'))
-            email = Column(Text, nullable=False, unique=True)
-            image = Column(Text, nullable=True)
-            password = Column(Text, nullable=False)
-            scopes = Column(Text, nullable=False)
-            name = Column(Text, nullable=False)
-
-        # Store model classes as attributes of the instance
-        self.User = User
+        pass
 
 # Create a single instance that can be imported and used throughout the application
 db = SQLite().db
