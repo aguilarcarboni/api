@@ -1,9 +1,9 @@
 # Use an official Python runtime as the base image
-FROM python:3.9-slim
+FROM python:3.11.9-slim
 
 # Add labels for metadata
-LABEL maintainer="laserfocus"
-LABEL name="laserfocus-api"
+LABEL maintainer="aguilarcarboni"
+LABEL name="api"
 LABEL version="1.0"
 LABEL description=""
 
