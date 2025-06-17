@@ -9,10 +9,10 @@ logger.announcement("Market Data Service initialized", 'success')
 tws = TWSConnector()
 
 @handle_exception
-def latest_stock_price(symbol: str):
+def latest_stock_data(symbol: str):
     logger.info(f"Fetching latest price for {symbol}")
     contract = Stock(symbol, 'SMART', 'USD')
-    return tws.latest_price(contract)
+    return tws.current_data(contract)
 
 @handle_exception
 def historical_stock_price(symbol: str, period: str = '1 Y'):
